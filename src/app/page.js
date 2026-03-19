@@ -47,22 +47,15 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
-      <main className="flex-1 flex flex-col min-[600px]:flex-row items-start justify-center gap-6 px-6 min-[600px]:px-12 pt-12 pb-6 relative z-10">
-
-        {/* Mobile: Headline → ImportCard → PhoneShowcase (top to bottom) */}
-        {/* Desktop: left column (Headline + PhoneShowcase) | right column (ImportCard) */}
-
-        {/* Left column on desktop */}
-        <div className="flex flex-col gap-6 flex-1 min-[600px]:min-w-[300px] min-[600px]:max-w-[580px] w-full order-1 min-[600px]:order-1">
+     <main className="flex-1 flex flex-col min-[900px]:flex-row items-center min-[900px]:items-start justify-center gap-6 px-6 min-[900px]:px-12 pt-12 pb-6 relative z-10">
+        <div className="flex flex-col gap-6 flex-1 min-[900px]:min-w-[300px] min-[900px]:max-w-[580px] w-full order-1 min-[900px]:order-1">
           <Headline t={t} />
-          {/* PhoneShowcase hidden on mobile, shown on desktop */}
-          <div className="hidden min-[600px]:block">
+          <div className="hidden min-[900px]:block">
             <PhoneShowcase t={t} />
           </div>
         </div>
 
-        {/* ImportCard — second on mobile, right column on desktop */}
-        <div className="w-full min-[600px]:w-auto order-2 min-[600px]:order-2">
+        <div className="w-full min-[900px]:w-auto order-2 min-[900px]:order-2">
           <ImportCard
             t={t}
             code={code}
@@ -73,11 +66,9 @@ export default function Home() {
           />
         </div>
 
-        {/* PhoneShowcase — shown only on mobile, at the bottom */}
-        <div className="block min-[600px]:hidden w-full order-3">
+        <div className="block min-[900px]:hidden w-full order-3">
           <PhoneShowcase t={t} />
         </div>
-
       </main>
 
       <HomeFooter t={t} lang={lang} setLang={setLang} />

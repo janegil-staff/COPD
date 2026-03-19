@@ -2,8 +2,8 @@ import Image from "next/image";
 
 export default function PhoneShowcase({ t }) {
   return (
-    <div className="w-full min-[600px]:flex-1 min-[600px]:min-w-[300px] min-[600px]:max-w-[580px]">
-      <div className="flex items-end gap-3 justify-center min-[600px]:justify-start">
+ <div className="w-full min-[900px]:flex-1 min-[900px]:min-w-[300px] min-[900px]:max-w-[580px]">
+  <div className="flex items-end gap-3 justify-center min-[900px]:justify-start">
         {[
           { src: "/screen4.png", alt: "Login" },
           { src: "/screen2.png", alt: "Calendar", lift: true },
