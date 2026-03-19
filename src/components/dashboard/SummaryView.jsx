@@ -21,7 +21,7 @@ function FourMonthIntro({ t }) {
 
   return (
     <div
-      className="rounded-xl p-4 mb-6 text-sm leading-relaxed text-gray-700"
+      className="rounded-xl p-3 min-[600px]:p-4 mb-4 min-[600px]:mb-6 text-xs min-[600px]:text-sm leading-relaxed text-gray-700"
       style={{
         background: "#f0fdf9",
         border: "1px solid rgba(38,142,134,0.1)",
@@ -53,17 +53,17 @@ function MonthlyTable({ t, lang }) {
 
   return (
     <div>
+      {/* Header row */}
       <div
-        className="grid text-xs font-semibold uppercase tracking-widest text-gray-400 pb-2 mb-1 gap-2"
+        className="grid text-[9px] min-[600px]:text-xs font-semibold uppercase tracking-widest text-gray-400 pb-2 mb-1"
         style={{
-          gridTemplateColumns: "130px 1fr 90px 70px",
+          gridTemplateColumns: "80px 1fr 50px 44px",
           borderBottom: "1px solid #f0f0f0",
+          gap: "4px",
         }}
       >
         <span>{t.month}</span>
-        <span>
-          {t.daysWithSymptoms} ({t.mild} / {t.moderate} / {t.serious})
-        </span>
+        <span>{t.daysWithSymptoms}</span>
         <span className="text-center">{t.medication}</span>
         <span className="text-right">{t.scoreHeader}</span>
       </div>
@@ -85,20 +85,22 @@ function MonthlyTable({ t, lang }) {
         return (
           <div
             key={`${year}-${month}`}
-            className="grid py-3 text-sm items-center gap-2"
+            className="grid py-2 min-[600px]:py-3 text-xs min-[600px]:text-sm items-center"
             style={{
-              gridTemplateColumns: "130px 1fr 90px 70px",
+              gridTemplateColumns: "80px 1fr 50px 44px",
+              gap: "4px",
               borderBottom: "1px solid #f9f9f9",
               background: isCurrentMonth
                 ? "rgba(38,142,134,0.03)"
                 : "transparent",
             }}
           >
-            <span className="font-semibold text-gray-700 flex items-center gap-1">
+            {/* Month */}
+            <span className="font-semibold text-gray-700 flex items-center gap-1 flex-wrap">
               {monthsShort[month]} {year}
               {isCurrentMonth && (
                 <span
-                  className="text-xs px-1.5 py-0.5 rounded-full"
+                  className="text-[8px] min-[600px]:text-xs px-1 py-0.5 rounded-full"
                   style={{
                     background: "rgba(38,142,134,0.1)",
                     color: "#268E86",
@@ -108,38 +110,40 @@ function MonthlyTable({ t, lang }) {
                 </span>
               )}
             </span>
-            <div className="flex items-center gap-2 flex-wrap">
+
+            {/* Days breakdown */}
+            <div className="flex items-center gap-1 flex-wrap">
               <span className="font-bold text-gray-700">{total}</span>
-              <span className="text-gray-400 text-xs">
-                ( <span style={{ color: "#0f6e56" }}>{mild}</span> /{" "}
-                <span style={{ color: "#854f0b" }}>{moderate}</span> /{" "}
-                <span style={{ color: "#a32d2d" }}>{serious}</span> )
+              <span className="text-gray-400 text-[9px] min-[600px]:text-xs">
+                (<span style={{ color: "#0f6e56" }}>{mild}</span>/
+                <span style={{ color: "#854f0b" }}>{moderate}</span>/
+                <span style={{ color: "#a32d2d" }}>{serious}</span>)
               </span>
               {total > 0 && (
                 <div className="flex gap-0.5">
                   {mild > 0 && (
                     <div
-                      className="h-3 rounded-sm"
+                      className="h-2 min-[600px]:h-3 rounded-sm"
                       style={{
-                        width: Math.max(mild * 5, 4),
+                        width: Math.max(mild * 3, 3),
                         background: "#5dcaa5",
                       }}
                     />
                   )}
                   {moderate > 0 && (
                     <div
-                      className="h-3 rounded-sm"
+                      className="h-2 min-[600px]:h-3 rounded-sm"
                       style={{
-                        width: Math.max(moderate * 5, 4),
+                        width: Math.max(moderate * 3, 3),
                         background: "#ef9f27",
                       }}
                     />
                   )}
                   {serious > 0 && (
                     <div
-                      className="h-3 rounded-sm"
+                      className="h-2 min-[600px]:h-3 rounded-sm"
                       style={{
-                        width: Math.max(serious * 5, 4),
+                        width: Math.max(serious * 3, 3),
                         background: "#e24b4a",
                       }}
                     />
@@ -147,7 +151,11 @@ function MonthlyTable({ t, lang }) {
                 </div>
               )}
             </div>
+
+            {/* Medication */}
             <span className="text-center text-gray-600">{medication}</span>
+
+            {/* Score */}
             <span
               className="text-right font-mono font-bold"
               style={{
@@ -160,7 +168,10 @@ function MonthlyTable({ t, lang }) {
           </div>
         );
       })}
-      <p className="text-xs text-gray-300 mt-4">{t.scoreLabel}</p>
+
+      <p className="text-[9px] min-[600px]:text-xs text-gray-300 mt-3 min-[600px]:mt-4">
+        {t.scoreLabel}
+      </p>
     </div>
   );
 }
@@ -168,16 +179,19 @@ function MonthlyTable({ t, lang }) {
 export default function SummaryView({ t, lang }) {
   return (
     <div className="rounded-2xl overflow-hidden shadow-sm" style={cardStyle}>
-      <div className="px-6 py-4" style={headerBorder}>
+      <div
+        className="px-4 min-[600px]:px-6 py-3 min-[600px]:py-4"
+        style={headerBorder}
+      >
         <p
-          className="font-bold text-base tracking-wide"
+          className="font-bold text-sm min-[600px]:text-base tracking-wide"
           style={{ color: "#268E86", fontFamily: "Georgia, serif" }}
         >
           {t.patientSummary}
         </p>
         <p className="text-xs text-gray-400 mt-0.5">{t.lastFourMonths}</p>
       </div>
-      <div className="p-6">
+      <div className="p-4 min-[600px]:p-6">
         <FourMonthIntro t={t} />
         <MonthlyTable t={t} lang={lang} />
       </div>
