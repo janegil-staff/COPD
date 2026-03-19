@@ -1,4 +1,6 @@
-import PageVisitor from "../models/PageVisitor.js";
+// src/lib/pageVisitorHelper.js
+
+import PageVisitor from "@/models/PageVisitor.js";
 
 /**
  * Record a visit to a page.
@@ -17,7 +19,7 @@ export async function recordVisit(page, isUnique = false) {
         ...(isUnique && { uniqueVisitors: 1 }),
       },
     },
-    { upsert: true, new: true },
+    { upsert: true, returnDocument: "after" },
   );
 
   const updated = await PageVisitor.findOneAndUpdate(
@@ -28,7 +30,7 @@ export async function recordVisit(page, isUnique = false) {
         ...(isUnique && { "dailyStats.$.uniqueVisitors": 1 }),
       },
     },
-    { new: true },
+    { returnDocument: "after" },
   );
 
   if (!updated) {
@@ -43,6 +45,7 @@ export async function recordVisit(page, isUnique = false) {
           },
         },
       },
+      { returnDocument: "after" },
     );
   }
 }
@@ -113,5 +116,6 @@ export async function resetPageStats(page) {
         dailyStats: [],
       },
     },
+    { returnDocument: "after" },
   );
 }
