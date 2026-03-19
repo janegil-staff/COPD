@@ -81,7 +81,7 @@ export default function LogView({ t, lang }) {
                 {t.medication}
               </th>
               <th
-                className="px-2 py-2 text-left text-gray-400 font-semibold uppercase tracking-wider"
+                className="px-2 py-2 text-right-10 text-gray-400 font-semibold uppercase tracking-wider"
                 style={{ width: "26%" }}
               >
                 {t.notes}
