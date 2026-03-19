@@ -1,24 +1,37 @@
-import dbConnect from "@/lib/dbConnect.js";
-import SecretCode from "@/models/SecretCode.js";
+// src/app/api/generate-code/route.js
+
+import dbConnect from '@/lib/dbConnect.js';
+import SecretCode from '@/models/SecretCode.js';
+
+export async function GET() {
+  try {
+    await dbConnect();
+    const codes = await SecretCode.find({}).lean();
+    return Response.json({ codes });
+  } catch (err) {
+    return Response.json({ error: err.message }, { status: 500 });
+  }
+}
 
 export async function POST(request) {
   try {
     await dbConnect();
     const { code, userId } = await request.json();
 
-    // Delete any existing code for this user
     await SecretCode.deleteMany({ userId });
 
-    // Store new code, expires in 10 minutes
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
     await SecretCode.create({
       code: String(code),
       userId,
-      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      expiresAt,
     });
 
-    return Response.json({ success: true });
+    // Return expiresAt so the client countdown matches exactly
+    return Response.json({ success: true, expiresAt });
   } catch (err) {
-    console.error("[generate-code]", err);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    console.error('[generate-code POST]', err);
+    return Response.json({ error: err.message }, { status: 500 });
   }
 }

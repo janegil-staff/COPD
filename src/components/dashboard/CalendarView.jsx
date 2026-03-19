@@ -1,32 +1,17 @@
-// src/components/Dashboard.jsx
 "use client";
-
 import { useEffect, useState } from "react";
+import { severityColor } from "@/utils/severityColor";
+import { DAYS_LOCALE, MONTHS_LOCALE } from "@/utils/locales";
 
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+const USER_ID = "69bc130abdcd059844b6ed1d";
+const cardStyle = {
+  background: "rgba(255,255,255,0.88)",
+  border: "1px solid rgba(38,142,134,0.12)",
+  backdropFilter: "blur(10px)",
+};
+const headerBorder = { borderBottom: "1px solid rgba(38,142,134,0.08)" };
 
-function severityColor(value) {
-  if (value === null || value === undefined) return null;
-  if (value <= 3) return { bg: "#e6f7f5", text: "#0f6e56" };
-  if (value <= 6) return { bg: "#faeeda", text: "#854f0b" };
-  return { bg: "#fcebeb", text: "#a32d2d" };
-}
-
-export default function Dashboard() {
+export default function CalendarView({ t, lang }) {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
@@ -34,12 +19,13 @@ export default function Dashboard() {
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const DAYS = DAYS_LOCALE[lang] ?? DAYS_LOCALE.en;
+  const MONTHS = MONTHS_LOCALE[lang] ?? MONTHS_LOCALE.en;
+
   useEffect(() => {
     setLoading(true);
     setSelected(null);
-    fetch(
-      `/api/symptoms?userId=69bc130abdcd059844b6ed1d&year=${year}&month=${month}`,
-    )
+    fetch(`/api/symptoms?userId=${USER_ID}&year=${year}&month=${month}`)
       .then((r) => r.json())
       .then((data) => {
         setDays(data.days ?? []);
@@ -84,24 +70,15 @@ export default function Dashboard() {
     today.getDate() === dayNum;
 
   return (
-    <div>
-      {/* Calendar card */}
-      <div
-        className="rounded-2xl overflow-hidden shadow-sm"
-        style={{
-          background: "rgba(255,255,255,0.88)",
-          border: "1px solid rgba(38,142,134,0.12)",
-          backdropFilter: "blur(10px)",
-        }}
-      >
-        {/* Month navigation */}
+    <>
+      <div className="rounded-2xl overflow-hidden shadow-sm" style={cardStyle}>
         <div
           className="flex items-center justify-between px-6 py-4"
-          style={{ borderBottom: "1px solid rgba(38,142,134,0.08)" }}
+          style={headerBorder}
         >
           <button
             onClick={prevMonth}
-            className="w-9 h-9 flex items-center justify-center rounded-full transition-all hover:bg-gray-100 text-gray-400 text-lg font-light"
+            className="w-9 h-9 flex items-center justify-center rounded-full transition-all hover:bg-gray-100 text-gray-400 text-lg"
           >
             ‹
           </button>
@@ -116,22 +93,21 @@ export default function Dashboard() {
           </div>
           <button
             onClick={nextMonth}
-            className="w-9 h-9 flex items-center justify-center rounded-full transition-all hover:bg-gray-100 text-gray-400 text-lg font-light"
+            className="w-9 h-9 flex items-center justify-center rounded-full transition-all hover:bg-gray-100 text-gray-400 text-lg"
           >
             ›
           </button>
         </div>
 
         <div className="px-4 py-4">
-          {/* Legend */}
           <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4 px-1">
             {[
-              { color: "#e6f7f5", border: "#5dcaa5", label: "Mild" },
-              { color: "#faeeda", border: "#ef9f27", label: "Moderate" },
-              { color: "#fcebeb", border: "#e24b4a", label: "Serious" },
-              { color: "#268E86", label: "Exacerbation", dot: true },
-              { color: "#6366f1", label: "Medication", dot: true },
-              { color: "#34d399", label: "Activity", dot: true },
+              { color: "#e6f7f5", border: "#5dcaa5", label: t.mild },
+              { color: "#faeeda", border: "#ef9f27", label: t.moderate },
+              { color: "#fcebeb", border: "#e24b4a", label: t.serious },
+              { color: "#268E86", label: t.exacerbation, dot: true },
+              { color: "#6366f1", label: t.medication, dot: true },
+              { color: "#34d399", label: t.activity, dot: true },
             ].map(({ color, border, label, dot }) => (
               <div key={label} className="flex items-center gap-1.5">
                 {dot ? (
@@ -150,7 +126,6 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Day headers */}
           <div className="grid grid-cols-7 mb-1">
             {DAYS.map((d) => (
               <div
@@ -162,17 +137,15 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Grid */}
           {loading ? (
             <div className="h-48 flex items-center justify-center text-gray-300 text-sm tracking-widest uppercase">
-              Loading...
+              {t.loading}
             </div>
           ) : (
             <div className="grid grid-cols-7 gap-1">
               {Array.from({ length: startOffset }).map((_, i) => (
                 <div key={`e-${i}`} />
               ))}
-
               {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(
                 (dayNum) => {
                   const data = getDayData(dayNum);
@@ -214,7 +187,6 @@ export default function Dashboard() {
                       >
                         {dayNum}
                       </span>
-
                       {s && (
                         <div className="flex gap-0.5 justify-center flex-wrap px-1">
                           {(s.moderateExacerbation ||
@@ -251,19 +223,14 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Day detail panel */}
       {selected && (
         <div
           className="mt-3 rounded-2xl overflow-hidden shadow-sm"
-          style={{
-            background: "rgba(255,255,255,0.88)",
-            border: "1px solid rgba(38,142,134,0.12)",
-            backdropFilter: "blur(10px)",
-          }}
+          style={cardStyle}
         >
           <div
             className="flex items-center justify-between px-6 py-4"
-            style={{ borderBottom: "1px solid rgba(38,142,134,0.08)" }}
+            style={headerBorder}
           >
             <p
               className="font-bold text-sm tracking-wide"
@@ -278,13 +245,12 @@ export default function Dashboard() {
               ×
             </button>
           </div>
-
           <div className="p-5">
             {selected.data ? (
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                 {[
                   {
-                    label: "Avg symptoms",
+                    label: t.avgSymptoms,
                     value:
                       selected.data.symptoms.average !== null
                         ? `${selected.data.symptoms.average} / 10`
@@ -297,10 +263,10 @@ export default function Dashboard() {
                       "#9ca3af",
                   },
                   {
-                    label: "Moderate exacerbation",
+                    label: t.moderateExacerbation,
                     value: selected.data.symptoms.moderateExacerbation
-                      ? "Yes"
-                      : "No",
+                      ? "✓"
+                      : "✗",
                     color: selected.data.symptoms.moderateExacerbation
                       ? "#e6f7f5"
                       : "#fafafa",
@@ -309,10 +275,10 @@ export default function Dashboard() {
                       : "#d1d5db",
                   },
                   {
-                    label: "Serious exacerbation",
+                    label: t.seriousExacerbation,
                     value: selected.data.symptoms.seriousExacerbation
-                      ? "Yes"
-                      : "No",
+                      ? "✓"
+                      : "✗",
                     color: selected.data.symptoms.seriousExacerbation
                       ? "#fcebeb"
                       : "#fafafa",
@@ -321,7 +287,7 @@ export default function Dashboard() {
                       : "#d1d5db",
                   },
                   {
-                    label: "Physical activity",
+                    label: t.physicalActivity,
                     value:
                       selected.data.symptoms.physicalActivity !== null
                         ? `${selected.data.symptoms.physicalActivity} / 10`
@@ -330,10 +296,8 @@ export default function Dashboard() {
                     dot: "#34d399",
                   },
                   {
-                    label: "Medication",
-                    value: selected.data.symptoms.medication
-                      ? "Taken"
-                      : "Not taken",
+                    label: t.medication,
+                    value: selected.data.symptoms.medication ? "✓" : "✗",
                     color: selected.data.symptoms.medication
                       ? "#eef2ff"
                       : "#fafafa",
@@ -359,29 +323,28 @@ export default function Dashboard() {
                     </div>
                   </div>
                 ))}
-
-                {selected.data.notes ? (
+                {selected.data.notes && (
                   <div
                     className="col-span-2 sm:col-span-3 rounded-xl p-3"
                     style={{ background: "#f9fafb" }}
                   >
                     <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">
-                      Notes
+                      {t.notes}
                     </p>
                     <p className="text-sm text-gray-600">
                       {selected.data.notes}
                     </p>
                   </div>
-                ) : null}
+                )}
               </div>
             ) : (
               <p className="text-sm text-gray-300 text-center py-4 tracking-wide">
-                No data recorded for this day.
+                {t.noData}
               </p>
             )}
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

@@ -1,5 +1,3 @@
-// src/models/PageVisitor.js
-
 import mongoose from 'mongoose';
 
 const pageVisitorSchema = new mongoose.Schema(
@@ -42,7 +40,6 @@ const pageVisitorSchema = new mongoose.Schema(
 
 pageVisitorSchema.index({ page: 1, 'dailyStats.date': 1 });
 
-// ✅ Reuse the model if already compiled (hot reload safe)
 const PageVisitor = mongoose.models.PageVisitor || mongoose.model('PageVisitor', pageVisitorSchema);
 
 export default PageVisitor;

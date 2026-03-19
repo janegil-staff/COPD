@@ -21,7 +21,6 @@ export default function TestCodePage() {
     setError(null);
 
     const newCode = generateCode();
-    console.log('[test-code] generating code:', newCode, 'for userId:', USER_ID);
 
     try {
       const res = await fetch('/api/generate-code', {
@@ -31,7 +30,6 @@ export default function TestCodePage() {
       });
 
       const data = await res.json();
-      console.log('[test-code] response:', data);
 
       if (!res.ok || !data.success) {
         setError(data.error ?? 'Failed to generate code');
@@ -39,18 +37,19 @@ export default function TestCodePage() {
       }
 
       setCode(newCode);
-      startCountdown();
+      // Use server expiry time so countdown matches exactly
+      const msRemaining = new Date(data.expiresAt) - new Date();
+      startCountdown(Math.floor(msRemaining / 1000));
     } catch (err) {
-      console.error('[test-code] error:', err);
       setError(err.message);
     } finally {
       setLoading(false);
     }
   }
 
-  function startCountdown() {
+  function startCountdown(seconds) {
     if (countdownRef.current) clearInterval(countdownRef.current);
-    setTimeLeft(600);
+    setTimeLeft(seconds);
 
     countdownRef.current = setInterval(() => {
       setTimeLeft((prev) => {
@@ -65,9 +64,7 @@ export default function TestCodePage() {
   }
 
   useEffect(() => {
-    return () => {
-      if (countdownRef.current) clearInterval(countdownRef.current);
-    };
+    return () => { if (countdownRef.current) clearInterval(countdownRef.current); };
   }, []);
 
   const minutes = timeLeft ? Math.floor(timeLeft / 60) : 0;
@@ -80,53 +77,27 @@ export default function TestCodePage() {
 
       <div
         className="relative z-10 rounded-2xl shadow-lg p-10 flex flex-col items-center gap-6 w-full max-w-sm"
-        style={{
-          background: 'rgba(255,255,255,0.85)',
-          border: '1px solid rgba(38,142,134,0.15)',
-          backdropFilter: 'blur(10px)',
-        }}
+        style={{ background: 'rgba(255,255,255,0.85)', border: '1px solid rgba(38,142,134,0.15)', backdropFilter: 'blur(10px)' }}
       >
-        <h1
-          className="text-xl font-bold tracking-widest uppercase"
-          style={{ color: '#268E86', fontFamily: 'Georgia, serif' }}
-        >
+        <h1 className="text-xl font-bold tracking-widest uppercase" style={{ color: '#268E86', fontFamily: 'Georgia, serif' }}>
           Code Generator
         </h1>
 
-        {error && (
-          <p className="text-red-500 text-xs text-center">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-xs text-center">{error}</p>}
 
         {code ? (
           <div className="flex flex-col items-center gap-2">
-            <p className="text-xs font-semibold tracking-widest text-gray-400 uppercase">
-              Your access code
-            </p>
-            <p
-              className="text-4xl font-mono font-bold tracking-[0.3em]"
-              style={{ color: '#268E86' }}
-            >
-              {code}
-            </p>
-
+            <p className="text-xs font-semibold tracking-widest text-gray-400 uppercase">Your access code</p>
+            <p className="text-4xl font-mono font-bold tracking-[0.3em]" style={{ color: '#268E86' }}>{code}</p>
             <div className="flex flex-col items-center mt-2">
-              <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">
-                Expires in
-              </p>
-              <p
-                className="text-2xl font-mono font-bold"
-                style={{ color: timeLeft < 60 ? '#e53e3e' : '#268E86' }}
-              >
+              <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">Expires in</p>
+              <p className="text-2xl font-mono font-bold" style={{ color: timeLeft < 60 ? '#e53e3e' : '#268E86' }}>
                 {minutes}:{seconds}
               </p>
-
               <div className="w-48 h-1.5 bg-gray-100 rounded-full mt-2 overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-1000"
-                  style={{
-                    width: `${(timeLeft / 600) * 100}%`,
-                    background: timeLeft < 60 ? '#e53e3e' : '#268E86',
-                  }}
+                  style={{ width: `${(timeLeft / 600) * 100}%`, background: timeLeft < 60 ? '#e53e3e' : '#268E86' }}
                 />
               </div>
             </div>
@@ -146,9 +117,7 @@ export default function TestCodePage() {
           {loading ? 'Generating...' : code ? 'Generate new code' : 'Generate code'}
         </button>
 
-        <p className="text-xs text-gray-300 text-center">
-          Test page — remove before production
-        </p>
+        <p className="text-xs text-gray-300 text-center">Test page — remove before production</p>
       </div>
     </div>
   );
