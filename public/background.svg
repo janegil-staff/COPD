@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900">
+  <defs>
+    <!-- Base gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8f5f3;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#f0f9f8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e4f4f2;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Teal blob gradient -->
+    <radialGradient id="tealBlob1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#2a9d8f;stop-opacity:0.18" />
+      <stop offset="100%" style="stop-color:#2a9d8f;stop-opacity:0" />
+    </radialGradient>
+
+    <radialGradient id="tealBlob2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#4dbdaf;stop-opacity:0.14" />
+      <stop offset="100%" style="stop-color:#4dbdaf;stop-opacity:0" />
+    </radialGradient>
+
+    <!-- Coral/warm blob gradient -->
+    <radialGradient id="coralBlob" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#e76f51;stop-opacity:0.13" />
+      <stop offset="100%" style="stop-color:#e76f51;stop-opacity:0" />
+    </radialGradient>
+
+    <radialGradient id="goldBlob" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#e9c46a;stop-opacity:0.11" />
+      <stop offset="100%" style="stop-color:#e9c46a;stop-opacity:0" />
+    </radialGradient>
+
+    <radialGradient id="mintBlob" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#76c7bb;stop-opacity:0.16" />
+      <stop offset="100%" style="stop-color:#76c7bb;stop-opacity:0" />
+    </radialGradient>
+
+    <!-- Noise filter for organic texture -->
+    <filter id="noise" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noiseOut"/>
+      <feColorMatrix type="saturate" values="0" in="noiseOut" result="grayNoise"/>
+      <feBlend in="SourceGraphic" in2="grayNoise" mode="multiply" result="blended"/>
+      <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+    </filter>
+
+    <filter id="blur1">
+      <feGaussianBlur stdDeviation="60"/>
+    </filter>
+    <filter id="blur2">
+      <feGaussianBlur stdDeviation="80"/>
+    </filter>
+    <filter id="blur3">
+      <feGaussianBlur stdDeviation="100"/>
+    </filter>
+  </defs>
+
+  <!-- Base background -->
+  <rect width="1440" height="900" fill="url(#bgGrad)"/>
+
+  <!-- Large teal blob — top left -->
+  <ellipse cx="-80" cy="120" rx="520" ry="480" fill="url(#tealBlob1)" filter="url(#blur2)" transform="rotate(-15 -80 120)"/>
+
+  <!-- Large coral blob — bottom right -->
+  <ellipse cx="1520" cy="820" rx="580" ry="500" fill="url(#coralBlob)" filter="url(#blur3)" transform="rotate(20 1520 820)"/>
+
+  <!-- Mid teal blob — center right -->
+  <ellipse cx="1200" cy="200" rx="380" ry="340" fill="url(#tealBlob2)" filter="url(#blur2)" transform="rotate(-30 1200 200)"/>
+
+  <!-- Gold blob — bottom left -->
+  <ellipse cx="180" cy="820" rx="420" ry="360" fill="url(#goldBlob)" filter="url(#blur2)" transform="rotate(10 180 820)"/>
+
+  <!-- Mint blob — center -->
+  <ellipse cx="720" cy="500" rx="460" ry="380" fill="url(#mintBlob)" filter="url(#blur3)" transform="rotate(5 720 500)"/>
+
+  <!-- Small accent teal — top right -->
+  <ellipse cx="1350" cy="80" rx="220" ry="200" fill="url(#tealBlob1)" filter="url(#blur1)" />
+
+  <!-- Small accent coral — mid left -->
+  <ellipse cx="80" cy="480" rx="200" ry="180" fill="url(#coralBlob)" filter="url(#blur1)" />
+
+  <!-- Organic blob shapes using paths (more irregular, like the reference) -->
+
+  <!-- Large organic teal shape top-left -->
+  <path d="M -120 -60 C 80 -20, 340 40, 420 180 C 500 320, 380 480, 260 520 C 140 560, -40 480, -100 360 C -160 240, -180 80, -120 -60 Z"
+        fill="#2a9d8f" opacity="0.09" filter="url(#blur2)"/>
+
+  <!-- Large organic coral shape bottom-right -->
+  <path d="M 1560 960 C 1400 900, 1240 820, 1200 680 C 1160 540, 1280 400, 1380 360 C 1480 320, 1580 400, 1620 520 C 1660 640, 1640 820, 1560 960 Z"
+        fill="#e76f51" opacity="0.1" filter="url(#blur2)"/>
+
+  <!-- Organic mid blob -->
+  <path d="M 600 80 C 720 40, 900 80, 980 200 C 1060 320, 1000 480, 880 520 C 760 560, 620 500, 560 380 C 500 260, 480 120, 600 80 Z"
+        fill="#4dbdaf" opacity="0.08" filter="url(#blur3)"/>
+
+  <!-- Small decorative dots -->
+  <circle cx="320" cy="140" r="5" fill="#2a9d8f" opacity="0.25"/>
+  <circle cx="340" cy="158" r="3" fill="#2a9d8f" opacity="0.18"/>
+  <circle cx="298" cy="162" r="4" fill="#2a9d8f" opacity="0.2"/>
+
+  <circle cx="1100" cy="720" r="6" fill="#e76f51" opacity="0.2"/>
+  <circle cx="1124" cy="738" r="3.5" fill="#e76f51" opacity="0.15"/>
+  <circle cx="1082" cy="742" r="4" fill="#e76f51" opacity="0.18"/>
+
+  <circle cx="700" cy="80" r="5" fill="#2a9d8f" opacity="0.22"/>
+  <circle cx="718" cy="64" r="3" fill="#2a9d8f" opacity="0.16"/>
+
+  <circle cx="1280" cy="580" r="4" fill="#4dbdaf" opacity="0.2"/>
+  <circle cx="1300" cy="596" r="2.5" fill="#4dbdaf" opacity="0.15"/>
+
+  <circle cx="160" cy="680" r="5" fill="#e9c46a" opacity="0.22"/>
+  <circle cx="178" cy="698" r="3" fill="#e9c46a" opacity="0.15"/>
+
+  <!-- Plus signs (like in reference) -->
+  <g opacity="0.2" fill="#2a9d8f">
+    <rect x="398" y="260" width="18" height="4" rx="2"/>
+    <rect x="405" y="253" width="4" height="18" rx="2"/>
+  </g>
+  <g opacity="0.15" fill="#2a9d8f">
+    <rect x="1060" y="140" width="14" height="3" rx="1.5"/>
+    <rect x="1066" y="134" width="3" height="14" rx="1.5"/>
+  </g>
+  <g opacity="0.18" fill="#e76f51">
+    <rect x="230" y="740" width="16" height="3.5" rx="1.75"/>
+    <rect x="236.5" y="733.5" width="3.5" height="16" rx="1.75"/>
+  </g>
+  <g opacity="0.15" fill="#4dbdaf">
+    <rect x="1180" y="380" width="12" height="3" rx="1.5"/>
+    <rect x="1185.5" y="374.5" width="3" height="12" rx="1.5"/>
+  </g>
+
+  <!-- Ring outlines (like in reference) -->
+  <circle cx="480" cy="200" r="28" fill="none" stroke="#2a9d8f" stroke-width="2.5" opacity="0.18"/>
+  <circle cx="480" cy="200" r="18" fill="none" stroke="#2a9d8f" stroke-width="1.5" opacity="0.12"/>
+
+  <circle cx="980" cy="760" r="24" fill="none" stroke="#e76f51" stroke-width="2" opacity="0.16"/>
+  <circle cx="980" cy="760" r="14" fill="none" stroke="#e76f51" stroke-width="1.5" opacity="0.1"/>
+
+  <circle cx="140" cy="340" r="20" fill="none" stroke="#4dbdaf" stroke-width="2" opacity="0.18"/>
+
+  <circle cx="1320" cy="460" r="22" fill="none" stroke="#2a9d8f" stroke-width="2" opacity="0.14"/>
+
+  <!-- Very subtle grain overlay rect -->
+  <rect width="1440" height="900" fill="white" opacity="0.03"/>
+</svg>

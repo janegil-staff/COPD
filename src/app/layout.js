@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import TrackVisit from '@/components/TrackVisit.js';
+import TrackVisit from "@/components/TrackVisit.jsx";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,8 +21,16 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <TrackVisit />
-        {children}
+        <div
+          style={{
+            backgroundImage: "url('/background.svg')",
+            backgroundSize: "cover",
+            minHeight: "100vh",
+          }}
+        >
+          <TrackVisit />
+          {children}
+        </div>
       </body>
     </html>
   );

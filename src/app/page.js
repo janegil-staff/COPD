@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 import no from "./messages/no.json";
 import en from "./messages/en.json";
 import nl from "./messages/nl.json";
@@ -13,6 +13,7 @@ import fi from "./messages/fi.json";
 import es from "./messages/es.json";
 import pl from "./messages/pl.json";
 import pt from "./messages/pt.json";
+import { useSecretCode } from "@/hooks/useSecretCode";
 
 const translations = { no, en, nl, fr, de, it, sv, da, fi, es, pl, pt };
 
@@ -36,8 +37,21 @@ const GOOGLE_PLAY_URL = "https://play.google.com";
 
 export default function Home() {
   const [lang, setLang] = useState("no");
-  const [code, setCode] = useState("");
+  const [error, setError] = useState(false);
+  const router = useRouter();
+
   const t = translations[lang];
+  const { input: code, unlocked, handleChange } = useSecretCode();
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    if (unlocked) {
+      router.push("/dashboard");
+    } else {
+      setError(true);
+      setTimeout(() => setError(false), 2000);
+    }
+  };
 
   return (
     <div
@@ -90,7 +104,7 @@ export default function Home() {
             ].map(({ src, alt, lift }) => (
               <div
                 key={src}
-                className="flex-shrink-0 rounded-[20px] overflow-hidden shadow-2xl"
+                className="flex-shrink-0 overflow-hidden shadow-2xl"
                 style={{
                   width: 160,
                   marginBottom: lift ? 24 : 0,
@@ -115,7 +129,7 @@ export default function Home() {
         </div>
 
         {/* RIGHT — import card */}
-        <div className="flex-shrink-0" style={{ width: 400 }}>
+        <div className="w-full min-[600px]:w-[400px] flex-shrink-0">
           <div
             className="rounded-2xl overflow-hidden shadow-lg"
             style={{
@@ -125,8 +139,8 @@ export default function Home() {
               padding: 40,
             }}
           >
-            {/* ── Two half-screenshots fading at the bottom ── */}
-            <div className="relative overflow-hidden " style={{ height: 180 }}>
+            {/* Two half-screenshots fading at the bottom */}
+            <div className="relative overflow-hidden" style={{ height: 180 }}>
               {/* Left screenshot */}
               <div className="overflow-hidden">
                 <img
@@ -158,7 +172,7 @@ export default function Home() {
                 />
               </div>
 
-              {/* Centre seam / divider shadow */}
+              {/* Centre seam */}
               <div
                 className="absolute inset-y-0"
                 style={{
@@ -169,7 +183,7 @@ export default function Home() {
                 }}
               />
 
-              {/* Bottom fade-out gradient */}
+              {/* Bottom fade */}
               <div
                 className="absolute bottom-0 left-0 right-0"
                 style={{
@@ -191,23 +205,33 @@ export default function Home() {
               <input
                 type="text"
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
+                onChange={(e) => {
+                  handleChange(e.target.value);
+                  setError(false);
+                }}
                 placeholder={t.placeholder}
-                className="w-full rounded-lg px-4 py-3 text-sm text-gray-800 mb-3 outline-none transition-all"
+                className="w-full rounded-lg px-4 py-3 text-sm text-gray-800 mb-1 outline-none transition-all"
                 style={{
                   background: "#f4f4f4",
-                  border: "1px solid #ddd",
+                  border: `1px solid ${error ? "#e53e3e" : "#ddd"}`,
                 }}
                 onFocus={(e) => {
-                  e.target.style.borderColor = "#268E86";
+                  e.target.style.borderColor = error ? "#e53e3e" : "#268E86";
                   e.target.style.boxShadow = "0 0 0 3px rgba(38,142,134,0.1)";
                 }}
                 onBlur={(e) => {
-                  e.target.style.borderColor = "#ddd";
+                  e.target.style.borderColor = error ? "#e53e3e" : "#ddd";
                   e.target.style.boxShadow = "none";
                 }}
               />
+              {error && (
+                <p className="text-red-500 text-xs mt-1 mb-2 tracking-wide">
+                  Invalid code
+                </p>
+              )}
+              <div className="mb-3" />
               <button
+                onClick={handleClick}
                 className="w-full py-3 rounded-lg text-white text-sm font-bold tracking-widest uppercase transition-all hover:opacity-90"
                 style={{ background: "#268E86" }}
               >
