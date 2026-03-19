@@ -24,7 +24,14 @@ export default function ImportCard({ t, code, error, setError, handleChange, han
               style={{ width: "200%", height: "auto", display: "block", marginLeft: 0 }}
             />
           </div>
-
+          <div className="absolute top-0 right-0">
+            <Image
+              height={50}
+              width={50}
+              src="/logo.png"
+              alt="App settings"
+            />
+          </div>
           <div className="absolute inset-y-0" style={{ left: "50%", transform: "translateX(-50%)", width: 2, background: "rgba(255,255,255,0.6)" }} />
           <div className="absolute bottom-0 left-0 right-0" style={{ height: 80, background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.95))" }} />
         </div>
