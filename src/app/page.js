@@ -37,15 +37,27 @@ const GOOGLE_PLAY_URL = "https://play.google.com";
 
 export default function Home() {
   const [lang, setLang] = useState("no");
-  const [error, setError] = useState(false);
   const router = useRouter();
-
+   const [error, setError] = useState(false);
   const t = translations[lang];
-  const { input: code, unlocked, handleChange } = useSecretCode();
+  const {
+    input: code,
+    unlocked,
+    loading,
+    handleChange,
+    handleSubmit,
+    lock,
+  } = useSecretCode();
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
-    if (unlocked) {
+    const res = await fetch("/api/verify-code", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code }),
+    });
+    const data = await res.json();
+    if (data.valid) {
       router.push("/dashboard");
     } else {
       setError(true);
@@ -207,7 +219,6 @@ export default function Home() {
                 value={code}
                 onChange={(e) => {
                   handleChange(e.target.value);
-                  setError(false);
                 }}
                 placeholder={t.placeholder}
                 className="w-full rounded-lg px-4 py-3 text-sm text-gray-800 mb-1 outline-none transition-all"

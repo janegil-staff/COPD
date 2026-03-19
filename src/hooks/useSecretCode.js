@@ -1,24 +1,52 @@
 // hooks/useSecretCode.js
 
-import { useState } from 'react';
-
-const SECRET_CODE = '090883';
+import { useState } from "react";
 
 export function useSecretCode() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [unlocked, setUnlocked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  async function handleSubmit() {
+    if (input.length !== 6) {
+      setError(true);
+      return;
+    }
+
+    setLoading(true);
+    setError(false);
+
+    try {
+      const res = await fetch("/api/verify-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: input }),
+      });
+      const data = await res.json();
+
+      if (data.valid) {
+        setUnlocked(true);
+      } else {
+        setError(true);
+        setTimeout(() => setError(false), 2000);
+      }
+    } catch (err) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   function handleChange(value) {
     setInput(value);
-    if (value === SECRET_CODE) {
-      setUnlocked(true);
-    }
+    setError(false);
   }
 
   function lock() {
     setUnlocked(false);
-    setInput('');
+    setInput("");
   }
 
-  return { input, unlocked, handleChange, lock };
+  return { input, unlocked, loading, error, handleChange, handleSubmit, lock };
 }
