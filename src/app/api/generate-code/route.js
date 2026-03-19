@@ -11,7 +11,7 @@ export async function POST(request) {
 
     // Store new code, expires in 10 minutes
     await SecretCode.create({
-      code,
+      code: String(code),
       userId,
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
     });

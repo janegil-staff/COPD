@@ -14,6 +14,7 @@ import es from "./messages/es.json";
 import pl from "./messages/pl.json";
 import pt from "./messages/pt.json";
 import { useSecretCode } from "@/hooks/useSecretCode";
+import Image from "next/image";
 
 const translations = { no, en, nl, fr, de, it, sv, da, fi, es, pl, pt };
 
@@ -38,7 +39,7 @@ const GOOGLE_PLAY_URL = "https://play.google.com";
 export default function Home() {
   const [lang, setLang] = useState("no");
   const router = useRouter();
-   const [error, setError] = useState(false);
+  const [error, setError] = useState(false);
   const t = translations[lang];
   const {
     input: code,
@@ -66,13 +67,7 @@ export default function Home() {
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col relative overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(155deg, #ffffff 0%, #eaf7f6 50%, #cde9e6 100%)",
-      }}
-    >
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
       {/* Background blob */}
       <div
         className="absolute pointer-events-none rounded-full"
@@ -125,7 +120,9 @@ export default function Home() {
                   background: "#1a1a1a",
                 }}
               >
-                <img
+                <Image
+                  height={300}
+                  width={130}
                   src={src}
                   alt={alt}
                   style={{
@@ -155,7 +152,9 @@ export default function Home() {
             <div className="relative overflow-hidden" style={{ height: 180 }}>
               {/* Left screenshot */}
               <div className="overflow-hidden">
-                <img
+                <Image
+                  height={300}
+                  width={130}
                   src="/welcome.png"
                   alt="App home"
                   style={{
@@ -172,7 +171,9 @@ export default function Home() {
                 className="absolute top-0 right-0 overflow-hidden"
                 style={{ width: "50%", height: "100%" }}
               >
-                <img
+                <Image
+                  height={300}
+                  width={130}
                   src="/screen5.png"
                   alt="App settings"
                   style={{

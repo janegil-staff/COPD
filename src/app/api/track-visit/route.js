@@ -1,37 +1,32 @@
-// app/api/track-visit/route.js
+// src/app/api/verify-code/route.js
 
-import { cookies } from 'next/headers';
-import { recordVisit } from '@/lib/pageVisitorHelper.js';
-import dbConnect from '@/lib/dbConnect.js';
+import dbConnect from "@/lib/dbConnect.js";
+import SecretCode from "@/models/SecretCode.js";
+import { recordVisit } from "@/lib/pageVisitorHelper.js";
 
-export async function POST(req) {
+export async function POST(request) {
   try {
     await dbConnect();
+    const { code } = await request.json();
 
-    const { page } = await req.json();
-    if (!page) {
-      return Response.json({ error: 'Missing page' }, { status: 400 });
+    const found = await SecretCode.findOne({
+      code,
+      expiresAt: { $gt: new Date() },
+    });
+
+    if (!found) {
+      return Response.json({ valid: false });
     }
 
-    const cookieStore = await cookies();
-    const cookieName = `visited_${page.replace(/\//g, '_')}`;
-    const hasVisited = cookieStore.has(cookieName);
+    // Delete code after use so it can't be reused
+    await SecretCode.deleteOne({ _id: found._id });
 
-    // Always record the visit — only isUnique changes
-    await recordVisit(page, !hasVisited);
+    // Only track visit on successful login
+    await recordVisit("/dashboard", true);
 
-    const response = Response.json({ success: true });
-
-    if (!hasVisited) {
-      response.headers.set(
-        'Set-Cookie',
-        `${cookieName}=1; Path=/; Max-Age=${60 * 60 * 24 * 30}; HttpOnly; SameSite=Lax`
-      );
-    }
-
-    return response;
+    return Response.json({ valid: true });
   } catch (err) {
-    console.error('[track-visit]', err);
-    return Response.json({ error: 'Internal server error' }, { status: 500 });
+    console.error("[verify-code]", err);
+    return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
