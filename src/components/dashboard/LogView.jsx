@@ -39,50 +39,50 @@ export default function LogView({ t, lang }) {
         </div>
       ) : (
         <table
-          className="w-full"
-          style={{ fontSize: 12, tableLayout: "fixed" }}
+          className="w-full text-[7px] min-[600px]:text-xs"
+          style={{ tableLayout: "fixed" }}
         >
           <thead>
             <tr style={{ borderBottom: "1px solid rgba(38,142,134,0.08)" }}>
               <th
-                className="px-2 py-2 text-left text-gray-400 font-semibold uppercase tracking-wider"
+                className="px-0.5 min-[600px]:px-2 py-2 text-center text-gray-400 font-semibold uppercase tracking-wider text-[6px] min-[600px]:text-xs"
                 style={{ width: "8%" }}
               >
                 Dato
               </th>
               <th
-                className="px-2 py-2 text-center text-gray-400 font-semibold uppercase tracking-wider"
-                style={{ width: "14%" }}
+                className="px-0.5 min-[600px]:px-2 py-2 text-center text-gray-400 font-semibold uppercase tracking-wider text-[6px] min-[600px]:text-xs"
+                style={{ width: "8%" }}
               >
                 {t.avgSymptoms}
               </th>
               <th
-                className="px-2 py-2 text-center text-gray-400 font-semibold uppercase tracking-wider"
-                style={{ width: "14%" }}
+                className="px-0.5 min-[600px]:px-2 py-2 text-center text-gray-400 font-semibold uppercase tracking-wider text-[6px] min-[600px]:text-xs"
+                style={{ width: "8%" }}
               >
                 {t.moderate}
               </th>
               <th
-                className="px-2 py-2 text-center text-gray-400 font-semibold uppercase tracking-wider"
-                style={{ width: "14%" }}
+                className="px-0.5 min-[600px]:px-2 py-2 text-center text-gray-400 font-semibold uppercase tracking-wider text-[6px] min-[600px]:text-xs"
+                style={{ width: "8%" }}
               >
                 {t.serious}
               </th>
               <th
-                className="px-2 py-2 text-center text-gray-400 font-semibold uppercase tracking-wider"
-                style={{ width: "12%" }}
+                className="px-0.5 min-[600px]:px-2 py-2 text-center text-gray-400 font-semibold uppercase tracking-wider text-[6px] min-[600px]:text-xs"
+                style={{ width: "8%" }}
               >
                 {t.activity}
               </th>
               <th
-                className="px-2 py-2 text-center text-gray-400 font-semibold uppercase tracking-wider"
-                style={{ width: "12%" }}
+                className="px-0.5 min-[600px]:px-2 py-2 text-center text-gray-400 font-semibold uppercase tracking-wider text-[6px] min-[600px]:text-xs"
+                style={{ width: "8%" }}
               >
                 {t.medication}
               </th>
               <th
-                className="px-2 py-2 text-right-10 text-gray-400 font-semibold uppercase tracking-wider"
-                style={{ width: "26%" }}
+                className="px-0.5 min-[600px]:px-2 py-2 text-center text-gray-400 font-semibold uppercase tracking-wider text-[6px] min-[600px]:text-xs"
+                style={{ width: "8%" }}
               >
                 {t.notes}
               </th>
