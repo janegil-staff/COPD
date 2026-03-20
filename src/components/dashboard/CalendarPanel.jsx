@@ -137,85 +137,119 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
         <button onClick={nextMonth} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 transition-all" style={{ color: "#268E86", fontSize: 18 }}>›</button>
       </div>
 
-      {/* Day headers */}
-      <div className="grid grid-cols-7 mb-1">
+      {/* Day headers — 8 cols: week number + 7 days */}
+      <div className="grid mb-1" style={{ gridTemplateColumns: "24px repeat(7, 1fr)" }}>
+        <div /> {/* empty corner above week numbers */}
         {days.map((d) => (
           <div key={d} className="text-center py-1 tracking-wider uppercase" style={{ color: "#a0b8b6", fontSize: 10, fontWeight: 600 }}>{d}</div>
         ))}
       </div>
 
-      {/* Calendar grid */}
-      <div className="grid grid-cols-7" style={{ gap: 3 }}>
-        {cells.map((day, i) => {
-          if (!day) return <div key={`e-${i}`} />;
-          const dateStr   = `${viewYear}-${pad(viewMonth + 1)}-${pad(day)}`;
-          const record    = weekMap[dateStr];
-          const isExact   = !!recordMap[dateStr];
-          const c         = CAT_COLOR(record?.cat8);
-          const isSelected = selectedDate === dateStr ||
-            (record && selectedDate === record.date && !recordMap[dateStr]);
-          const isToday   = dateStr === `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+      {/* Calendar grid — 8 cols: week number + 7 day circles */}
+      <div style={{ display: "grid", gridTemplateColumns: "24px repeat(7, 1fr)", gap: 3 }}>
+        {(() => {
+          const rows = [];
+          let i = 0;
+          while (i < cells.length) {
+            const weekCells = cells.slice(i, i + 7);
+            // Calculate ISO week number from the first real day in this row
+            const firstDay = weekCells.find(d => d !== null);
+            let weekNum = null;
+            if (firstDay !== null && firstDay !== undefined) {
+              const d = new Date(viewYear, viewMonth, firstDay);
+              // ISO week: Thursday of current week's year
+              const thu = new Date(d);
+              thu.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 3);
+              const jan4 = new Date(thu.getFullYear(), 0, 4);
+              weekNum = 1 + Math.round((thu - jan4) / 604800000);
+            }
 
-          const showExDot   = show.exacerbation && isExact && (recordMap[dateStr]?.moderateExacerbations || recordMap[dateStr]?.seriousExacerbations);
-          const showNoteDot = show.note     && isExact && recordMap[dateStr]?.note?.trim();
-          const showMedDot  = show.medicine && isExact && recordMap[dateStr]?.medicines?.length > 0;
-          const anyDot      = showExDot || showNoteDot || showMedDot;
-
-          return (
-            <div key={dateStr} className="flex flex-col items-center" style={{ gap: 2 }}>
-              <button
-                onClick={() => record && onDayClick(record)}
-                disabled={!record}
-                className="flex items-center justify-center transition-all hover:scale-110"
-                style={{
-                  width: 32, height: 32,
-                  borderRadius: "50%",
-                  background: isSelected
-                    ? "#268E86"
-                    : record
-                    ? c.bg
-                    : "transparent",
-                  border: isSelected
-                    ? "2px solid #268E86"
-                    : isExact
-                    ? `2px solid ${c.border}`
-                    : record
-                    ? `1px solid ${c.border}`
-                    : isToday
-                    ? "1px solid rgba(38,142,134,0.35)"
-                    : "1px solid transparent",
-                  cursor: record ? "pointer" : "default",
-                  opacity: record && !isExact ? 0.6 : 1,
-                  flexShrink: 0,
-                }}
+            rows.push(
+              // Week number label
+              <div
+                key={`wn-${i}`}
+                className="flex items-start justify-center pt-1"
+                style={{ color: "#b8cccb", fontSize: 9, fontWeight: 600, userSelect: "none" }}
               >
-                <div className="flex flex-col items-center" style={{ gap: 1 }}>
-                  <span style={{
-                    color: isSelected ? "#fff" : record ? c.text : "#c8d8d6",
-                    fontSize: isExact ? 10 : 9,
-                    fontWeight: isExact ? 700 : 400,
-                    lineHeight: 1,
-                  }}>
-                    {day}
-                  </span>
-                  {isExact && show.catScore && (
-                    <span style={{ color: isSelected ? "rgba(255,255,255,0.85)" : c.text, fontSize: 9, fontWeight: 700, lineHeight: 1 }}>
-                      {record.cat8}
-                    </span>
+                {weekNum !== null ? weekNum : ""}
+              </div>
+            );
+
+            // 7 day cells for this row
+            weekCells.forEach((day, j) => {
+              const cellIndex = i + j;
+              if (!day) {
+                rows.push(<div key={`e-${cellIndex}`} />);
+                return;
+              }
+              const dateStr   = `${viewYear}-${pad(viewMonth + 1)}-${pad(day)}`;
+              const record    = weekMap[dateStr];
+              const isExact   = !!recordMap[dateStr];
+              const c         = CAT_COLOR(record?.cat8);
+              const isSelected = selectedDate === dateStr ||
+                (record && selectedDate === record.date && !recordMap[dateStr]);
+              const isToday   = dateStr === `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+
+              const showExDot   = show.exacerbation && isExact && (recordMap[dateStr]?.moderateExacerbations || recordMap[dateStr]?.seriousExacerbations);
+              const showNoteDot = show.note     && isExact && recordMap[dateStr]?.note?.trim();
+              const showMedDot  = show.medicine && isExact && recordMap[dateStr]?.medicines?.length > 0;
+              const anyDot      = showExDot || showNoteDot || showMedDot;
+
+              rows.push(
+                <div key={dateStr} className="flex flex-col items-center" style={{ gap: 2 }}>
+                  <button
+                    onClick={() => record && onDayClick(record)}
+                    disabled={!record}
+                    className="flex items-center justify-center transition-all hover:scale-110"
+                    style={{
+                      width: 32, height: 32,
+                      borderRadius: "50%",
+                      background: isSelected ? "#268E86" : record ? c.bg : "transparent",
+                      border: isSelected
+                        ? "2px solid #268E86"
+                        : isExact
+                        ? `2px solid ${c.border}`
+                        : record
+                        ? `1px solid ${c.border}`
+                        : isToday
+                        ? "1px solid rgba(38,142,134,0.35)"
+                        : "1px solid transparent",
+                      cursor: record ? "pointer" : "default",
+                      opacity: record && !isExact ? 0.6 : 1,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <div className="flex flex-col items-center" style={{ gap: 1 }}>
+                      <span style={{
+                        color: isSelected ? "#fff" : record ? c.text : "#c8d8d6",
+                        fontSize: isExact ? 10 : 9,
+                        fontWeight: isExact ? 700 : 400,
+                        lineHeight: 1,
+                      }}>
+                        {day}
+                      </span>
+                      {isExact && show.catScore && (
+                        <span style={{ color: isSelected ? "rgba(255,255,255,0.85)" : c.text, fontSize: 9, fontWeight: 700, lineHeight: 1 }}>
+                          {record.cat8}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                  {isExact && anyDot && (
+                    <div className="flex gap-0.5">
+                      {showExDot   && <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#ef4444" }} />}
+                      {showNoteDot && <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#8b5cf6" }} />}
+                      {showMedDot  && <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#0ea5e9" }} />}
+                    </div>
                   )}
                 </div>
-              </button>
-              {/* Indicator dots below circle */}
-              {isExact && anyDot && (
-                <div className="flex gap-0.5">
-                  {showExDot   && <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#ef4444" }} />}
-                  {showNoteDot && <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#8b5cf6" }} />}
-                  {showMedDot  && <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#0ea5e9" }} />}
-                </div>
-              )}
-            </div>
-          );
-        })}
+              );
+            });
+
+            i += 7;
+          }
+          return rows;
+        })()}
       </div>
 
       {/* Visibility checkboxes */}
