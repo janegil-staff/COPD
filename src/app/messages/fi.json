@@ -109,5 +109,14 @@
     "Pe",
     "La",
     "Su"
-  ]
+  ],
+  "averageMonthly": "Kuukausikeskiarvo",
+  "showCatScore": "Näytä CAT-pisteet",
+  "showExacerbation": "Näytä paheneminen",
+  "showMedicine": "Näytä lääke",
+  "showNote": "Näytä muistiinpanot",
+  "showActivity": "Näytä aktiviteetti",
+  "showWeight": "Näytä paino",
+  "showIn": "Näytä kalenterissa",
+  "sessionExpiring": "Sinut kirjataan ulos 1 minuutin kuluttua epäaktiivisuuden vuoksi."
 }

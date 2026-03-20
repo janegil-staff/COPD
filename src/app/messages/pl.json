@@ -109,5 +109,14 @@
     "Pt",
     "Sob",
     "Nd"
-  ]
+  ],
+  "averageMonthly": "Średnia miesięczna",
+  "showCatScore": "Pokaż wynik CAT",
+  "showExacerbation": "Pokaż zaostrzenie",
+  "showMedicine": "Pokaż lek",
+  "showNote": "Pokaż notatki",
+  "showActivity": "Pokaż aktywność",
+  "showWeight": "Pokaż wagę",
+  "showIn": "Pokaż w kalendarzu",
+  "sessionExpiring": "Zostaniesz wylogowany za 1 minutę z powodu braku aktywności."
 }

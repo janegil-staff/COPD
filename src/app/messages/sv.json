@@ -109,5 +109,14 @@
     "Fre",
     "Lör",
     "Sön"
-  ]
+  ],
+  "averageMonthly": "Månadsgenomsnitt",
+  "showCatScore": "Visa CAT-poäng",
+  "showExacerbation": "Visa exacerbation",
+  "showMedicine": "Visa medicin",
+  "showNote": "Visa anteckningar",
+  "showActivity": "Visa aktivitet",
+  "showWeight": "Visa vikt",
+  "showIn": "Visa i kalender",
+  "sessionExpiring": "Du loggas ut om 1 minut på grund av inaktivitet."
 }

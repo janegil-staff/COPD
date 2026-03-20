@@ -109,5 +109,14 @@
     "Vie",
     "Sáb",
     "Dom"
-  ]
+  ],
+  "averageMonthly": "Promedio mensual",
+  "showCatScore": "Mostrar puntuación CAT",
+  "showExacerbation": "Mostrar exacerbación",
+  "showMedicine": "Mostrar medicamento",
+  "showNote": "Mostrar notas",
+  "showActivity": "Mostrar actividad",
+  "showWeight": "Mostrar peso",
+  "showIn": "Mostrar en calendario",
+  "sessionExpiring": "Se cerrará su sesión en 1 minuto por inactividad."
 }

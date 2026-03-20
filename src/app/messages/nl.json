@@ -109,5 +109,14 @@
     "Vr",
     "Za",
     "Zo"
-  ]
+  ],
+  "averageMonthly": "Maandelijks gemiddelde",
+  "showCatScore": "Toon CAT-score",
+  "showExacerbation": "Toon exacerbatie",
+  "showMedicine": "Toon medicatie",
+  "showNote": "Toon notities",
+  "showActivity": "Toon activiteit",
+  "showWeight": "Toon gewicht",
+  "showIn": "Toon in kalender",
+  "sessionExpiring": "U wordt over 1 minuut uitgelogd wegens inactiviteit."
 }

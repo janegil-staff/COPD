@@ -109,5 +109,14 @@
     "Fr",
     "Sa",
     "So"
-  ]
+  ],
+  "averageMonthly": "Monatsdurchschnitt",
+  "showCatScore": "CAT-Score anzeigen",
+  "showExacerbation": "Exazerbation anzeigen",
+  "showMedicine": "Medikament anzeigen",
+  "showNote": "Notizen anzeigen",
+  "showActivity": "Aktivität anzeigen",
+  "showWeight": "Gewicht anzeigen",
+  "showIn": "Im Kalender anzeigen",
+  "sessionExpiring": "Sie werden in 1 Minute wegen Inaktivität abgemeldet."
 }

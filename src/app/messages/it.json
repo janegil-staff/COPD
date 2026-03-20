@@ -109,5 +109,14 @@
     "Ven",
     "Sab",
     "Dom"
-  ]
+  ],
+  "averageMonthly": "Media mensile",
+  "showCatScore": "Mostra punteggio CAT",
+  "showExacerbation": "Mostra riacutizzazione",
+  "showMedicine": "Mostra farmaco",
+  "showNote": "Mostra note",
+  "showActivity": "Mostra attività",
+  "showWeight": "Mostra peso",
+  "showIn": "Mostra nel calendario",
+  "sessionExpiring": "Verrai disconnesso tra 1 minuto per inattività."
 }

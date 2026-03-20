@@ -109,5 +109,14 @@
     "Sex",
     "Sáb",
     "Dom"
-  ]
+  ],
+  "averageMonthly": "Média mensal",
+  "showCatScore": "Mostrar pontuação CAT",
+  "showExacerbation": "Mostrar exacerbação",
+  "showMedicine": "Mostrar medicamento",
+  "showNote": "Mostrar notas",
+  "showActivity": "Mostrar atividade",
+  "showWeight": "Mostrar peso",
+  "showIn": "Mostrar no calendário",
+  "sessionExpiring": "Você será desconectado em 1 minuto devido à inatividade."
 }

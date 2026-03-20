@@ -109,5 +109,14 @@
     "Fre",
     "Lør",
     "Søn"
-  ]
+  ],
+  "averageMonthly": "Månedligt gennemsnit",
+  "showCatScore": "Vis CAT-score",
+  "showExacerbation": "Vis eksacerbation",
+  "showMedicine": "Vis medicin",
+  "showNote": "Vis noter",
+  "showActivity": "Vis aktivitet",
+  "showWeight": "Vis vægt",
+  "showIn": "Vis i kalender",
+  "sessionExpiring": "Du bliver logget ud om 1 minut på grund af inaktivitet."
 }

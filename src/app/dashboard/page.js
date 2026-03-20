@@ -30,6 +30,46 @@ export default function Dashboard() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // ── Visibility toggles lifted here so both CalendarPanel and DayDetailDrawer share them ──
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+
+  const TIMEOUT_MS = 10 * 60 * 1000; // 10 min
+  const WARNING_MS = 9 * 60 * 1000; //  9 min — warn 60s before logout
+
+  useEffect(() => {
+    let warnTimer;
+    let logoutTimer;
+
+    const logout = () => {
+      sessionStorage.removeItem("patientData");
+      router.replace("/");
+    };
+
+    const reset = () => {
+      setShowWarning(false);
+      clearTimeout(warnTimer);
+      clearTimeout(logoutTimer);
+      warnTimer = setTimeout(() => setShowWarning(true), WARNING_MS);
+      logoutTimer = setTimeout(logout, TIMEOUT_MS);
+    };
+
+    const events = [
+      "mousemove",
+      "mousedown",
+      "keydown",
+      "touchstart",
+      "scroll",
+    ];
+    events.forEach((e) => window.addEventListener(e, reset, { passive: true }));
+    reset(); // kick off timers on mount
+
+    return () => {
+      clearTimeout(warnTimer);
+      clearTimeout(logoutTimer);
+      events.forEach((e) => window.removeEventListener(e, reset));
+    };
+  }, []);
+
   const [show, setShow] = useState({
     catScore: true,
     exacerbation: true,
@@ -71,9 +111,35 @@ export default function Dashboard() {
         backgroundAttachment: "fixed",
       }}
     >
+      {/* Inactivity warning banner */}
+      {showWarning && (
+        <div
+          className="fixed top-0 left-0 right-0 z-[300] flex items-center justify-between px-6 py-3 text-sm font-semibold"
+          style={{
+            background: "rgba(251,191,36,0.97)",
+            backdropFilter: "blur(8px)",
+            borderBottom: "1px solid rgba(217,119,6,0.4)",
+            color: "#78350f",
+          }}
+        >
+          <span>
+            ⏱{" "}
+            {t.sessionExpiring ??
+              "Du blir logget ut om 1 minutt på grunn av inaktivitet."}
+          </span>
+          <button
+            onClick={() => setShowWarning(false)}
+            className="ml-4 px-3 py-1 rounded-full text-xs font-bold transition-all hover:opacity-80"
+            style={{ background: "rgba(0,0,0,0.1)", color: "#78350f" }}
+          >
+            {t.current ?? "OK"}
+          </button>
+        </div>
+      )}
+
       {/* Top bar */}
       <header
-        className="flex items-center justify-between px-8 py-4"
+        className="flex items-center justify-between px-8 py-4 relative z-[100]"
         style={{
           background: "rgba(255,255,255,0.6)",
           backdropFilter: "blur(14px)",
@@ -96,7 +162,8 @@ export default function Dashboard() {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        {/* Desktop nav — hidden on small screens */}
+        <div className="hidden sm:flex items-center gap-2">
           <button
             onClick={() => router.push("/summary")}
             className="text-xs px-4 py-1.5 rounded-full font-semibold transition-all hover:opacity-80"
@@ -133,6 +200,100 @@ export default function Dashboard() {
           >
             {t.logout}
           </button>
+        </div>
+
+        {/* Mobile nav — hamburger dropdown */}
+        <div className="relative sm:hidden">
+          <button
+            onClick={() => setMenuOpen((o) => !o)}
+            className="w-9 h-9 flex flex-col items-center justify-center gap-1.5 rounded-full transition-all"
+            style={{
+              background: menuOpen
+                ? "rgba(38,142,134,0.15)"
+                : "rgba(38,142,134,0.08)",
+              border: "1px solid rgba(38,142,134,0.25)",
+            }}
+          >
+            <span
+              className="block w-4 h-0.5 rounded-full transition-all"
+              style={{
+                background: "#268E86",
+                transform: menuOpen ? "translateY(4px) rotate(45deg)" : "none",
+              }}
+            />
+            <span
+              className="block w-4 h-0.5 rounded-full transition-all"
+              style={{ background: "#268E86", opacity: menuOpen ? 0 : 1 }}
+            />
+            <span
+              className="block w-4 h-0.5 rounded-full transition-all"
+              style={{
+                background: "#268E86",
+                transform: menuOpen
+                  ? "translateY(-8px) rotate(-45deg)"
+                  : "none",
+              }}
+            />
+          </button>
+
+          {menuOpen && (
+            <>
+              {/* Backdrop to close on outside click */}
+              <div
+                className="fixed inset-0 z-[199]"
+                onClick={() => setMenuOpen(false)}
+              />
+              {/* Dropdown */}
+              <div
+                className="absolute right-0 top-11 z-[200] rounded-2xl overflow-hidden flex flex-col"
+                style={{
+                  background: "rgba(255,255,255,0.97)",
+                  backdropFilter: "blur(16px)",
+                  border: "1px solid rgba(38,142,134,0.2)",
+                  boxShadow: "0 8px 32px rgba(38,142,134,0.15)",
+                  minWidth: 160,
+                }}
+              >
+                {[
+                  {
+                    label: t.summaryTab,
+                    action: () => {
+                      setMenuOpen(false);
+                      router.push("/summary");
+                    },
+                  },
+                  {
+                    label: t.logTab,
+                    action: () => {
+                      setMenuOpen(false);
+                      router.push("/log");
+                    },
+                  },
+                  {
+                    label: t.logout,
+                    action: () => {
+                      setMenuOpen(false);
+                      sessionStorage.removeItem("patientData");
+                      router.replace("/");
+                    },
+                    danger: true,
+                  },
+                ].map(({ label, action, danger }) => (
+                  <button
+                    key={label}
+                    onClick={action}
+                    className="text-left px-5 py-3 text-sm font-semibold transition-all hover:bg-black/5"
+                    style={{
+                      color: danger ? "#b91c1c" : "#268E86",
+                      borderBottom: "1px solid rgba(38,142,134,0.08)",
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </header>
 
@@ -171,7 +332,12 @@ export default function Dashboard() {
             top: 24,
           }}
         >
-          <Sidebar t={t} patient={patient} selectedRecord={selectedRecord} />
+          <Sidebar
+            t={t}
+            patient={patient}
+            selectedRecord={selectedRecord}
+            show={show}
+          />
         </div>
       </main>
 

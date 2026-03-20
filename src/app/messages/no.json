@@ -117,5 +117,6 @@
   "showNote": "Vis notater",
   "showActivity": "Vis aktivitet",
   "showWeight": "Vis vekt",
-  "showIn": "Vis i kalender"
+  "showIn": "Vis i kalender",
+  "sessionExpiring": "Du blir logget ut om 1 minutt på grunn av inaktivitet."
 }

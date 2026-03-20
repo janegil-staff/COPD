@@ -109,5 +109,14 @@
     "Ven",
     "Sam",
     "Dim"
-  ]
+  ],
+  "averageMonthly": "Moyenne mensuelle",
+  "showCatScore": "Afficher score CAT",
+  "showExacerbation": "Afficher exacerbation",
+  "showMedicine": "Afficher médicament",
+  "showNote": "Afficher notes",
+  "showActivity": "Afficher activité",
+  "showWeight": "Afficher poids",
+  "showIn": "Afficher dans le calendrier",
+  "sessionExpiring": "Vous serez déconnecté dans 1 minute en raison d'inactivité."
 }
