@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLang } from "@/context/LangContext";
+import { useInactivityLogout } from "@/hooks/useInactivityLogout";
+import InactivityWarning from "@/components/InactivityWarning";
 import CalendarPanel from "@/components/dashboard/CalendarPanel";
 import Sidebar from "@/components/dashboard/Sidebar";
 import DayDetailDrawer from "@/components/dashboard/DayDetailDrawer";
@@ -29,46 +31,8 @@ export default function Dashboard() {
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // ── Visibility toggles lifted here so both CalendarPanel and DayDetailDrawer share them ──
+  const { showWarning, dismissWarning } = useInactivityLogout();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showWarning, setShowWarning] = useState(false);
-
-  const TIMEOUT_MS = 10 * 60 * 1000; // 10 min
-  const WARNING_MS = 9 * 60 * 1000; //  9 min — warn 60s before logout
-
-  useEffect(() => {
-    let warnTimer;
-    let logoutTimer;
-
-    const logout = () => {
-      sessionStorage.removeItem("patientData");
-      router.replace("/");
-    };
-
-    const reset = () => {
-      setShowWarning(false);
-      clearTimeout(warnTimer);
-      clearTimeout(logoutTimer);
-      warnTimer = setTimeout(() => setShowWarning(true), WARNING_MS);
-      logoutTimer = setTimeout(logout, TIMEOUT_MS);
-    };
-
-    const events = [
-      "mousemove",
-      "mousedown",
-      "keydown",
-      "touchstart",
-      "scroll",
-    ];
-    events.forEach((e) => window.addEventListener(e, reset, { passive: true }));
-    reset(); // kick off timers on mount
-
-    return () => {
-      clearTimeout(warnTimer);
-      clearTimeout(logoutTimer);
-      events.forEach((e) => window.removeEventListener(e, reset));
-    };
-  }, []);
 
   const [show, setShow] = useState({
     catScore: true,
@@ -111,31 +75,7 @@ export default function Dashboard() {
         backgroundAttachment: "fixed",
       }}
     >
-      {/* Inactivity warning banner */}
-      {showWarning && (
-        <div
-          className="fixed top-0 left-0 right-0 z-[300] flex items-center justify-between px-6 py-3 text-sm font-semibold"
-          style={{
-            background: "rgba(251,191,36,0.97)",
-            backdropFilter: "blur(8px)",
-            borderBottom: "1px solid rgba(217,119,6,0.4)",
-            color: "#78350f",
-          }}
-        >
-          <span>
-            ⏱{" "}
-            {t.sessionExpiring ??
-              "Du blir logget ut om 1 minutt på grunn av inaktivitet."}
-          </span>
-          <button
-            onClick={() => setShowWarning(false)}
-            className="ml-4 px-3 py-1 rounded-full text-xs font-bold transition-all hover:opacity-80"
-            style={{ background: "rgba(0,0,0,0.1)", color: "#78350f" }}
-          >
-            {t.current ?? "OK"}
-          </button>
-        </div>
-      )}
+      <InactivityWarning show={showWarning} onDismiss={dismissWarning} t={t} />
 
       {/* Top bar */}
       <header

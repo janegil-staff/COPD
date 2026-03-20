@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 
 const CAT_COLOR = (score) => {
   if (score === null || score === undefined)
@@ -34,11 +34,20 @@ function Checkbox({ checked, onChange, label, color }) {
       >
         {checked && (
           <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
-            <path d="M1 3.5L3.5 6L8 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M1 3.5L3.5 6L8 1"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         )}
       </div>
-      <span className="text-xs font-medium" style={{ color: checked ? "#1a3a38" : "#a0b8b6" }}>
+      <span
+        className="text-xs font-medium"
+        style={{ color: checked ? "#1a3a38" : "#a0b8b6" }}
+      >
         {label}
       </span>
     </label>
@@ -46,35 +55,64 @@ function Checkbox({ checked, onChange, label, color }) {
 }
 
 // show and onToggleShow come from page.js (lifted state)
-export default function CalendarPanel({ t, records, medicines, onDayClick, selectedDate, show, onToggleShow }) {
+export default function CalendarPanel({
+  t,
+  records,
+  medicines,
+  onDayClick,
+  selectedDate,
+  show,
+  onToggleShow,
+}) {
   const recordMap = useMemo(() => {
     const map = {};
-    (records || []).forEach((r) => { map[r.date] = r; });
+    (records || []).forEach((r) => {
+      map[r.date] = r;
+    });
     return map;
   }, [records]);
 
   const now = new Date();
   const [viewYear, setViewYear] = useState(() => {
-    if (records?.length) return parseInt(records[records.length - 1].date.slice(0, 4));
+    if (records?.length)
+      return parseInt(records[records.length - 1].date.slice(0, 4));
     return now.getFullYear();
   });
   const [viewMonth, setViewMonth] = useState(() => {
-    if (records?.length) return parseInt(records[records.length - 1].date.slice(5, 7)) - 1;
+    if (records?.length)
+      return parseInt(records[records.length - 1].date.slice(5, 7)) - 1;
     return now.getMonth();
   });
 
-  const cells  = buildCalendar(viewYear, viewMonth);
-  const pad    = (n) => String(n).padStart(2, "0");
-  const months = t.months ?? ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  const days   = t.days   ?? ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const cells = buildCalendar(viewYear, viewMonth);
+  const pad = (n) => String(n).padStart(2, "0");
+  const months = t.months ?? [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const days = t.days ?? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const prevMonth = () => {
-    if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); }
-    else setViewMonth(m => m - 1);
+    if (viewMonth === 0) {
+      setViewMonth(11);
+      setViewYear((y) => y - 1);
+    } else setViewMonth((m) => m - 1);
   };
   const nextMonth = () => {
-    if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); }
-    else setViewMonth(m => m + 1);
+    if (viewMonth === 11) {
+      setViewMonth(0);
+      setViewYear((y) => y + 1);
+    } else setViewMonth((m) => m + 1);
   };
 
   const monthRecords = Object.entries(recordMap)
@@ -82,38 +120,64 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
     .map(([, r]) => r);
 
   const counts = {
-    low:           monthRecords.filter(r => r.cat8 <= 10).length,
-    medium:        monthRecords.filter(r => r.cat8 > 10 && r.cat8 <= 20).length,
-    high:          monthRecords.filter(r => r.cat8 > 20 && r.cat8 <= 30).length,
-    veryHigh:      monthRecords.filter(r => r.cat8 > 30).length,
-    exacerbations: monthRecords.filter(r => r.moderateExacerbations || r.seriousExacerbations).length,
-    filled:        monthRecords.length,
+    low: monthRecords.filter((r) => r.cat8 <= 10).length,
+    medium: monthRecords.filter((r) => r.cat8 > 10 && r.cat8 <= 20).length,
+    high: monthRecords.filter((r) => r.cat8 > 20 && r.cat8 <= 30).length,
+    veryHigh: monthRecords.filter((r) => r.cat8 > 30).length,
+    exacerbations: monthRecords.filter(
+      (r) => r.moderateExacerbations || r.seriousExacerbations,
+    ).length,
+    filled: monthRecords.length,
   };
 
   const checkboxes = [
-    { key: "catScore",     label: t.showCatScore,     color: "#268E86" },
+    { key: "catScore", label: t.showCatScore, color: "#268E86" },
     { key: "exacerbation", label: t.showExacerbation, color: "#ef4444" },
-    { key: "medicine",     label: t.showMedicine,     color: "#0ea5e9" },
-    { key: "note",         label: t.showNote,         color: "#8b5cf6" },
-    { key: "activity",     label: t.showActivity,     color: "#0f8a6a" },
-    { key: "weight",       label: t.showWeight,       color: "#a16200" },
+    { key: "medicine", label: t.showMedicine, color: "#0ea5e9" },
+    { key: "note", label: t.showNote, color: "#8b5cf6" },
+    { key: "activity", label: t.showActivity, color: "#0f8a6a" },
+    { key: "weight", label: t.showWeight, color: "#a16200" },
   ];
 
   return (
     <div>
       {/* Month navigation */}
       <div className="flex items-center justify-between mb-6">
-        <button onClick={prevMonth} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 transition-all" style={{ color: "#268E86", fontSize: 20 }}>‹</button>
-        <h2 className="text-xl font-bold tracking-wide" style={{ color: "#1a3a38", fontFamily: "'Playfair Display', Georgia, serif" }}>
+        <button
+          onClick={prevMonth}
+          className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 transition-all"
+          style={{ color: "#268E86", fontSize: 20 }}
+        >
+          ‹
+        </button>
+        <h2
+          className="text-xl font-bold tracking-wide"
+          style={{
+            color: "#1a3a38",
+            fontFamily: "'Playfair Display', Georgia, serif",
+          }}
+        >
           {months[viewMonth]} {viewYear}
         </h2>
-        <button onClick={nextMonth} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 transition-all" style={{ color: "#268E86", fontSize: 20 }}>›</button>
+        <button
+          onClick={nextMonth}
+          className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 transition-all"
+          style={{ color: "#268E86", fontSize: 20 }}
+        >
+          ›
+        </button>
       </div>
 
       {/* Day headers */}
       <div className="grid grid-cols-7 mb-1">
         {days.map((d) => (
-          <div key={d} className="text-center text-xs font-semibold py-2 tracking-wider uppercase" style={{ color: "#a0b8b6" }}>{d}</div>
+          <div
+            key={d}
+            className="text-center text-xs font-semibold py-2 tracking-wider uppercase"
+            style={{ color: "#a0b8b6" }}
+          >
+            {d}
+          </div>
         ))}
       </div>
 
@@ -121,18 +185,23 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
       <div className="grid grid-cols-7 gap-1">
         {cells.map((day, i) => {
           if (!day) return <div key={`e-${i}`} />;
-          const dateStr    = `${viewYear}-${pad(viewMonth + 1)}-${pad(day)}`;
-          const record     = recordMap[dateStr];
-          const c          = CAT_COLOR(record?.cat8);
+          const dateStr = `${viewYear}-${pad(viewMonth + 1)}-${pad(day)}`;
+          const record = recordMap[dateStr];
+          const c = CAT_COLOR(record?.cat8);
           const isSelected = selectedDate === dateStr;
-          const isToday    = dateStr === `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+          const isToday =
+            dateStr ===
+            `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 
-          const showExDot  = show.exacerbation && (record?.moderateExacerbations || record?.seriousExacerbations);
-          const showNoteDot = show.note        && record?.note?.trim();
-          const showMedDot  = show.medicine    && record?.medicines?.length > 0;
-          const showActDot  = show.activity    && record?.physicalActivity > 0;
-          const showWtDot   = show.weight      && record?.weight != null;
-          const anyDot      = showExDot || showNoteDot || showMedDot || showActDot || showWtDot;
+          const showExDot =
+            show.exacerbation &&
+            (record?.moderateExacerbations || record?.seriousExacerbations);
+          const showNoteDot = show.note && record?.note?.trim();
+          const showMedDot = show.medicine && record?.medicines?.length > 0;
+          const showActDot = show.activity && record?.physicalActivity > 0;
+          const showWtDot = show.weight && record?.weight != null;
+          const anyDot =
+            showExDot || showNoteDot || showMedDot || showActDot || showWtDot;
 
           return (
             <button
@@ -143,29 +212,76 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
               style={{
                 aspectRatio: "1",
                 minHeight: 54,
-                background: isSelected ? "#268E86" : record ? c.bg : "transparent",
-                border: isSelected ? "2px solid #268E86"
-                  : isToday && !record ? "1.5px solid rgba(38,142,134,0.4)"
-                  : record ? `1px solid ${c.border}` : "1px solid transparent",
+                background: isSelected
+                  ? "#268E86"
+                  : record
+                    ? c.bg
+                    : "transparent",
+                border: isSelected
+                  ? "2px solid #268E86"
+                  : isToday && !record
+                    ? "1.5px solid rgba(38,142,134,0.4)"
+                    : record
+                      ? `1px solid ${c.border}`
+                      : "1px solid transparent",
                 cursor: record ? "pointer" : "default",
-                boxShadow: isSelected ? "0 2px 12px rgba(38,142,134,0.25)" : "none",
+                boxShadow: isSelected
+                  ? "0 2px 12px rgba(38,142,134,0.25)"
+                  : "none",
               }}
             >
-              <span className="text-xs font-semibold leading-none" style={{ color: isSelected ? "#fff" : record ? c.text : "#c8d8d6", fontSize: 12 }}>
+              <span
+                className="text-xs font-semibold leading-none"
+                style={{
+                  color: isSelected ? "#fff" : record ? c.text : "#c8d8d6",
+                  fontSize: 12,
+                }}
+              >
                 {day}
               </span>
               {record && show.catScore && (
-                <span className="font-bold leading-none mt-0.5" style={{ color: isSelected ? "rgba(255,255,255,0.9)" : c.text, fontSize: 15 }}>
+                <span
+                  className="font-bold leading-none mt-0.5"
+                  style={{
+                    color: isSelected ? "rgba(255,255,255,0.9)" : c.text,
+                    fontSize: 15,
+                  }}
+                >
                   {record.cat8}
                 </span>
               )}
               {record && anyDot && (
                 <div className="flex gap-0.5 mt-0.5">
-                  {showExDot   && <div className="w-1 h-1 rounded-full" style={{ background: isSelected ? "#fff" : "#ef4444" }} />}
-                  {showNoteDot && <div className="w-1 h-1 rounded-full" style={{ background: isSelected ? "#fff" : "#8b5cf6" }} />}
-                  {showMedDot  && <div className="w-1 h-1 rounded-full" style={{ background: isSelected ? "#fff" : "#0ea5e9" }} />}
-                  {showActDot  && <div className="w-1 h-1 rounded-full" style={{ background: isSelected ? "#fff" : "#0f8a6a" }} />}
-                  {showWtDot   && <div className="w-1 h-1 rounded-full" style={{ background: isSelected ? "#fff" : "#a16200" }} />}
+                  {showExDot && (
+                    <div
+                      className="w-1 h-1 rounded-full"
+                      style={{ background: isSelected ? "#fff" : "#ef4444" }}
+                    />
+                  )}
+                  {showNoteDot && (
+                    <div
+                      className="w-1 h-1 rounded-full"
+                      style={{ background: isSelected ? "#fff" : "#8b5cf6" }}
+                    />
+                  )}
+                  {showMedDot && (
+                    <div
+                      className="w-1 h-1 rounded-full"
+                      style={{ background: isSelected ? "#fff" : "#0ea5e9" }}
+                    />
+                  )}
+                  {showActDot && (
+                    <div
+                      className="w-1 h-1 rounded-full"
+                      style={{ background: isSelected ? "#fff" : "#0f8a6a" }}
+                    />
+                  )}
+                  {showWtDot && (
+                    <div
+                      className="w-1 h-1 rounded-full"
+                      style={{ background: isSelected ? "#fff" : "#a16200" }}
+                    />
+                  )}
                 </div>
               )}
             </button>
@@ -176,9 +292,15 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
       {/* Visibility checkboxes */}
       <div
         className="mt-4 rounded-xl px-4 py-3"
-        style={{ background: "rgba(38,142,134,0.03)", border: "1px solid rgba(38,142,134,0.1)" }}
+        style={{
+          background: "rgba(38,142,134,0.03)",
+          border: "1px solid rgba(38,142,134,0.1)",
+        }}
       >
-        <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: "#7a9a98" }}>
+        <p
+          className="text-xs font-semibold tracking-widest uppercase mb-3"
+          style={{ color: "#7a9a98" }}
+        >
           {t.showIn}
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2.5">
@@ -198,74 +320,173 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
       <div className="flex flex-wrap gap-4 mt-3">
         {[
           show.exacerbation && ["#ef4444", t.exacerbation],
-          show.note         && ["#8b5cf6", t.notes],
-          show.medicine     && ["#0ea5e9", t.medication],
-          show.activity     && ["#0f8a6a", t.physicalActivity],
-          show.weight       && ["#a16200", t.weight],
-        ].filter(Boolean).map(([color, label]) => (
-          <div key={label} className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full" style={{ background: color }} />
-            <span className="text-xs" style={{ color: "#7a9a98" }}>{label}</span>
-          </div>
-        ))}
+          show.note && ["#8b5cf6", t.notes],
+          show.medicine && ["#0ea5e9", t.medication],
+          show.activity && ["#0f8a6a", t.physicalActivity],
+          show.weight && ["#a16200", t.weight],
+        ]
+          .filter(Boolean)
+          .map(([color, label]) => (
+            <div key={label} className="flex items-center gap-1.5">
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{ background: color }}
+              />
+              <span className="text-xs" style={{ color: "#7a9a98" }}>
+                {label}
+              </span>
+            </div>
+          ))}
       </div>
 
       {/* Monthly summary */}
-      <div className="mt-5 rounded-xl p-4 grid grid-cols-2 gap-3" style={{ background: "rgba(38,142,134,0.05)", border: "1px solid rgba(38,142,134,0.12)" }}>
-        <p className="col-span-2 text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "#268E86" }}>
+      <div
+        className="mt-5 rounded-xl p-4 grid grid-cols-2 gap-3"
+        style={{
+          background: "rgba(38,142,134,0.05)",
+          border: "1px solid rgba(38,142,134,0.12)",
+        }}
+      >
+        <p
+          className="col-span-2 text-xs font-semibold tracking-widest uppercase mb-1"
+          style={{ color: "#268E86" }}
+        >
           {t.monthlySummary}
         </p>
         {[
-          [t.filledDays,     counts.filled,         "#268E86"],
-          [t.exacerbation,   counts.exacerbations,  "#ef4444"],
-          [t.lowImpact,      counts.low,             "#0f8a6a"],
-          [t.mediumImpact,   counts.medium,          "#a16200"],
-          [t.highImpact,     counts.high,            "#c05400"],
-          [t.veryHighImpact, counts.veryHigh,        "#b91c1c"],
+          [t.filledDays, counts.filled, "#268E86"],
+          [t.exacerbation, counts.exacerbations, "#ef4444"],
+          [t.lowImpact, counts.low, "#0f8a6a"],
+          [t.mediumImpact, counts.medium, "#a16200"],
+          [t.highImpact, counts.high, "#c05400"],
+          [t.veryHighImpact, counts.veryHigh, "#b91c1c"],
         ].map(([label, val, color]) => (
           <div key={label} className="flex items-center justify-between">
-            <span className="text-xs" style={{ color: "#7a9a98" }}>{label}</span>
-            <span className="text-sm font-bold" style={{ color }}>{val}</span>
+            <span className="text-xs" style={{ color: "#7a9a98" }}>
+              {label}
+            </span>
+            <span className="text-sm font-bold" style={{ color }}>
+              {val}
+            </span>
           </div>
         ))}
       </div>
 
-      {/* All records list */}
+      {/* All records list — infinite scroll */}
       {records?.length > 0 && (
-        <div className="mt-6">
-          <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: "#a0b8b6" }}>
-            {t.allRecords}
-          </p>
-          <div className="space-y-1.5">
-            {[...records].reverse().map((r) => {
-              const c = CAT_COLOR(r.cat8);
-              const isActive = selectedDate === r.date;
-              return (
-                <button
-                  key={r.date}
-                  onClick={() => onDayClick(r)}
-                  className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all hover:shadow-sm"
-                  style={{
-                    background: isActive ? "rgba(38,142,134,0.08)" : "rgba(38,142,134,0.03)",
-                    border: `1px solid ${isActive ? "rgba(38,142,134,0.3)" : "rgba(38,142,134,0.1)"}`,
-                  }}
-                >
-                  <span className="text-sm font-medium" style={{ color: "#4a7a78" }}>{r.date}</span>
-                  <div className="flex items-center gap-3">
-                    {show.weight   && r.weight != null       && <span className="text-xs" style={{ color: "#a0b8b6" }}>⚖ {r.weight} kg</span>}
-                    {show.activity && r.physicalActivity > 0 && <span className="text-xs" style={{ color: "#a0b8b6" }}>🚶 {r.physicalActivity} min</span>}
-                    {show.catScore && (
-                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full" style={{ background: c.bg, color: c.text, border: `1px solid ${c.border}` }}>
-                        {t.catScore} {r.cat8}
-                      </span>
-                    )}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <RecordsList
+          records={records}
+          selectedDate={selectedDate}
+          onDayClick={onDayClick}
+          show={show}
+          t={t}
+        />
       )}
+    </div>
+  );
+}
+
+const PAGE_SIZE = 20;
+
+function RecordsList({ records, selectedDate, onDayClick, show, t }) {
+  const sorted = useMemo(() => [...records].reverse(), [records]);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const sentinelRef = useRef(null);
+
+  // Reset when records change (e.g. new patient loaded)
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [records]);
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount((prev) => prev + PAGE_SIZE);
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const visible = sorted.slice(0, visibleCount);
+  const hasMore = visibleCount < sorted.length;
+
+  return (
+    <div className="mt-6">
+      <p
+        className="text-xs font-semibold tracking-widest uppercase mb-3"
+        style={{ color: "#a0b8b6" }}
+      >
+        {t.allRecords}
+      </p>
+      <div className="space-y-1.5">
+        {visible.map((r) => {
+          const c = CAT_COLOR(r.cat8);
+          const isActive = selectedDate === r.date;
+          return (
+            <button
+              key={r.date}
+              onClick={() => onDayClick(r)}
+              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all hover:shadow-sm"
+              style={{
+                background: isActive
+                  ? "rgba(38,142,134,0.08)"
+                  : "rgba(38,142,134,0.03)",
+                border: `1px solid ${isActive ? "rgba(38,142,134,0.3)" : "rgba(38,142,134,0.1)"}`,
+              }}
+            >
+              <span
+                className="text-sm font-medium"
+                style={{ color: "#4a7a78" }}
+              >
+                {r.date}
+              </span>
+              <div className="flex items-center gap-3">
+                {show.weight && r.weight != null && (
+                  <span className="text-xs" style={{ color: "#a0b8b6" }}>
+                    ⚖ {r.weight} kg
+                  </span>
+                )}
+                {show.activity && r.physicalActivity > 0 && (
+                  <span className="text-xs" style={{ color: "#a0b8b6" }}>
+                    🚶 {r.physicalActivity} min
+                  </span>
+                )}
+                {show.catScore && (
+                  <span
+                    className="text-xs font-bold px-2.5 py-0.5 rounded-full"
+                    style={{
+                      background: c.bg,
+                      color: c.text,
+                      border: `1px solid ${c.border}`,
+                    }}
+                  >
+                    {t.catScore} {r.cat8}
+                  </span>
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Sentinel */}
+      <div ref={sentinelRef} className="py-2 text-center">
+        {hasMore ? (
+          <p className="text-xs" style={{ color: "#a0b8b6" }}>
+            {visible.length} / {sorted.length} {t.entries}
+          </p>
+        ) : sorted.length > PAGE_SIZE ? (
+          <p className="text-xs" style={{ color: "#c8dedd" }}>
+            ✓ {sorted.length} {t.entries}
+          </p>
+        ) : null}
+      </div>
     </div>
   );
 }
