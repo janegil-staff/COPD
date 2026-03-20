@@ -37,7 +37,7 @@
   "back": "← Volver",
   "avslutt": "Cerrar sesión",
   "now": "ahora",
-  "month": "Mes",
+  "month": "Fecha",
   "scoreHeader": "Puntuación*",
   "symptomLog": "Registro de síntomas",
   "invalidCode": "Código inválido",
@@ -118,5 +118,8 @@
   "showActivity": "Mostrar actividad",
   "showWeight": "Mostrar peso",
   "showIn": "Mostrar en calendario",
-  "sessionExpiring": "Se cerrará su sesión en 1 minuto por inactividad."
+  "sessionExpiring": "Se cerrará su sesión en 1 minuto por inactividad.",
+  "downloadPdf": "Descargar PDF",
+  "reportDate": "Fecha del informe",
+  "reportTitle": "Informe de síntomas"
 }

@@ -37,7 +37,7 @@
   "back": "← Wstecz",
   "avslutt": "Wyloguj",
   "now": "teraz",
-  "month": "Miesiąc",
+  "month": "Data",
   "scoreHeader": "Wynik*",
   "symptomLog": "Dziennik objawów",
   "invalidCode": "Nieprawidłowy kod",
@@ -118,5 +118,8 @@
   "showActivity": "Pokaż aktywność",
   "showWeight": "Pokaż wagę",
   "showIn": "Pokaż w kalendarzu",
-  "sessionExpiring": "Zostaniesz wylogowany za 1 minutę z powodu braku aktywności."
+  "sessionExpiring": "Zostaniesz wylogowany za 1 minutę z powodu braku aktywności.",
+  "downloadPdf": "Pobierz PDF",
+  "reportDate": "Data raportu",
+  "reportTitle": "Raport objawów"
 }

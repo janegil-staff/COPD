@@ -12,7 +12,7 @@
   "calendarTab": "Calendar",
   "summaryTab": "Summary",
   "logTab": "Log",
-  "patientSummary": "Patient summary",
+  "patientSummary": "Patient Summary",
   "lastFourMonths": "Last 4 months",
   "daysWithSymptoms": "days with symptoms",
   "acuteMedication": "Acute medication used on",
@@ -37,9 +37,9 @@
   "back": "← Back",
   "avslutt": "Sign out",
   "now": "now",
-  "month": "Month",
+  "month": "Date",
   "scoreHeader": "Score*",
-  "symptomLog": "Symptom log",
+  "symptomLog": "Symptom Log",
   "invalidCode": "Invalid code",
   "current": "now",
   "male": "Male",
@@ -118,5 +118,8 @@
   "showActivity": "Show activity",
   "showWeight": "Show weight",
   "showIn": "Show in calendar",
-  "sessionExpiring": "You will be logged out in 1 minute due to inactivity."
+  "sessionExpiring": "You will be logged out in 1 minute due to inactivity.",
+  "downloadPdf": "Download PDF",
+  "reportDate": "Report date",
+  "reportTitle": "Symptom Report"
 }

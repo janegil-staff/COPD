@@ -37,7 +37,7 @@
   "back": "← Zurück",
   "avslutt": "Abmelden",
   "now": "jetzt",
-  "month": "Monat",
+  "month": "Datum",
   "scoreHeader": "Score*",
   "symptomLog": "Symptomprotokoll",
   "invalidCode": "Ungültiger Code",
@@ -118,5 +118,8 @@
   "showActivity": "Aktivität anzeigen",
   "showWeight": "Gewicht anzeigen",
   "showIn": "Im Kalender anzeigen",
-  "sessionExpiring": "Sie werden in 1 Minute wegen Inaktivität abgemeldet."
+  "sessionExpiring": "Sie werden in 1 Minute wegen Inaktivität abgemeldet.",
+  "downloadPdf": "PDF herunterladen",
+  "reportDate": "Berichtsdatum",
+  "reportTitle": "Symptombericht"
 }

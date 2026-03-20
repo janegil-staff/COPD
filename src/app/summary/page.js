@@ -14,8 +14,6 @@ import fi from "@/app/messages/fi.json";
 import es from "@/app/messages/es.json";
 import pl from "@/app/messages/pl.json";
 import pt from "@/app/messages/pt.json";
-import { useInactivityLogout } from "@/hooks/useInactivityLogout";
-import InactivityWarning from "@/components/InactivityWarning";
 
 const translations = { no, en, nl, fr, de, it, sv, da, fi, es, pl, pt };
 
@@ -193,7 +191,6 @@ export default function SummaryPage() {
   const router = useRouter();
   const { lang } = useLang();
   const t = translations[lang] ?? translations.en;
-  const { showWarning, dismissWarning } = useInactivityLogout();
   const [patient, setPatient] = useState(null);
 
   useEffect(() => {
@@ -319,8 +316,6 @@ export default function SummaryPage() {
         backgroundAttachment: "fixed",
       }}
     >
-      <InactivityWarning show={showWarning} onDismiss={dismissWarning} t={t} />
-
       {/* Header */}
       <header
         className="flex items-center justify-between px-6 py-4"

@@ -37,7 +37,7 @@
   "back": "← Tillbaka",
   "avslutt": "Logga ut",
   "now": "nu",
-  "month": "Månad",
+  "month": "Datum",
   "scoreHeader": "Poäng*",
   "symptomLog": "Symtomlogg",
   "invalidCode": "Ogiltig kod",
@@ -118,5 +118,8 @@
   "showActivity": "Visa aktivitet",
   "showWeight": "Visa vikt",
   "showIn": "Visa i kalender",
-  "sessionExpiring": "Du loggas ut om 1 minut på grund av inaktivitet."
+  "sessionExpiring": "Du loggas ut om 1 minut på grund av inaktivitet.",
+  "downloadPdf": "Ladda ner PDF",
+  "reportDate": "Rapportdatum",
+  "reportTitle": "Symtomrapport"
 }

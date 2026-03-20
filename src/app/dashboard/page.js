@@ -2,8 +2,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLang } from "@/context/LangContext";
-import { useInactivityLogout } from "@/hooks/useInactivityLogout";
-import InactivityWarning from "@/components/InactivityWarning";
 import CalendarPanel from "@/components/dashboard/CalendarPanel";
 import Sidebar from "@/components/dashboard/Sidebar";
 import DayDetailDrawer from "@/components/dashboard/DayDetailDrawer";
@@ -30,8 +28,6 @@ export default function Dashboard() {
   const [patient, setPatient] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const { showWarning, dismissWarning } = useInactivityLogout();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [show, setShow] = useState({
@@ -75,8 +71,6 @@ export default function Dashboard() {
         backgroundAttachment: "fixed",
       }}
     >
-      <InactivityWarning show={showWarning} onDismiss={dismissWarning} t={t} />
-
       {/* Top bar */}
       <header
         className="flex items-center justify-between px-8 py-4 relative z-[100]"

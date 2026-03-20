@@ -37,7 +37,7 @@
   "back": "← Indietro",
   "avslutt": "Disconnettersi",
   "now": "ora",
-  "month": "Mese",
+  "month": "Data",
   "scoreHeader": "Punteggio*",
   "symptomLog": "Registro sintomi",
   "invalidCode": "Codice non valido",
@@ -118,5 +118,8 @@
   "showActivity": "Mostra attività",
   "showWeight": "Mostra peso",
   "showIn": "Mostra nel calendario",
-  "sessionExpiring": "Verrai disconnesso tra 1 minuto per inattività."
+  "sessionExpiring": "Verrai disconnesso tra 1 minuto per inattività.",
+  "downloadPdf": "Scarica PDF",
+  "reportDate": "Data del rapporto",
+  "reportTitle": "Rapporto sintomi"
 }

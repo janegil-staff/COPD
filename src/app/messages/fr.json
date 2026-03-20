@@ -37,7 +37,7 @@
   "back": "← Retour",
   "avslutt": "Déconnexion",
   "now": "maintenant",
-  "month": "Mois",
+  "month": "Date",
   "scoreHeader": "Score*",
   "symptomLog": "Journal des symptômes",
   "invalidCode": "Code invalide",
@@ -118,5 +118,8 @@
   "showActivity": "Afficher activité",
   "showWeight": "Afficher poids",
   "showIn": "Afficher dans le calendrier",
-  "sessionExpiring": "Vous serez déconnecté dans 1 minute en raison d'inactivité."
+  "sessionExpiring": "Vous serez déconnecté dans 1 minute en raison d'inactivité.",
+  "downloadPdf": "Télécharger PDF",
+  "reportDate": "Date du rapport",
+  "reportTitle": "Rapport de symptômes"
 }

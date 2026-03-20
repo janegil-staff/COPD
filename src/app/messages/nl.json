@@ -37,7 +37,7 @@
   "back": "← Terug",
   "avslutt": "Uitloggen",
   "now": "nu",
-  "month": "Maand",
+  "month": "Datum",
   "scoreHeader": "Score*",
   "symptomLog": "Symptoomlogboek",
   "invalidCode": "Ongeldige code",
@@ -118,5 +118,8 @@
   "showActivity": "Toon activiteit",
   "showWeight": "Toon gewicht",
   "showIn": "Toon in kalender",
-  "sessionExpiring": "U wordt over 1 minuut uitgelogd wegens inactiviteit."
+  "sessionExpiring": "U wordt over 1 minuut uitgelogd wegens inactiviteit.",
+  "downloadPdf": "PDF downloaden",
+  "reportDate": "Rapportdatum",
+  "reportTitle": "Symptoomrapport"
 }

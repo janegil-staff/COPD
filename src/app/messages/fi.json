@@ -37,7 +37,7 @@
   "back": "← Takaisin",
   "avslutt": "Kirjaudu ulos",
   "now": "nyt",
-  "month": "Kuukausi",
+  "month": "Päivämäärä",
   "scoreHeader": "Pisteet*",
   "symptomLog": "Oireloki",
   "invalidCode": "Virheellinen koodi",
@@ -118,5 +118,8 @@
   "showActivity": "Näytä aktiviteetti",
   "showWeight": "Näytä paino",
   "showIn": "Näytä kalenterissa",
-  "sessionExpiring": "Sinut kirjataan ulos 1 minuutin kuluttua epäaktiivisuuden vuoksi."
+  "sessionExpiring": "Sinut kirjataan ulos 1 minuutin kuluttua epäaktiivisuuden vuoksi.",
+  "downloadPdf": "Lataa PDF",
+  "reportDate": "Raporttipäivä",
+  "reportTitle": "Oireraportti"
 }

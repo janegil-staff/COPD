@@ -440,12 +440,38 @@ function RecordsList({ records, selectedDate, onDayClick, show, t }) {
                 border: `1px solid ${isActive ? "rgba(38,142,134,0.3)" : "rgba(38,142,134,0.1)"}`,
               }}
             >
-              <span
-                className="text-sm font-medium"
-                style={{ color: "#4a7a78" }}
-              >
-                {r.date}
-              </span>
+              {/* Left: date + indicator dots */}
+              <div className="flex items-center gap-2">
+                <span
+                  className="text-sm font-medium"
+                  style={{ color: "#4a7a78" }}
+                >
+                  {r.date}
+                </span>
+                <div className="flex gap-1">
+                  {show.exacerbation &&
+                    (r.moderateExacerbations || r.seriousExacerbations) && (
+                      <div
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ background: "#ef4444" }}
+                      />
+                    )}
+                  {show.note && r.note?.trim() && (
+                    <div
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: "#8b5cf6" }}
+                    />
+                  )}
+                  {show.medicine && r.medicines?.length > 0 && (
+                    <div
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: "#0ea5e9" }}
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Right: weight, activity, CAT badge */}
               <div className="flex items-center gap-3">
                 {show.weight && r.weight != null && (
                   <span className="text-xs" style={{ color: "#a0b8b6" }}>
