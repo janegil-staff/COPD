@@ -42,12 +42,10 @@
   "symptomLog": "Symptomlogg",
   "invalidCode": "Ugyldig kode",
   "current": "nå",
-
   "male": "Mann",
   "female": "Kvinne",
   "registrations": "registreringer",
   "logout": "Avslutt",
-
   "catScore": "CAT-score",
   "catSubScores": "CAT delscorer",
   "allRecords": "Alle registreringer",
@@ -60,7 +58,6 @@
   "low": "Lav",
   "high": "Høy",
   "veryHigh": "Svært høy",
-
   "medicines": "Medisiner",
   "medicineSatisfaction": "Medisintilfredshet",
   "anxiety": "Angst",
@@ -75,7 +72,6 @@
   "from": "fra",
   "stopped": "sluttet",
   "timesUsed": "× brukt",
-
   "cat8Cough": "Hoste",
   "cat8Phlegm": "Slim",
   "cat8ChestTightness": "Brysttetthet",
@@ -84,7 +80,6 @@
   "cat8Confidence": "Trygghet",
   "cat8Sleep": "Søvn",
   "cat8Energy": "Energi",
-
   "gad7feelingNervous": "Nervøs / urolig",
   "gad7noWorryingControl": "Bekymringskontroll",
   "gad7worrying": "Overdreven bekymring",
@@ -92,7 +87,35 @@
   "gad7restless": "Rastløs",
   "gad7easilyAnnoyed": "Lett irritert",
   "gad7afraid": "Frykt for noe forferdelig",
-
-  "months": ["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"],
-  "days": ["Man","Tir","Ons","Tor","Fre","Lør","Søn"]
+  "months": [
+    "Januar",
+    "Februar",
+    "Mars",
+    "April",
+    "Mai",
+    "Juni",
+    "Juli",
+    "August",
+    "September",
+    "Oktober",
+    "November",
+    "Desember"
+  ],
+  "days": [
+    "Man",
+    "Tir",
+    "Ons",
+    "Tor",
+    "Fre",
+    "Lør",
+    "Søn"
+  ],
+  "averageMonthly": "Månedlig gjennomsnitt",
+  "showCatScore": "Vis CAT-score",
+  "showExacerbation": "Vis eksaserbasjon",
+  "showMedicine": "Vis medisin",
+  "showNote": "Vis notater",
+  "showActivity": "Vis aktivitet",
+  "showWeight": "Vis vekt",
+  "showIn": "Vis i kalender"
 }

@@ -52,10 +52,12 @@ function Bar({ value, max = 5 }) {
   );
 }
 
-function DrawerContent({ t, record, catColor, usedMedicines, onClose }) {
+function DrawerContent({ t, record, catColor, usedMedicines, onClose, show }) {
+  // CAT sub-scores are always shown — they're the core clinical data.
+  // Everything else respects the show toggles.
   return (
     <div className="p-6">
-      {/* Header */}
+      {/* Header — date + CAT badge always visible */}
       <div className="flex items-start justify-between mb-5">
         <div>
           <p
@@ -75,16 +77,18 @@ function DrawerContent({ t, record, catColor, usedMedicines, onClose }) {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div
-            className="text-2xl font-black px-4 py-2 rounded-xl"
-            style={{
-              background: catColor.bg,
-              color: catColor.text,
-              border: `1px solid ${catColor.border}`,
-            }}
-          >
-            {record.cat8}
-          </div>
+          {show.catScore && (
+            <div
+              className="text-2xl font-black px-4 py-2 rounded-xl"
+              style={{
+                background: catColor.bg,
+                color: catColor.text,
+                border: `1px solid ${catColor.border}`,
+              }}
+            >
+              {record.cat8}
+            </div>
+          )}
           <button
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 transition-all"
@@ -96,21 +100,25 @@ function DrawerContent({ t, record, catColor, usedMedicines, onClose }) {
       </div>
 
       {/* Exacerbation alert */}
-      {(record.moderateExacerbations || record.seriousExacerbations) && (
-        <div
-          className="flex items-center gap-2 px-3 py-2.5 rounded-xl mb-4"
-          style={{ background: "#fff0f0", border: "1px solid #fca5a5" }}
-        >
-          <span>⚠️</span>
-          <span className="text-sm font-semibold" style={{ color: "#b91c1c" }}>
-            {record.seriousExacerbations
-              ? t.seriousExacerbation
-              : t.moderateExacerbation}
-          </span>
-        </div>
-      )}
+      {show.exacerbation &&
+        (record.moderateExacerbations || record.seriousExacerbations) && (
+          <div
+            className="flex items-center gap-2 px-3 py-2.5 rounded-xl mb-4"
+            style={{ background: "#fff0f0", border: "1px solid #fca5a5" }}
+          >
+            <span>⚠️</span>
+            <span
+              className="text-sm font-semibold"
+              style={{ color: "#b91c1c" }}
+            >
+              {record.seriousExacerbations
+                ? t.seriousExacerbation
+                : t.moderateExacerbation}
+            </span>
+          </div>
+        )}
 
-      {/* CAT sub-scores */}
+      {/* CAT sub-scores — always shown, they are the clinical detail */}
       <p
         className="text-xs font-semibold tracking-widest uppercase mb-3"
         style={{ color: "#a0b8b6" }}
@@ -131,44 +139,46 @@ function DrawerContent({ t, record, catColor, usedMedicines, onClose }) {
         ))}
       </div>
 
-      {/* Stats */}
-      <div className="flex gap-3 mb-5">
-        {record.weight != null && (
-          <div
-            className="flex-1 px-3 py-2.5 rounded-xl text-center"
-            style={{
-              background: "rgba(38,142,134,0.06)",
-              border: "1px solid rgba(38,142,134,0.15)",
-            }}
-          >
-            <p className="text-xs mb-0.5" style={{ color: "#7a9a98" }}>
-              {t.weight}
-            </p>
-            <p className="text-sm font-bold" style={{ color: "#268E86" }}>
-              {record.weight} kg
-            </p>
-          </div>
-        )}
-        {record.physicalActivity != null && (
-          <div
-            className="flex-1 px-3 py-2.5 rounded-xl text-center"
-            style={{
-              background: "rgba(38,142,134,0.06)",
-              border: "1px solid rgba(38,142,134,0.15)",
-            }}
-          >
-            <p className="text-xs mb-0.5" style={{ color: "#7a9a98" }}>
-              {t.physicalActivity}
-            </p>
-            <p className="text-sm font-bold" style={{ color: "#268E86" }}>
-              {record.physicalActivity} min
-            </p>
-          </div>
-        )}
-      </div>
+      {/* Weight + Activity stats */}
+      {(show.weight || show.activity) && (
+        <div className="flex gap-3 mb-5">
+          {show.weight && record.weight != null && (
+            <div
+              className="flex-1 px-3 py-2.5 rounded-xl text-center"
+              style={{
+                background: "rgba(38,142,134,0.06)",
+                border: "1px solid rgba(38,142,134,0.15)",
+              }}
+            >
+              <p className="text-xs mb-0.5" style={{ color: "#7a9a98" }}>
+                {t.weight}
+              </p>
+              <p className="text-sm font-bold" style={{ color: "#268E86" }}>
+                {record.weight} kg
+              </p>
+            </div>
+          )}
+          {show.activity && record.physicalActivity != null && (
+            <div
+              className="flex-1 px-3 py-2.5 rounded-xl text-center"
+              style={{
+                background: "rgba(38,142,134,0.06)",
+                border: "1px solid rgba(38,142,134,0.15)",
+              }}
+            >
+              <p className="text-xs mb-0.5" style={{ color: "#7a9a98" }}>
+                {t.physicalActivity}
+              </p>
+              <p className="text-sm font-bold" style={{ color: "#268E86" }}>
+                {record.physicalActivity} min
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Medicines used */}
-      {usedMedicines.length > 0 && (
+      {show.medicine && usedMedicines.length > 0 && (
         <>
           <p
             className="text-xs font-semibold tracking-widest uppercase mb-3"
@@ -220,7 +230,7 @@ function DrawerContent({ t, record, catColor, usedMedicines, onClose }) {
       )}
 
       {/* Note */}
-      {record.note?.trim() && (
+      {show.note && record.note?.trim() && (
         <>
           <p
             className="text-xs font-semibold tracking-widest uppercase mb-2"
@@ -249,6 +259,7 @@ export default function DayDetailDrawer({
   record,
   medicines,
   userMedicines,
+  show,
 }) {
   useEffect(() => {
     if (!open) return;
@@ -282,9 +293,15 @@ export default function DayDetailDrawer({
     transition: "opacity 0.2s ease",
   };
 
+  const sharedDrawerStyle = {
+    background: "rgba(255,255,255,0.97)",
+    backdropFilter: "blur(16px)",
+    border: "1px solid rgba(38,142,134,0.25)",
+  };
+
   return (
     <>
-      {/* Mobile */}
+      {/* Mobile — slide up */}
       <div
         className="fixed inset-0 z-40 lg:hidden"
         style={backdropStyle}
@@ -293,9 +310,7 @@ export default function DayDetailDrawer({
       <div
         className="fixed bottom-0 left-0 right-0 z-50 lg:hidden rounded-t-2xl overflow-y-auto"
         style={{
-          background: "rgba(255,255,255,0.97)",
-          backdropFilter: "blur(16px)",
-          border: "1px solid rgba(38,142,134,0.2)",
+          ...sharedDrawerStyle,
           maxHeight: "82vh",
           transform: open ? "translateY(0)" : "translateY(100%)",
           transition: "transform 0.3s cubic-bezier(0.32,0.72,0,1)",
@@ -311,10 +326,11 @@ export default function DayDetailDrawer({
           catColor={catColor}
           usedMedicines={usedMedicines}
           onClose={onClose}
+          show={show}
         />
       </div>
 
-      {/* Desktop modal */}
+      {/* Desktop — centred modal */}
       <div
         className="hidden lg:block fixed inset-0 z-40"
         style={backdropStyle}
@@ -323,9 +339,7 @@ export default function DayDetailDrawer({
       <div
         className="hidden lg:block fixed top-1/2 left-1/2 z-50 rounded-2xl overflow-y-auto shadow-2xl"
         style={{
-          background: "rgba(255,255,255,0.97)",
-          backdropFilter: "blur(16px)",
-          border: "1px solid rgba(38,142,134,0.25)",
+          ...sharedDrawerStyle,
           width: 440,
           maxHeight: "82vh",
           transform: open
@@ -342,6 +356,7 @@ export default function DayDetailDrawer({
           catColor={catColor}
           usedMedicines={usedMedicines}
           onClose={onClose}
+          show={show}
         />
       </div>
     </>

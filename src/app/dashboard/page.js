@@ -29,6 +29,18 @@ export default function Dashboard() {
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
+  // ── Visibility toggles lifted here so both CalendarPanel and DayDetailDrawer share them ──
+  const [show, setShow] = useState({
+    catScore: true,
+    exacerbation: true,
+    medicine: true,
+    note: true,
+    activity: true,
+    weight: true,
+  });
+  const toggleShow = (key) =>
+    setShow((prev) => ({ ...prev, [key]: !prev[key] }));
+
   useEffect(() => {
     const raw = sessionStorage.getItem("patientData");
     if (!raw) {
@@ -84,25 +96,48 @@ export default function Dashboard() {
             </p>
           </div>
         </div>
-        <button
-          onClick={() => {
-            sessionStorage.removeItem("patientData");
-            router.replace("/");
-          }}
-          className="text-xs px-4 py-1.5 rounded-full font-semibold transition-all hover:opacity-80"
-          style={{
-            background: "rgba(38,142,134,0.12)",
-            color: "#268E86",
-            border: "1px solid rgba(38,142,134,0.3)",
-          }}
-        >
-          {t.logout}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => router.push("/summary")}
+            className="text-xs px-4 py-1.5 rounded-full font-semibold transition-all hover:opacity-80"
+            style={{
+              background: "rgba(38,142,134,0.08)",
+              color: "#268E86",
+              border: "1px solid rgba(38,142,134,0.2)",
+            }}
+          >
+            {t.summaryTab}
+          </button>
+          <button
+            onClick={() => router.push("/log")}
+            className="text-xs px-4 py-1.5 rounded-full font-semibold transition-all hover:opacity-80"
+            style={{
+              background: "rgba(38,142,134,0.08)",
+              color: "#268E86",
+              border: "1px solid rgba(38,142,134,0.2)",
+            }}
+          >
+            {t.logTab}
+          </button>
+          <button
+            onClick={() => {
+              sessionStorage.removeItem("patientData");
+              router.replace("/");
+            }}
+            className="text-xs px-4 py-1.5 rounded-full font-semibold transition-all hover:opacity-80"
+            style={{
+              background: "rgba(38,142,134,0.12)",
+              color: "#268E86",
+              border: "1px solid rgba(38,142,134,0.3)",
+            }}
+          >
+            {t.logout}
+          </button>
+        </div>
       </header>
 
       {/* Body */}
       <main className="flex-1 flex items-start justify-center px-4 py-8 gap-6">
-        {/* Calendar card */}
         <div
           className="rounded-2xl shadow-xl w-full"
           style={{
@@ -119,10 +154,11 @@ export default function Dashboard() {
             medicines={patient.medicines}
             onDayClick={handleDayClick}
             selectedDate={selectedRecord?.date}
+            show={show}
+            onToggleShow={toggleShow}
           />
         </div>
 
-        {/* Sidebar */}
         <div
           className="hidden lg:block rounded-2xl shadow-xl overflow-y-auto flex-shrink-0"
           style={{
@@ -146,6 +182,7 @@ export default function Dashboard() {
         record={selectedRecord}
         medicines={patient.medicines}
         userMedicines={patient.userMedicines}
+        show={show}
       />
     </div>
   );

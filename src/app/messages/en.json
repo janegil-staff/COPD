@@ -42,12 +42,10 @@
   "symptomLog": "Symptom log",
   "invalidCode": "Invalid code",
   "current": "now",
-
   "male": "Male",
   "female": "Female",
   "registrations": "registrations",
   "logout": "Sign out",
-
   "catScore": "CAT score",
   "catSubScores": "CAT sub-scores",
   "allRecords": "All records",
@@ -60,7 +58,6 @@
   "low": "Low",
   "high": "High",
   "veryHigh": "Very high",
-
   "medicines": "Medicines",
   "medicineSatisfaction": "Medicine satisfaction",
   "anxiety": "Anxiety",
@@ -75,7 +72,6 @@
   "from": "from",
   "stopped": "stopped",
   "timesUsed": "× used",
-
   "cat8Cough": "Cough",
   "cat8Phlegm": "Phlegm",
   "cat8ChestTightness": "Chest tightness",
@@ -84,7 +80,6 @@
   "cat8Confidence": "Confidence",
   "cat8Sleep": "Sleep",
   "cat8Energy": "Energy",
-
   "gad7feelingNervous": "Feeling nervous",
   "gad7noWorryingControl": "Worry control",
   "gad7worrying": "Excessive worrying",
@@ -92,7 +87,35 @@
   "gad7restless": "Restless",
   "gad7easilyAnnoyed": "Easily annoyed",
   "gad7afraid": "Feeling afraid",
-
-  "months": ["January","February","March","April","May","June","July","August","September","October","November","December"],
-  "days": ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+  "months": [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ],
+  "days": [
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat",
+    "Sun"
+  ],
+  "averageMonthly": "Monthly average",
+  "showCatScore": "Show CAT score",
+  "showExacerbation": "Show exacerbation",
+  "showMedicine": "Show medicine",
+  "showNote": "Show notes",
+  "showActivity": "Show activity",
+  "showWeight": "Show weight",
+  "showIn": "Show in calendar"
 }
