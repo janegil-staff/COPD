@@ -46,7 +46,7 @@ function ScoreBar({ value, max = 5 }) {
   );
 }
 
-function RecordRow({ record, medicines, userMedicines, t, expanded, onToggle }) {
+function RecordRow({ record, medicines, userMedicines, t, expanded, onToggle, isFirst }) {
   const c = CAT_COLOR(record.cat8);
 
   const usedMeds = (record.medicines ?? []).map((id, i) => {
@@ -64,12 +64,12 @@ function RecordRow({ record, medicines, userMedicines, t, expanded, onToggle }) 
 
   return (
     <div
-      className="rounded-xl overflow-hidden transition-all"
+      className="overflow-hidden transition-all"
       style={{
         background: expanded ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.88)",
         backdropFilter: "blur(12px)",
-        border: `1px solid ${expanded ? "rgba(38,142,134,0.3)" : "rgba(38,142,134,0.1)"}`,
-        boxShadow: expanded ? "0 4px 20px rgba(38,142,134,0.08)" : "none",
+        borderTop: isFirst ? "none" : "1px solid #c8c8c8",
+        boxShadow: expanded ? "0 2px 12px rgba(38,142,134,0.06)" : "none",
       }}
     >
       {/* ── Compact row — matches dashboard style ── */}
@@ -367,14 +367,23 @@ export default function LogPage() {
       </div>
 
       {/* Records */}
-      <main className="flex-1 px-6 py-4 max-w-3xl mx-auto w-full space-y-3 pb-12">
+      <main className="flex-1 px-6 py-4 max-w-3xl mx-auto w-full pb-12">
         {filtered.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-sm" style={{ color: "#a0b8b6" }}>{t.noEntries}</p>
           </div>
         ) : (
           <>
-            {visible.map((record) => (
+            <div
+              className="rounded-xl overflow-hidden"
+              style={{
+                background: "rgba(255,255,255,0.88)",
+                backdropFilter: "blur(12px)",
+                border: "1px solid rgba(38,142,134,0.14)",
+                boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
+              }}
+            >
+            {visible.map((record, idx) => (
               <RecordRow
                 key={record.date}
                 record={record}
@@ -383,8 +392,11 @@ export default function LogPage() {
                 t={t}
                 expanded={expandedDate === record.date}
                 onToggle={() => setExpandedDate(expandedDate === record.date ? null : record.date)}
+                isFirst={idx === 0}
               />
             ))}
+
+            </div>
 
             {/* Sentinel — watched by IntersectionObserver */}
             <div ref={sentinelRef} className="py-2 text-center">
