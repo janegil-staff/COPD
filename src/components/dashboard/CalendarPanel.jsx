@@ -53,6 +53,33 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
     return map;
   }, [records]);
 
+  // weekMap: for every date, find the record whose Mon–Sun week contains it
+  const weekMap = useMemo(() => {
+    const map = {};
+
+    // Parse YYYY-MM-DD safely without timezone shifting
+    const parseLocal = (dateStr) => {
+      const [y, m, d] = dateStr.split("-").map(Number);
+      return new Date(y, m - 1, d); // local midnight — no UTC offset
+    };
+
+    const toKey = (d) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+
+    (records || []).forEach((r) => {
+      const d   = parseLocal(r.date);
+      const dow = (d.getDay() + 6) % 7; // 0=Mon … 6=Sun
+      for (let i = 0; i < 7; i++) {
+        const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + i);
+        const key = toKey(dd);
+        if (!map[key]) map[key] = r;
+      }
+    });
+    // Exact record dates always win
+    (records || []).forEach((r) => { map[r.date] = r; });
+    return map;
+  }, [records]);
+
   const now = new Date();
   const [viewYear, setViewYear] = useState(() => {
     if (records?.length) return parseInt(records[records.length - 1].date.slice(0, 4));
@@ -102,70 +129,84 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
   return (
     <div>
       {/* Month navigation */}
-      <div className="flex items-center justify-between mb-6">
-        <button onClick={prevMonth} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 transition-all" style={{ color: "#268E86", fontSize: 20 }}>‹</button>
-        <h2 className="text-xl font-bold tracking-wide" style={{ color: "#1a3a38", fontFamily: "'Playfair Display', Georgia, serif" }}>
+      <div className="flex items-center justify-between mb-4">
+        <button onClick={prevMonth} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 transition-all" style={{ color: "#268E86", fontSize: 18 }}>‹</button>
+        <h2 className="text-lg font-bold tracking-wide" style={{ color: "#1a3a38", fontFamily: "'Playfair Display', Georgia, serif" }}>
           {months[viewMonth]} {viewYear}
         </h2>
-        <button onClick={nextMonth} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 transition-all" style={{ color: "#268E86", fontSize: 20 }}>›</button>
+        <button onClick={nextMonth} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 transition-all" style={{ color: "#268E86", fontSize: 18 }}>›</button>
       </div>
 
       {/* Day headers */}
       <div className="grid grid-cols-7 mb-1">
         {days.map((d) => (
-          <div key={d} className="text-center text-xs font-semibold py-2 tracking-wider uppercase" style={{ color: "#a0b8b6" }}>{d}</div>
+          <div key={d} className="text-center py-1 tracking-wider uppercase" style={{ color: "#a0b8b6", fontSize: 10, fontWeight: 600 }}>{d}</div>
         ))}
       </div>
 
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7" style={{ gap: 2 }}>
         {cells.map((day, i) => {
           if (!day) return <div key={`e-${i}`} />;
-          const dateStr    = `${viewYear}-${pad(viewMonth + 1)}-${pad(day)}`;
-          const record     = recordMap[dateStr];
-          const c          = CAT_COLOR(record?.cat8);
-          const isSelected = selectedDate === dateStr;
-          const isToday    = dateStr === `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+          const dateStr   = `${viewYear}-${pad(viewMonth + 1)}-${pad(day)}`;
+          const record    = weekMap[dateStr];   // record for this day's week
+          const isExact   = !!recordMap[dateStr]; // exact filing date
+          const c         = CAT_COLOR(record?.cat8);
+          const isSelected = selectedDate === dateStr ||
+            (record && selectedDate === record.date && !recordMap[dateStr]);
+          const isToday   = dateStr === `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
 
-          const showExDot  = show.exacerbation && (record?.moderateExacerbations || record?.seriousExacerbations);
-          const showNoteDot = show.note        && record?.note?.trim();
-          const showMedDot  = show.medicine    && record?.medicines?.length > 0;
-          const showActDot  = show.activity    && record?.physicalActivity > 0;
-          const showWtDot   = show.weight      && record?.weight != null;
-          const anyDot      = showExDot || showNoteDot || showMedDot || showActDot || showWtDot;
+          const showExDot   = show.exacerbation && isExact && (recordMap[dateStr]?.moderateExacerbations || recordMap[dateStr]?.seriousExacerbations);
+          const showNoteDot = show.note     && isExact && recordMap[dateStr]?.note?.trim();
+          const showMedDot  = show.medicine && isExact && recordMap[dateStr]?.medicines?.length > 0;
+          const anyDot      = showExDot || showNoteDot || showMedDot;
 
           return (
             <button
               key={dateStr}
               onClick={() => record && onDayClick(record)}
               disabled={!record}
-              className="relative flex flex-col items-center justify-center rounded-xl transition-all"
+              className="relative flex flex-col items-center justify-center transition-all"
               style={{
                 aspectRatio: "1",
-                minHeight: 54,
-                background: isSelected ? "#268E86" : record ? c.bg : "transparent",
-                border: isSelected ? "2px solid #268E86"
-                  : isToday && !record ? "1.5px solid rgba(38,142,134,0.4)"
-                  : record ? `1px solid ${c.border}` : "1px solid transparent",
+                minHeight: 34,
+                borderRadius: 6,
+                background: isSelected
+                  ? "#268E86"
+                  : record
+                  ? c.bg
+                  : "transparent",
+                border: isSelected
+                  ? "2px solid #268E86"
+                  : isExact
+                  ? `1.5px solid ${c.border}`
+                  : record
+                  ? `1px solid ${c.border}`
+                  : isToday
+                  ? "1px solid rgba(38,142,134,0.35)"
+                  : "none",
                 cursor: record ? "pointer" : "default",
-                boxShadow: isSelected ? "0 2px 12px rgba(38,142,134,0.25)" : "none",
+                opacity: record && !isExact ? 0.65 : 1,
               }}
             >
-              <span className="text-xs font-semibold leading-none" style={{ color: isSelected ? "#fff" : record ? c.text : "#c8d8d6", fontSize: 12 }}>
+              <span style={{
+                color: isSelected ? "#fff" : record ? c.text : "#c8d8d6",
+                fontSize: isExact ? 11 : 10,
+                fontWeight: isExact ? 700 : 400,
+                lineHeight: 1,
+              }}>
                 {day}
               </span>
-              {record && show.catScore && (
-                <span className="font-bold leading-none mt-0.5" style={{ color: isSelected ? "rgba(255,255,255,0.9)" : c.text, fontSize: 15 }}>
+              {isExact && show.catScore && (
+                <span style={{ color: isSelected ? "rgba(255,255,255,0.9)" : c.text, fontSize: 11, fontWeight: 700, lineHeight: 1, marginTop: 1 }}>
                   {record.cat8}
                 </span>
               )}
-              {record && anyDot && (
-                <div className="flex gap-0.5 mt-0.5">
-                  {showExDot   && <div className="w-1 h-1 rounded-full" style={{ background: isSelected ? "#fff" : "#ef4444" }} />}
-                  {showNoteDot && <div className="w-1 h-1 rounded-full" style={{ background: isSelected ? "#fff" : "#8b5cf6" }} />}
-                  {showMedDot  && <div className="w-1 h-1 rounded-full" style={{ background: isSelected ? "#fff" : "#0ea5e9" }} />}
-                  {showActDot  && <div className="w-1 h-1 rounded-full" style={{ background: isSelected ? "#fff" : "#0f8a6a" }} />}
-                  {showWtDot   && <div className="w-1 h-1 rounded-full" style={{ background: isSelected ? "#fff" : "#a16200" }} />}
+              {isExact && anyDot && (
+                <div className="flex gap-0.5" style={{ marginTop: 1 }}>
+                  {showExDot   && <div style={{ width: 3, height: 3, borderRadius: "50%", background: isSelected ? "#fff" : "#ef4444" }} />}
+                  {showNoteDot && <div style={{ width: 3, height: 3, borderRadius: "50%", background: isSelected ? "#fff" : "#8b5cf6" }} />}
+                  {showMedDot  && <div style={{ width: 3, height: 3, borderRadius: "50%", background: isSelected ? "#fff" : "#0ea5e9" }} />}
                 </div>
               )}
             </button>
