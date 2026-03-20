@@ -186,8 +186,7 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
               const record    = weekMap[dateStr];
               const isExact   = !!recordMap[dateStr];
               const c         = CAT_COLOR(record?.cat8);
-              const isSelected = selectedDate === dateStr ||
-                (record && selectedDate === record.date && !recordMap[dateStr]);
+              const isSelected = selectedDate === record?.date;
               const isToday   = dateStr === `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
 
               const showExDot   = show.exacerbation && isExact && (recordMap[dateStr]?.moderateExacerbations || recordMap[dateStr]?.seriousExacerbations);
@@ -360,6 +359,14 @@ function RecordsList({ records, selectedDate, onDayClick, show, t }) {
         {visible.map((r) => {
           const c = CAT_COLOR(r.cat8);
           const isActive = selectedDate === r.date;
+
+          // ISO week number
+          const d   = new Date(r.date);
+          const thu = new Date(d);
+          thu.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 3);
+          const jan4 = new Date(thu.getFullYear(), 0, 4);
+          const weekNum = 1 + Math.round((thu - jan4) / 604800000);
+
           return (
             <button
               key={r.date}
@@ -370,8 +377,14 @@ function RecordsList({ records, selectedDate, onDayClick, show, t }) {
                 border: `1px solid ${isActive ? "rgba(38,142,134,0.3)" : "rgba(38,142,134,0.1)"}`,
               }}
             >
-              {/* Left: date + indicator dots */}
-              <div className="flex items-center gap-1.5">
+              {/* Left: week number + date + indicator dots */}
+              <div className="flex items-center gap-2">
+                <span
+                  className="font-bold tabular-nums flex-shrink-0"
+                  style={{ color: "#b8cccb", fontSize: 10, minWidth: 20 }}
+                >
+                  W{weekNum}
+                </span>
                 <span className="text-xs sm:text-sm font-medium" style={{ color: "#4a7a78" }}>{r.date}</span>
                 <div className="flex gap-0.5 sm:gap-1">
                   {show.exacerbation && (r.moderateExacerbations || r.seriousExacerbations) && (

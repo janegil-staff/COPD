@@ -77,8 +77,20 @@ function RecordRow({ record, medicines, userMedicines, t, expanded, onToggle, is
         onClick={onToggle}
         className="w-full flex items-center justify-between px-4 py-3 text-left transition-all hover:bg-black/[0.015]"
       >
-        {/* Left: date + dots */}
+        {/* Left: week + date + dots */}
         <div className="flex items-center gap-2.5 min-w-0">
+          {(() => {
+            const d   = new Date(record.date);
+            const thu = new Date(d);
+            thu.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 3);
+            const jan4 = new Date(thu.getFullYear(), 0, 4);
+            const wn   = 1 + Math.round((thu - jan4) / 604800000);
+            return (
+              <span className="font-bold tabular-nums shrink-0" style={{ color: "#b8cccb", fontSize: 10, minWidth: 22 }}>
+                W{wn}
+              </span>
+            );
+          })()}
           <span className="text-sm font-semibold shrink-0" style={{ color: "#4a7a78" }}>
             {record.date}
           </span>
