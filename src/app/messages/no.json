@@ -3,7 +3,7 @@
   "subtitle": "Få full oversikt med enkel registrering og daglig påminnelse. Enkel import av data på denne siden. Utviklet i samarbeid med lungeleger og KOLS-spesialister.",
   "importTitle": "Importer data",
   "importLabel": "Kode (fra mobil app):",
-  "placeholder": "Skriv inn tekst",
+  "placeholder": "Skriv inn kode",
   "importButton": "Start",
   "available": "Tilgjengelig på App Store og Google Play.",
   "download": "Last ned gratis på din smarttelefon.",
@@ -121,5 +121,6 @@
   "sessionExpiring": "Du blir logget ut om 1 minutt på grunn av inaktivitet.",
   "downloadPdf": "Last ned PDF",
   "reportDate": "Rapportdato",
-  "reportTitle": "Symptomrapport"
+  "reportTitle": "Symptomrapport",
+  "hour": "t"
 }

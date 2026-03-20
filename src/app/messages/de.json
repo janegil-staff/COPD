@@ -121,5 +121,6 @@
   "sessionExpiring": "Sie werden in 1 Minute wegen Inaktivität abgemeldet.",
   "downloadPdf": "PDF herunterladen",
   "reportDate": "Berichtsdatum",
-  "reportTitle": "Symptombericht"
+  "reportTitle": "Symptombericht",
+  "hour": "h"
 }

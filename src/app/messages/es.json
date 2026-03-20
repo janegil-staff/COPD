@@ -121,5 +121,6 @@
   "sessionExpiring": "Se cerrará su sesión en 1 minuto por inactividad.",
   "downloadPdf": "Descargar PDF",
   "reportDate": "Fecha del informe",
-  "reportTitle": "Informe de síntomas"
+  "reportTitle": "Informe de síntomas",
+  "hour": "h"
 }

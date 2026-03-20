@@ -121,5 +121,6 @@
   "sessionExpiring": "Sinut kirjataan ulos 1 minuutin kuluttua epäaktiivisuuden vuoksi.",
   "downloadPdf": "Lataa PDF",
   "reportDate": "Raporttipäivä",
-  "reportTitle": "Oireraportti"
+  "reportTitle": "Oireraportti",
+  "hour": "t"
 }

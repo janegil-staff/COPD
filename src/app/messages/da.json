@@ -121,5 +121,6 @@
   "sessionExpiring": "Du bliver logget ud om 1 minut på grund af inaktivitet.",
   "downloadPdf": "Download PDF",
   "reportDate": "Rapportdato",
-  "reportTitle": "Symptomrapport"
+  "reportTitle": "Symptomrapport",
+  "hour": "t"
 }

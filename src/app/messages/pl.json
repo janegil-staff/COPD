@@ -121,5 +121,6 @@
   "sessionExpiring": "Zostaniesz wylogowany za 1 minutę z powodu braku aktywności.",
   "downloadPdf": "Pobierz PDF",
   "reportDate": "Data raportu",
-  "reportTitle": "Raport objawów"
+  "reportTitle": "Raport objawów",
+  "hour": "g"
 }

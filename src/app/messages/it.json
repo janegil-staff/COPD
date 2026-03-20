@@ -121,5 +121,6 @@
   "sessionExpiring": "Verrai disconnesso tra 1 minuto per inattività.",
   "downloadPdf": "Scarica PDF",
   "reportDate": "Data del rapporto",
-  "reportTitle": "Rapporto sintomi"
+  "reportTitle": "Rapporto sintomi",
+  "hour": "h"
 }

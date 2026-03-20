@@ -211,7 +211,7 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
         { label: t.daysRecorded,    value: String(filtered.length) },
         { label: t.catScore,        value: avgCat != null ? String(avgCat) : "–" },
         { label: t.exacerbation,    value: String(exCount) },
-        { label: t.physicalActivity, value: avgAct != null ? `${avgAct} min` : "–" },
+        { label: t.physicalActivity, value: avgAct != null ? `${avgAct} ${t.hour}` : "–" },
       ];
 
       const statW = CW / stats.length;
@@ -254,7 +254,7 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
       if (COL.cat)   doc.text("CAT", COL.cat.x + COL.cat.w / 2, y + 4.8, { align: "center" });
       if (COL.subs)  doc.text((t.catSubScores ?? "Sub-scores").toUpperCase().slice(0, 18), COL.subs.x + 2, y + 4.8);
       if (COL.meds)  doc.text((t.medication ?? "Medication").toUpperCase(), COL.meds.x + 2, y + 4.8);
-      if (COL.stats) doc.text(`${(t.weight ?? "Wt").slice(0,2).toUpperCase()} / MIN`, COL.stats.x + 2, y + 4.8);
+      if (COL.stats) doc.text(`${(t.weight ?? "Wt").slice(0,2).toUpperCase()} / ${(t.hour ?? "h").toUpperCase()}`, COL.stats.x + 2, y + 4.8);
 
       Object.entries(COL).filter(([k]) => k !== "date").forEach(([, c]) => vline(c.x, y, y + thH, 0.15));
       y += thH;
@@ -267,10 +267,18 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
       const SEP_H    = 5.5;   // height of exacerbation / note separator bands
 
       // ── Records ──────────────────────────────────────────
-      filtered.forEach((r, idx) => {
+      filtered.slice().reverse().forEach((r, idx, arr) => {
+        const prevEntry = arr[idx - 1] ?? null;
         // ── Year headline ────────────────────────────────────
-        const year = r.date.slice(0, 4);
-        const prevYear = idx > 0 ? filtered[idx - 1].date.slice(0, 4) : null;
+        const rd0  = new Date(r.date.slice(0,4), r.date.slice(5,7)-1, r.date.slice(8,10));
+        const thu0 = new Date(rd0.getFullYear(), rd0.getMonth(), rd0.getDate() - ((rd0.getDay()+6)%7) + 3);
+        const year = String(thu0.getFullYear());
+        const prevYear = idx > 0 ? (() => {
+          const p = arr[idx-1];
+          const pd = new Date(p.date.slice(0,4), p.date.slice(5,7)-1, p.date.slice(8,10));
+          const pt = new Date(pd.getFullYear(), pd.getMonth(), pd.getDate() - ((pd.getDay()+6)%7) + 3);
+          return String(pt.getFullYear());
+        })() : null;
         if (year !== prevYear) {
           checkY(10);
           if (idx > 0) y += 3; // extra space before new year
@@ -408,7 +416,7 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
           if (fields.weight   && r.weight != null)
             { doc.text(`${r.weight} kg`, COL.stats.x + PAD_SIDE, sy); sy += LINE_H; }
           if (fields.activity && r.physicalActivity > 0)
-            { doc.text(`${r.physicalActivity} min`, COL.stats.x + PAD_SIDE, sy); }
+            { doc.text(`${r.physicalActivity} ${t.hour}`, COL.stats.x + PAD_SIDE, sy); }
         }
 
         // ── Exacerbation text ───────────────────────────────

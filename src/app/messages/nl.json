@@ -121,5 +121,6 @@
   "sessionExpiring": "U wordt over 1 minuut uitgelogd wegens inactiviteit.",
   "downloadPdf": "PDF downloaden",
   "reportDate": "Rapportdatum",
-  "reportTitle": "Symptoomrapport"
+  "reportTitle": "Symptoomrapport",
+  "hour": "u"
 }

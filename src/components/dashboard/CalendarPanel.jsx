@@ -216,29 +216,15 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
                       flexShrink: 0,
                     }}
                   >
-                    <div className="flex flex-col items-center" style={{ gap: 1 }}>
-                      <span style={{
-                        color: isSelected ? "#fff" : record ? c.text : "#c8d8d6",
-                        fontSize: 10,
-                        fontWeight: 700,
-                        lineHeight: 1,
-                      }}>
-                        {day}
-                      </span>
-                      {record && show.catScore && (
-                        <span style={{ color: isSelected ? "rgba(255,255,255,0.85)" : c.text, fontSize: 9, fontWeight: 700, lineHeight: 1 }}>
-                          {record.cat8}
-                        </span>
-                      )}
-                    </div>
+                    <span style={{
+                      color: isSelected ? "#fff" : record ? c.text : "#c8d8d6",
+                      fontSize: 10,
+                      fontWeight: 700,
+                      lineHeight: 1,
+                    }}>
+                      {day}
+                    </span>
                   </button>
-                  {record && anyDot && (
-                    <div className="flex gap-0.5">
-                      {showExDot   && <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#ef4444" }} />}
-                      {showNoteDot && <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#8b5cf6" }} />}
-                      {showMedDot  && <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#0ea5e9" }} />}
-                    </div>
-                  )}
                 </div>
               );
             });
@@ -354,13 +340,24 @@ function RecordsList({ records, selectedDate, onDayClick, show, t }) {
         {t.allRecords}
       </p>
       <div className="space-y-1.5">
-        {visible.map((r) => {
+        {visible.map((r, idx) => {
           const c = CAT_COLOR(r.cat8);
           const isActive = selectedDate === r.date;
 
-          // ISO week number + Mon–Sun range
+          // ISO week year helper
+          const isoWeekYear = (dateStr) => {
+            const d   = new Date(dateStr.slice(0,4), dateStr.slice(5,7)-1, dateStr.slice(8,10));
+            const dow = (d.getDay() + 6) % 7;
+            const thu = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + 3);
+            return String(thu.getFullYear());
+          };
+          const year     = isoWeekYear(r.date);
+          const prevYear = idx > 0 ? isoWeekYear(visible[idx - 1].date) : null;
+          const showYearHeadline = year !== prevYear;
+
+          // Mon–Sun range
           const rd  = new Date(r.date.slice(0,4), r.date.slice(5,7)-1, r.date.slice(8,10));
-          const dow = (rd.getDay() + 6) % 7; // 0=Mon
+          const dow = (rd.getDay() + 6) % 7;
           const mon = new Date(rd.getFullYear(), rd.getMonth(), rd.getDate() - dow);
           const sun = new Date(rd.getFullYear(), rd.getMonth(), rd.getDate() - dow + 6);
           const fmt = (d) => `${String(d.getDate()).padStart(2,"0")}.${String(d.getMonth()+1).padStart(2,"0")}`;
@@ -370,14 +367,28 @@ function RecordsList({ records, selectedDate, onDayClick, show, t }) {
           const weekRange = `${fmt(mon)} – ${fmt(sun)}`;
 
           return (
-            <button
-              key={r.date}
-              onClick={() => onDayClick(r)}
-              className="w-full flex items-center justify-between px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl transition-all hover:shadow-sm"
-              style={{
-                background: isActive ? "rgba(38,142,134,0.08)" : "rgba(38,142,134,0.03)",
-                border: `1px solid ${isActive ? "rgba(38,142,134,0.3)" : "rgba(38,142,134,0.1)"}`,
-              }}
+            <div key={r.date}>
+              {showYearHeadline && (
+                <div
+                  className="flex items-center gap-2 mb-1"
+                  style={{ marginTop: idx > 0 ? 8 : 0 }}
+                >
+                  <span
+                    className="text-xs font-bold tracking-widest uppercase"
+                    style={{ color: "#268E86" }}
+                  >
+                    {year}
+                  </span>
+                  <div className="flex-1 h-px" style={{ background: "rgba(38,142,134,0.2)" }} />
+                </div>
+              )}
+              <button
+                onClick={() => onDayClick(r)}
+                className="w-full flex items-center justify-between px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl transition-all hover:shadow-sm"
+                style={{
+                  background: isActive ? "rgba(38,142,134,0.08)" : "rgba(38,142,134,0.03)",
+                  border: `1px solid ${isActive ? "rgba(38,142,134,0.3)" : "rgba(38,142,134,0.1)"}`,
+                }}
             >
               {/* Left: week number + week range + indicator dots */}
               <div className="flex items-center gap-2">
@@ -404,7 +415,7 @@ function RecordsList({ records, selectedDate, onDayClick, show, t }) {
               {/* Right: weight, activity, CAT badge */}
               <div className="flex items-center gap-1.5 sm:gap-3">
                 {show.weight   && r.weight != null       && <span className="text-xs hidden sm:inline" style={{ color: "#a0b8b6" }}>⚖ {r.weight} kg</span>}
-                {show.activity && r.physicalActivity > 0 && <span className="text-xs hidden sm:inline" style={{ color: "#a0b8b6" }}>🚶 {r.physicalActivity} min</span>}
+                {show.activity && r.physicalActivity > 0 && <span className="text-xs hidden sm:inline" style={{ color: "#a0b8b6" }}>🚶 {r.physicalActivity} {t.hour}</span>}
                 {show.catScore && (
                   <span className="font-bold rounded-full" style={{
                     background: c.bg, color: c.text, border: `1px solid ${c.border}`,
@@ -415,6 +426,7 @@ function RecordsList({ records, selectedDate, onDayClick, show, t }) {
                 )}
               </div>
             </button>
+            </div>
           );
         })}
       </div>

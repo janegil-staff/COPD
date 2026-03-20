@@ -14,7 +14,6 @@ import fi from "@/app/messages/fi.json";
 import es from "@/app/messages/es.json";
 import pl from "@/app/messages/pl.json";
 import pt from "@/app/messages/pt.json";
-import PdfExportModal from "@/components/PdfExportModal";
 
 const translations = { no, en, nl, fr, de, it, sv, da, fi, es, pl, pt };
 
@@ -119,7 +118,7 @@ function RecordRow({ record, medicines, userMedicines, t, expanded, onToggle, is
             <span className="text-xs hidden sm:inline" style={{ color: "#a0b8b6" }}>⚖ {record.weight} kg</span>
           )}
           {record.physicalActivity > 0 && (
-            <span className="text-xs hidden sm:inline" style={{ color: "#a0b8b6" }}>🚶 {record.physicalActivity} min</span>
+            <span className="text-xs hidden sm:inline" style={{ color: "#a0b8b6" }}>🚶 {record.physicalActivity} {t.hour}</span>
           )}
           <span
             className="text-xs font-bold px-2.5 py-0.5 rounded-full"
@@ -182,7 +181,7 @@ function RecordRow({ record, medicines, userMedicines, t, expanded, onToggle, is
                   style={{ background: "rgba(38,142,134,0.05)", border: "1px solid rgba(38,142,134,0.12)" }}
                 >
                   <p className="text-xs" style={{ color: "#7a9a98" }}>{t.physicalActivity}</p>
-                  <p className="text-sm font-bold" style={{ color: "#268E86" }}>{record.physicalActivity} min</p>
+                  <p className="text-sm font-bold" style={{ color: "#268E86" }}>{record.physicalActivity} {t.hour}</p>
                 </div>
               )}
             </div>
@@ -401,8 +400,15 @@ export default function LogPage() {
               }}
             >
             {visible.map((record, idx) => {
-              const year = record.date.slice(0, 4);
-              const prevYear = idx > 0 ? visible[idx - 1].date.slice(0, 4) : null;
+              // Use ISO week year (year that owns the week) for grouping
+              const isoWeekYear = (dateStr) => {
+                const d   = new Date(dateStr.slice(0,4), dateStr.slice(5,7)-1, dateStr.slice(8,10));
+                const dow = (d.getDay() + 6) % 7;
+                const thu = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + 3);
+                return String(thu.getFullYear());
+              };
+              const year     = isoWeekYear(record.date);
+              const prevYear = idx > 0 ? isoWeekYear(visible[idx - 1].date) : null;
               const showYear = year !== prevYear;
               return (
                 <div key={record.date}>
