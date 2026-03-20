@@ -238,7 +238,7 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
 
       // Dynamic column layout
       let colX = ML;
-      const COL = { date: { x: colX, w: 24 } }; colX += 25;
+      const COL = { date: { x: colX, w: 32 } }; colX += 33;
       if (fields.catScore) { COL.cat = { x: colX, w: 13 }; colX += 14; }
       if (showSubs)        { COL.subs = { x: colX, w: showMeds ? 58 : 80 }; colX += COL.subs.w + 1; }
       if (showMeds)        { COL.meds = { x: colX, w: showStats ? 36 : 54 }; colX += COL.meds.w + 1; }
@@ -268,6 +268,18 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
 
       // ── Records ──────────────────────────────────────────
       filtered.forEach((r, idx) => {
+        // ── Year headline ────────────────────────────────────
+        const year = r.date.slice(0, 4);
+        const prevYear = idx > 0 ? filtered[idx - 1].date.slice(0, 4) : null;
+        if (year !== prevYear) {
+          checkY(10);
+          if (idx > 0) y += 3; // extra space before new year
+          setFont(7, "bold", [38, 142, 134]);
+          doc.text(year, ML + PAD_SIDE, y + 5);
+          doc.setLineWidth(0.15); doc.setDrawColor(180, 220, 218);
+          doc.line(ML + PAD_SIDE + 10, y + 4, W - MR, y + 4);
+          y += 8;
+        }
         const catLabel = r.cat8 <= 10 ? t.low : r.cat8 <= 20 ? t.moderate : r.cat8 <= 30 ? t.high : t.veryHigh;
 
         const usedMeds = (r.medicines ?? []).map(id => {
@@ -292,7 +304,7 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
         // Medicines content height
         const medContentH  = medSplit.length > 0 ? medSplit.length * LINE_H : 0;
         // Body = tallest content column + top + bottom padding
-        const bodyContentH = Math.max(subContentH, medContentH, LINE_H);
+        const bodyContentH = Math.max(subContentH, medContentH, LINE_H * 3);
         const bodyH        = PAD_TOP + bodyContentH + PAD_BOT;
 
         // Extra bands below body
@@ -335,16 +347,22 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
 
         const ty = y + PAD_TOP; // first text baseline
 
-        // ── Week number + Date ───────────────────────────────
+        // ── Week number + full Mon / Sun dates stacked ───────
         const rd   = new Date(r.date.slice(0,4), r.date.slice(5,7)-1, r.date.slice(8,10));
-        const thu  = new Date(rd); thu.setDate(rd.getDate() - ((rd.getDay()+6)%7) + 3);
+        const dow  = (rd.getDay() + 6) % 7;
+        const mon  = new Date(rd.getFullYear(), rd.getMonth(), rd.getDate() - dow);
+        const sun  = new Date(rd.getFullYear(), rd.getMonth(), rd.getDate() - dow + 6);
+        const fmt  = (d) => `${String(d.getDate()).padStart(2,"0")}.${String(d.getMonth()+1).padStart(2,"0")}.${d.getFullYear()}`;
+        const thu  = new Date(rd); thu.setDate(rd.getDate() - dow + 3);
         const jan4 = new Date(thu.getFullYear(), 0, 4);
         const wn   = 1 + Math.round((thu - jan4) / 604800000);
 
         setFont(6, "bold", [180, 200, 198]);
         doc.text(`W${wn}`, COL.date.x + PAD_SIDE, ty);
-        setFont(7.5, "bold", ink);
-        doc.text(r.date, COL.date.x + PAD_SIDE, ty + LINE_H * 0.9);
+        setFont(6.5, "bold", ink);
+        doc.text(fmt(mon), COL.date.x + PAD_SIDE, ty + LINE_H * 0.95);
+        setFont(6.5, "bold", ink);
+        doc.text(fmt(sun), COL.date.x + PAD_SIDE, ty + LINE_H * 0.95 + LINE_H);
 
         // ── CAT score ───────────────────────────────────────
         if (COL.cat) {

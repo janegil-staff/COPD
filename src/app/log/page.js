@@ -77,23 +77,28 @@ function RecordRow({ record, medicines, userMedicines, t, expanded, onToggle, is
         onClick={onToggle}
         className="w-full flex items-center justify-between px-4 py-3 text-left transition-all hover:bg-black/[0.015]"
       >
-        {/* Left: week + date + dots */}
+        {/* Left: week + week range + dots */}
         <div className="flex items-center gap-2.5 min-w-0">
           {(() => {
-            const d   = new Date(record.date);
-            const thu = new Date(d);
-            thu.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 3);
+            const rd  = new Date(record.date.slice(0,4), record.date.slice(5,7)-1, record.date.slice(8,10));
+            const dow = (rd.getDay() + 6) % 7;
+            const mon = new Date(rd.getFullYear(), rd.getMonth(), rd.getDate() - dow);
+            const sun = new Date(rd.getFullYear(), rd.getMonth(), rd.getDate() - dow + 6);
+            const fmt = (d) => `${String(d.getDate()).padStart(2,"0")}.${String(d.getMonth()+1).padStart(2,"0")}`;
+            const thu  = new Date(rd); thu.setDate(rd.getDate() - dow + 3);
             const jan4 = new Date(thu.getFullYear(), 0, 4);
             const wn   = 1 + Math.round((thu - jan4) / 604800000);
             return (
-              <span className="font-bold tabular-nums shrink-0" style={{ color: "#b8cccb", fontSize: 10, minWidth: 22 }}>
-                W{wn}
-              </span>
+              <>
+                <span className="font-bold tabular-nums shrink-0" style={{ color: "#b8cccb", fontSize: 10, minWidth: 22 }}>
+                  W{wn}
+                </span>
+                <span className="text-sm font-semibold shrink-0" style={{ color: "#4a7a78" }}>
+                  {fmt(mon)} – {fmt(sun)}
+                </span>
+              </>
             );
           })()}
-          <span className="text-sm font-semibold shrink-0" style={{ color: "#4a7a78" }}>
-            {record.date}
-          </span>
           {/* Indicator dots */}
           <div className="flex gap-1 items-center">
             {hasExacerbation && (
@@ -395,18 +400,39 @@ export default function LogPage() {
                 boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
               }}
             >
-            {visible.map((record, idx) => (
-              <RecordRow
-                key={record.date}
-                record={record}
-                medicines={patient.medicines}
-                userMedicines={patient.userMedicines}
-                t={t}
-                expanded={expandedDate === record.date}
-                onToggle={() => setExpandedDate(expandedDate === record.date ? null : record.date)}
-                isFirst={idx === 0}
-              />
-            ))}
+            {visible.map((record, idx) => {
+              const year = record.date.slice(0, 4);
+              const prevYear = idx > 0 ? visible[idx - 1].date.slice(0, 4) : null;
+              const showYear = year !== prevYear;
+              return (
+                <div key={record.date}>
+                  {showYear && (
+                    <div
+                      className="flex items-center gap-2 px-4"
+                      style={{
+                        paddingTop: idx > 0 ? 10 : 6,
+                        paddingBottom: 6,
+                        borderTop: idx > 0 ? "1px solid #c8c8c8" : "none",
+                      }}
+                    >
+                      <span className="text-xs font-bold tracking-widest uppercase" style={{ color: "#268E86" }}>
+                        {year}
+                      </span>
+                      <div className="flex-1 h-px" style={{ background: "rgba(38,142,134,0.2)" }} />
+                    </div>
+                  )}
+                  <RecordRow
+                    record={record}
+                    medicines={patient.medicines}
+                    userMedicines={patient.userMedicines}
+                    t={t}
+                    expanded={expandedDate === record.date}
+                    onToggle={() => setExpandedDate(expandedDate === record.date ? null : record.date)}
+                    isFirst={idx === 0 || showYear}
+                  />
+                </div>
+              );
+            })}
 
             </div>
 
