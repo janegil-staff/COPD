@@ -1,12 +1,25 @@
 // src/context/LangContext.js
-'use client';
+"use client";
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from "react";
 
-const LangContext = createContext({ lang: 'no', setLang: () => {} });
+const LangContext = createContext({ lang: "no", setLang: () => {} });
 
 export function LangProvider({ children }) {
-  const [lang, setLang] = useState('no');
+  const [lang, setLangState] = useState("no");
+
+  // On mount, restore saved language
+  useEffect(() => {
+    const saved = localStorage.getItem("lang");
+    if (saved) setLangState(saved);
+  }, []);
+
+  // Persist every time the user changes language
+  const setLang = (newLang) => {
+    localStorage.setItem("lang", newLang);
+    setLangState(newLang);
+  };
+
   return (
     <LangContext.Provider value={{ lang, setLang }}>
       {children}

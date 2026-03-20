@@ -38,16 +38,17 @@ export default function Home() {
     });
     const data = await res.json();
     if (data.valid) {
+      // Store patient data for the dashboard to consume
+      sessionStorage.setItem("patientData", JSON.stringify(data.patient));
       router.push("/dashboard");
     } else {
       setError(true);
       setTimeout(() => setError(false), 2000);
     }
   };
-
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
-     <main className="flex-1 flex flex-col min-[900px]:flex-row items-center min-[900px]:items-start justify-center gap-6 px-6 min-[900px]:px-12 pt-12 pb-6 relative z-10">
+      <main className="flex-1 flex flex-col min-[900px]:flex-row items-center min-[900px]:items-start justify-center gap-6 px-6 min-[900px]:px-12 pt-12 pb-6 relative z-10">
         <div className="flex flex-col gap-6 flex-1 min-[900px]:min-w-[300px] min-[900px]:max-w-[580px] w-full order-1 min-[900px]:order-1">
           <Headline t={t} />
           <div className="hidden min-[900px]:block">

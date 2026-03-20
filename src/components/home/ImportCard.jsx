@@ -63,6 +63,7 @@ export default function ImportCard({
 
         {/* Form */}
         <div className="px-5 pb-5">
+            <p>TEST</p>
           <p className="text-center font-bold tracking-widest text-sm mb-4 text-gray-800 uppercase">
             {t.importTitle}
           </p>

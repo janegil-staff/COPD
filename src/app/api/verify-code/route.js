@@ -1,37 +1,30 @@
-// src/app/api/verify-code/route.js
+// app/api/verify-code/route.js
+import { NextResponse } from "next/server";
 
-import dbConnect from '@/lib/dbConnect.js';
-import SecretCode from '@/models/SecretCode.js';
-import { recordVisit } from '@/lib/pageVisitorHelper.js';
+export async function POST(req) {
+  const { code } = await req.json();
 
-export async function POST(request) {
+  if (!/^\d{6}$/.test(code?.trim())) {
+    return NextResponse.json({ valid: false });
+  }
+
   try {
-    await dbConnect();
-    const { code } = await request.json();
+    const res = await fetch(
+      `https://server.copdcalendar.com/api/patients/details/json?accessCode=${code.trim()}`
+    );
 
-    const now = new Date();
-    console.log('[verify-code] code:', code, '| now:', now.toISOString());
-
-    const found = await SecretCode.findOne({ code: String(code) }).lean();
-    console.log('[verify-code] found:', found);
-
-    if (!found) {
-      console.log('[verify-code] no code found in db');
-      return Response.json({ valid: false });
+    if (!res.ok) {
+      return NextResponse.json({ valid: false });
     }
 
-    const expiresAt = new Date(found.expiresAt);
-    console.log('[verify-code] expiresAt:', expiresAt.toISOString(), '| expired:', expiresAt < now);
+    const data = await res.json();
 
-    if (expiresAt < now) {
-      console.log('[verify-code] code expired');
-      return Response.json({ valid: false });
+    if (!data || !data.records) {
+      return NextResponse.json({ valid: false });
     }
 
-    await recordVisit('/dashboard', true);
-    return Response.json({ valid: true });
-  } catch (err) {
-    console.error('[verify-code]', err);
-    return Response.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ valid: true, patient: data });
+  } catch {
+    return NextResponse.json({ valid: false });
   }
 }
