@@ -137,99 +137,137 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
         <button onClick={nextMonth} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 transition-all" style={{ color: "#268E86", fontSize: 18 }}>›</button>
       </div>
 
-      {/* Day headers — 8 cols: week number + 7 days */}
-      <div className="grid mb-1" style={{ gridTemplateColumns: "24px repeat(7, 1fr)" }}>
-        <div /> {/* empty corner above week numbers */}
-        {days.map((d) => (
-          <div key={d} className="text-center py-1 tracking-wider uppercase" style={{ color: "#a0b8b6", fontSize: 10, fontWeight: 600 }}>{d}</div>
-        ))}
-      </div>
-
-      {/* Calendar grid — 8 cols: week number + 7 day circles */}
-      <div style={{ display: "grid", gridTemplateColumns: "24px repeat(7, 1fr)", gap: 3 }}>
+      {/* Week rows — one bar per week */}
+      <div className="space-y-1">
         {(() => {
           const rows = [];
           let i = 0;
           while (i < cells.length) {
             const weekCells = cells.slice(i, i + 7);
-            // Calculate ISO week number from the first real day in this row
-            const firstDay = weekCells.find(d => d !== null);
-            let weekNum = null;
-            if (firstDay !== null && firstDay !== undefined) {
-              const d = new Date(viewYear, viewMonth, firstDay);
-              // ISO week: Thursday of current week's year
-              const thu = new Date(d);
-              thu.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 3);
-              const jan4 = new Date(thu.getFullYear(), 0, 4);
-              weekNum = 1 + Math.round((thu - jan4) / 604800000);
-            }
+            const firstDay  = weekCells.find(d => d != null);
+            i += 7;
+            if (firstDay == null) continue;
+
+            const dateStr = `${viewYear}-${pad(viewMonth + 1)}-${pad(firstDay)}`;
+            // Find the record for this week via weekMap
+            const record  = weekMap[dateStr];
+            const c       = CAT_COLOR(record?.cat8);
+            const isSelected = record && selectedDate === record.date;
+
+            // ISO week number
+            const d    = new Date(viewYear, viewMonth, firstDay);
+            const dow  = (d.getDay() + 6) % 7;
+            const thu  = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + 3);
+            const jan4 = new Date(thu.getFullYear(), 0, 4);
+            const wn   = 1 + Math.round((thu - jan4) / 604800000);
+
+            // Mon–Sun date range
+            const mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow);
+            const sun = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + 6);
+            const fmt = (dd) => `${String(dd.getDate()).padStart(2,"0")}.${String(dd.getMonth()+1).padStart(2,"0")}`;
+
+            const showExDot   = show.exacerbation && record && (record.moderateExacerbations || record.seriousExacerbations);
+            const showNoteDot = show.note     && record?.note?.trim();
+            const showMedDot  = show.medicine && record?.medicines?.length > 0;
+            const showActDot  = show.activity && record?.physicalActivity > 0;
+            const showWtDot   = show.weight   && record?.weight != null;
+            const anyDot      = showExDot || showNoteDot || showMedDot || showActDot || showWtDot;
+
+            // Solid colour backgrounds per CAT level
+            const bgColor = record
+              ? record.cat8 <= 10 ? "#1a9e7a"
+              : record.cat8 <= 20 ? "#c97d00"
+              : record.cat8 <= 30 ? "#d96000"
+              : "#d42020"
+              : "rgba(38,142,134,0.05)";
+            const textColor = isSelected || record ? "#fff" : "#a0b8b6";
+            const stripeColor = isSelected
+              ? "#0f6b63"
+              : record
+              ? record.cat8 <= 10 ? "#0f6b4e"
+              : record.cat8 <= 20 ? "#8a5200"
+              : record.cat8 <= 30 ? "#a04000"
+              : "#9b1515"
+              : "rgba(38,142,134,0.15)";
 
             rows.push(
-              // Week number label
               <div
-                key={`wn-${i}`}
-                className="flex items-start justify-center pt-1"
-                style={{ color: "#b8cccb", fontSize: 9, fontWeight: 600, userSelect: "none" }}
+                key={`week-${wn}`}
+                role="button"
+                tabIndex={record ? 0 : -1}
+                onClick={() => record && onDayClick(record)}
+                onKeyDown={(e) => e.key === "Enter" && record && onDayClick(record)}
+                className="w-full flex flex-col rounded-xl transition-all overflow-hidden"
+                style={{
+                  background: bgColor,
+                  border: isSelected ? `2.5px solid #1a1a1a` : "none",
+                  borderLeft: isSelected ? `2.5px solid #1a1a1a` : "none",
+                  cursor: record ? "pointer" : "default",
+                  boxShadow: isSelected ? "0 8px 24px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.4)" : record ? "0 1px 4px rgba(0,0,0,0.12)" : "none",
+                  paddingLeft: 8, paddingRight: 10, paddingTop: 3, paddingBottom: 3,
+                  gap: 1,
+                  color: "#fff",
+                  WebkitTextFillColor: record ? "#fff" : "#a0b8b6",
+                }}
               >
-                {weekNum !== null ? `${t.week ?? "W"}${weekNum}` : ""}
+                {/* Top row: week label + dots + CAT score */}
+                <div className="flex items-center justify-between w-full">
+                  <span style={{ color: record ? "#fff" : "#b8cccb", fontSize: 9, fontWeight: 700 }}>
+                    {t.week ?? "W"}{wn}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    {anyDot && (
+                      <div className="flex gap-0.5">
+                        {showExDot   && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#ff6b6b" }} />}
+                        {showNoteDot && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#c084fc" }} />}
+                        {showMedDot  && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#38bdf8" }} />}
+                        {showActDot  && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#4ade80" }} />}
+                        {showWtDot   && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#fbbf24" }} />}
+                      </div>
+                    )}
+                    {record && show.catScore && (
+                      <span style={{ fontSize: 12, fontWeight: 800, lineHeight: 1, color: "#fff" }}>
+                        {record.cat8}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Day numbers spanning full width */}
+                <div className="flex items-center justify-between w-full">
+                  {Array.from({ length: 7 }).map((_, di) => {
+                    const dd      = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + di);
+                    const inMonth = dd.getMonth() === viewMonth;
+                    const dayNum  = dd.getDate();
+                    const isToday = dd.toDateString() === now.toDateString();
+                    return (
+                      <div
+                        key={di}
+                        style={{
+                          width: 18, height: 18,
+                          borderRadius: "50%",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          flexShrink: 0,
+                          background: isToday && record ? "rgba(255,255,255,0.25)" : "transparent",
+                          border: isToday && record ? "1.5px solid rgba(255,255,255,0.8)" : "none",
+                        }}
+                      >
+                        <span style={{
+                          fontSize: 10,
+                          fontWeight: isToday ? 800 : inMonth ? 600 : 400,
+                          color: record
+                            ? inMonth ? "#fff" : "rgba(255,255,255,0.35)"
+                            : inMonth ? "#a0b8b6" : "#d0e0de",
+                          lineHeight: 1,
+                        }}>
+                          {dayNum}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             );
-
-            // 7 day cells for this row
-            weekCells.forEach((day, j) => {
-              const cellIndex = i + j;
-              if (!day) {
-                rows.push(<div key={`e-${cellIndex}`} />);
-                return;
-              }
-              const dateStr   = `${viewYear}-${pad(viewMonth + 1)}-${pad(day)}`;
-              const record    = weekMap[dateStr];
-              const isExact   = !!recordMap[dateStr];
-              const c         = CAT_COLOR(record?.cat8);
-              const isSelected = selectedDate === record?.date;
-              const isToday   = dateStr === `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
-
-              const showExDot   = show.exacerbation && record && (recordMap[dateStr]?.moderateExacerbations || recordMap[dateStr]?.seriousExacerbations || record.moderateExacerbations || record.seriousExacerbations);
-              const showNoteDot = show.note     && record && (recordMap[dateStr]?.note?.trim()      || record.note?.trim());
-              const showMedDot  = show.medicine && record && (recordMap[dateStr]?.medicines?.length > 0 || record.medicines?.length > 0);
-              const anyDot      = showExDot || showNoteDot || showMedDot;
-
-              rows.push(
-                <div key={dateStr} className="flex flex-col items-center" style={{ gap: 2 }}>
-                  <button
-                    onClick={() => record && onDayClick(record)}
-                    disabled={!record}
-                    className="flex items-center justify-center transition-all hover:scale-110"
-                    style={{
-                      width: 32, height: 32,
-                      borderRadius: "50%",
-                      background: isSelected ? "#268E86" : record ? c.bg : "transparent",
-                      border: isSelected
-                        ? "2px solid #268E86"
-                        : record
-                        ? `2px solid ${c.border}`
-                        : isToday
-                        ? "1px solid rgba(38,142,134,0.35)"
-                        : "1px solid transparent",
-                      cursor: record ? "pointer" : "default",
-                      opacity: 1,
-                      flexShrink: 0,
-                    }}
-                  >
-                    <span style={{
-                      color: isSelected ? "#fff" : record ? c.text : "#c8d8d6",
-                      fontSize: 10,
-                      fontWeight: 700,
-                      lineHeight: 1,
-                    }}>
-                      {day}
-                    </span>
-                  </button>
-                </div>
-              );
-            });
-
-            i += 7;
           }
           return rows;
         })()}
@@ -396,7 +434,7 @@ function RecordsList({ records, selectedDate, onDayClick, show, t }) {
                   className="font-bold tabular-nums flex-shrink-0"
                   style={{ color: "#b8cccb", fontSize: 10, minWidth: 20 }}
                 >
-                  {t.week ?? "W"} {weekNum}
+                  {t.week ?? "W"}{weekNum}
                 </span>
                 <span className="text-xs sm:text-sm font-medium" style={{ color: "#4a7a78" }}>{weekRange}</span>
                 <div className="flex gap-0.5 sm:gap-1">
