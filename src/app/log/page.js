@@ -14,6 +14,7 @@ import fi from "@/app/messages/fi.json";
 import es from "@/app/messages/es.json";
 import pl from "@/app/messages/pl.json";
 import pt from "@/app/messages/pt.json";
+import PdfExportModal from "@/components/PdfExportModal";
 
 const translations = { no, en, nl, fr, de, it, sv, da, fi, es, pl, pt };
 
