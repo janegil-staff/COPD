@@ -123,5 +123,6 @@
   "reportDate": "Fecha del informe",
   "reportTitle": "Informe de síntomas",
   "hour": "h",
-  "week": "Semana"
+  "week": "Semana",
+  "hours": "horas"
 }

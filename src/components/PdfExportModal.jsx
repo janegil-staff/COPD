@@ -283,7 +283,7 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
         { label: t.exacerbation, value: String(exCount) },
         {
           label: t.physicalActivity,
-          value: avgAct != null ? `${avgAct} ${t.hour}` : "–",
+          value: avgAct != null ? `${avgAct} ${t.hours ?? t.hour}` : "–",
         },
       ];
 
@@ -602,7 +602,7 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
             }
             if (fields.activity && r.physicalActivity > 0) {
               doc.text(
-                `${r.physicalActivity} ${t.hour}`,
+                `${r.physicalActivity} ${t.hours ?? t.hour}`,
                 COL.stats.x + PAD_SIDE,
                 sy,
               );

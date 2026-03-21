@@ -123,5 +123,6 @@
   "reportDate": "Raporttipäivä",
   "reportTitle": "Oireraportti",
   "hour": "t",
-  "week": "Viikko"
+  "week": "Viikko",
+  "hours": "tuntia"
 }

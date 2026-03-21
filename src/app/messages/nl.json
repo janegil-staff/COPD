@@ -123,5 +123,6 @@
   "reportDate": "Rapportdatum",
   "reportTitle": "Symptoomrapport",
   "hour": "u",
-  "week": "Week"
+  "week": "Week",
+  "hours": "uur"
 }

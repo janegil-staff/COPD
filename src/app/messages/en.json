@@ -123,5 +123,6 @@
   "reportDate": "Report date",
   "reportTitle": "Symptom Report",
   "hour": "h",
-  "week": "Week"
+  "week": "Week",
+  "hours": "hours"
 }

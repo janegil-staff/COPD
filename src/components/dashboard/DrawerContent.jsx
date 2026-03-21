@@ -109,7 +109,7 @@ export default function DrawerContent({ t, record, catColor, usedMedicines, onCl
               style={{ background: "rgba(38,142,134,0.06)", border: "1px solid rgba(38,142,134,0.15)" }}
             >
               <p className="text-xs mb-0.5" style={{ color: "#7a9a98" }}>{t.physicalActivity}</p>
-              <p className="text-sm font-bold" style={{ color: "#268E86" }}>{record.physicalActivity} {t.hour}</p>
+              <p className="text-sm font-bold" style={{ color: "#268E86" }}>{record.physicalActivity} {t.hours ?? t.hour}</p>
             </div>
           )}
         </div>

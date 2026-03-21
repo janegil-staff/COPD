@@ -123,5 +123,6 @@
   "reportDate": "Rapportdatum",
   "reportTitle": "Symtomrapport",
   "hour": "t",
-  "week": "Vecka"
+  "week": "Vecka",
+  "hours": "timmar"
 }

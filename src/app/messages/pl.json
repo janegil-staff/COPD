@@ -123,5 +123,6 @@
   "reportDate": "Data raportu",
   "reportTitle": "Raport objawów",
   "hour": "g",
-  "week": "Tydzień"
+  "week": "Tydzień",
+  "hours": "godziny"
 }

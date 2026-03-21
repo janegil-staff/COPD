@@ -123,5 +123,6 @@
   "reportDate": "Rapportdato",
   "reportTitle": "Symptomrapport",
   "hour": "t",
-  "week": "Uge"
+  "week": "Uge",
+  "hours": "timer"
 }
