@@ -226,13 +226,13 @@ export default function SummaryPage() {
 
   // CAT per week (avg of items in each week)
   const catTrend = weeks.map(w => ({
-    label: `W${w.wn}`,
+    label: `${t.week ?? "W"}${w.wn}`,
     value: Math.round(w.items.reduce((s, r) => s + (r.cat8 ?? 0), 0) / w.items.length),
   }));
 
   // Weekly exacerbation counts
   const exWeekly = weeks.map(w => ({
-    label: `W${w.wn}`,
+    label: `${t.week ?? "W"}${w.wn}`,
     value: w.items.filter(r => r.moderateExacerbations || r.seriousExacerbations).length,
   }));
 
@@ -252,7 +252,7 @@ export default function SummaryPage() {
       const withWeight = w.items.filter(r => r.weight != null);
       if (!withWeight.length) return null;
       const avg = withWeight.reduce((s, r) => s + r.weight, 0) / withWeight.length;
-      return { label: `W${w.wn}`, value: Math.round(avg * 10) / 10 };
+      return { label: `${t.week ?? "W"}${w.wn}`, value: Math.round(avg * 10) / 10 };
     })
     .filter(Boolean);
 
@@ -260,7 +260,7 @@ export default function SummaryPage() {
   const activityData = weeks
     .map(w => {
       const total = w.items.reduce((s, r) => s + (r.physicalActivity ?? 0), 0);
-      return { label: `W${w.wn}`, value: total };
+      return { label: `${t.week ?? "W"}${w.wn}`, value: total };
     })
     .filter(d => d.value > 0);
   const avgActivity = activityData.length
