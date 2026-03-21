@@ -122,5 +122,6 @@
   "downloadPdf": "Descarregar PDF",
   "reportDate": "Data do relatório",
   "reportTitle": "Relatório de sintomas",
-  "hour": "h"
+  "hour": "h",
+  "week": "Semana"
 }

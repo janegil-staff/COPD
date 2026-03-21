@@ -122,5 +122,6 @@
   "downloadPdf": "PDF herunterladen",
   "reportDate": "Berichtsdatum",
   "reportTitle": "Symptombericht",
-  "hour": "h"
+  "hour": "h",
+  "week": "Woche"
 }

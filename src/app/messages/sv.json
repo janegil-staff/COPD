@@ -122,5 +122,6 @@
   "downloadPdf": "Ladda ner PDF",
   "reportDate": "Rapportdatum",
   "reportTitle": "Symtomrapport",
-  "hour": "t"
+  "hour": "t",
+  "week": "Vecka"
 }

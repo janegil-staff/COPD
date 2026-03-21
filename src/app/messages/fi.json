@@ -122,5 +122,6 @@
   "downloadPdf": "Lataa PDF",
   "reportDate": "Raporttipäivä",
   "reportTitle": "Oireraportti",
-  "hour": "t"
+  "hour": "t",
+  "week": "Viikko"
 }

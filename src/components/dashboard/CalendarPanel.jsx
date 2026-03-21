@@ -171,7 +171,7 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
                 className="flex items-start justify-center pt-1"
                 style={{ color: "#b8cccb", fontSize: 9, fontWeight: 600, userSelect: "none" }}
               >
-                {weekNum !== null ? weekNum : ""}
+                {weekNum !== null ? `${t.week ?? "W"}${weekNum}` : ""}
               </div>
             );
 
@@ -396,7 +396,7 @@ function RecordsList({ records, selectedDate, onDayClick, show, t }) {
                   className="font-bold tabular-nums flex-shrink-0"
                   style={{ color: "#b8cccb", fontSize: 10, minWidth: 20 }}
                 >
-                  W{weekNum}
+                  {t.week ?? "W"} {weekNum}
                 </span>
                 <span className="text-xs sm:text-sm font-medium" style={{ color: "#4a7a78" }}>{weekRange}</span>
                 <div className="flex gap-0.5 sm:gap-1">
