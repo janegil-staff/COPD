@@ -358,12 +358,12 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
           COL.meds.x + 2,
           y + 4.8,
         );
-      if (COL.stats)
-        doc.text(
-          `${(t.weight ?? "Wt").slice(0, 2).toUpperCase()} / ${(t.hour ?? "h").toUpperCase()}`,
-          COL.stats.x + 2,
-          y + 4.8,
-        );
+      if (COL.stats) {
+        const statsHeader = `${t.weight ?? "Vekt"} / ${t.physicalActivity ?? "Aktivitet"}`;
+        doc.setFontSize(5.5);
+        doc.text(statsHeader.toUpperCase(), COL.stats.x + 2, y + 4.8);
+        doc.setFontSize(6.5);
+      }
 
       Object.entries(COL)
         .filter(([k]) => k !== "date")
