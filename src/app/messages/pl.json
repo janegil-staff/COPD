@@ -124,5 +124,6 @@
   "reportTitle": "Raport objawów",
   "hour": "g",
   "week": "Tydzień",
-  "hours": "godziny"
+  "hours": "godziny",
+  "searchPlaceholder": "Szukaj..."
 }

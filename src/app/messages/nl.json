@@ -124,5 +124,6 @@
   "reportTitle": "Symptoomrapport",
   "hour": "u",
   "week": "Week",
-  "hours": "uur"
+  "hours": "uur",
+  "searchPlaceholder": "Zoeken..."
 }

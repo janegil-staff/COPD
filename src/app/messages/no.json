@@ -124,5 +124,6 @@
   "reportTitle": "Symptomrapport",
   "hour": "t",
   "week": "Uke",
-  "hours": "timer"
+  "hours": "timer",
+  "searchPlaceholder": "Søk..."
 }

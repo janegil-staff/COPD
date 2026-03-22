@@ -124,5 +124,6 @@
   "reportTitle": "Rapporto sintomi",
   "hour": "h",
   "week": "Settimana",
-  "hours": "ore"
+  "hours": "ore",
+  "searchPlaceholder": "Cerca..."
 }

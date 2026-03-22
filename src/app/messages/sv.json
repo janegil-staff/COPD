@@ -124,5 +124,6 @@
   "reportTitle": "Symtomrapport",
   "hour": "t",
   "week": "Vecka",
-  "hours": "timmar"
+  "hours": "timmar",
+  "searchPlaceholder": "Sök..."
 }

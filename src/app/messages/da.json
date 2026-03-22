@@ -124,5 +124,6 @@
   "reportTitle": "Symptomrapport",
   "hour": "t",
   "week": "Uge",
-  "hours": "timer"
+  "hours": "timer",
+  "searchPlaceholder": "Søg..."
 }

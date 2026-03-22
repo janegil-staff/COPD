@@ -124,5 +124,6 @@
   "reportTitle": "Oireraportti",
   "hour": "t",
   "week": "Viikko",
-  "hours": "tuntia"
+  "hours": "tuntia",
+  "searchPlaceholder": "Hae..."
 }

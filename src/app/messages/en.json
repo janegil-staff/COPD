@@ -124,5 +124,6 @@
   "reportTitle": "Symptom Report",
   "hour": "h",
   "week": "Week",
-  "hours": "hours"
+  "hours": "hours",
+  "searchPlaceholder": "Search..."
 }
