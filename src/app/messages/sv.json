@@ -125,5 +125,6 @@
   "hour": "t",
   "week": "Vecka",
   "hours": "timmar",
-  "searchPlaceholder": "Sök..."
+  "searchPlaceholder": "Sök...",
+  "weeksWithMedicine": "Veckor med medicin"
 }

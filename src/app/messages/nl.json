@@ -125,5 +125,6 @@
   "hour": "u",
   "week": "Week",
   "hours": "uur",
-  "searchPlaceholder": "Zoeken..."
+  "searchPlaceholder": "Zoeken...",
+  "weeksWithMedicine": "Weken met medicijnen"
 }

@@ -125,5 +125,6 @@
   "hour": "t",
   "week": "Uge",
   "hours": "timer",
-  "searchPlaceholder": "Søg..."
+  "searchPlaceholder": "Søg...",
+  "weeksWithMedicine": "Uger med medicin"
 }

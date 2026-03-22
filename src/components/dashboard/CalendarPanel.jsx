@@ -175,19 +175,19 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
 
             // Solid colour backgrounds per CAT level
             const bgColor = record
-              ? record.cat8 <= 10 ? "#1a9e7a"
-              : record.cat8 <= 20 ? "#c97d00"
-              : record.cat8 <= 30 ? "#d96000"
-              : "#d42020"
+              ? record.cat8 <= 10 ? "#4CC189"
+              : record.cat8 <= 20 ? "#FFC659"
+              : record.cat8 <= 30 ? "#FF7473"
+              : "#BE3830"
               : "rgba(38,142,134,0.05)";
-            const textColor = isSelected || record ? "#fff" : "#a0b8b6";
+            const textColor = record ? "#fff" : "#a0b8b6";
             const stripeColor = isSelected
               ? "#0f6b63"
               : record
-              ? record.cat8 <= 10 ? "#0f6b4e"
-              : record.cat8 <= 20 ? "#8a5200"
-              : record.cat8 <= 30 ? "#a04000"
-              : "#9b1515"
+              ? record.cat8 <= 10 ? "#2e9e68"
+              : record.cat8 <= 20 ? "#c99500"
+              : record.cat8 <= 30 ? "#cc4040"
+              : "#8a2020"
               : "rgba(38,142,134,0.15)";
 
             rows.push(
@@ -206,13 +206,13 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
                   boxShadow: isSelected ? "0 8px 24px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.4)" : record ? "0 1px 4px rgba(0,0,0,0.12)" : "none",
                   paddingLeft: 8, paddingRight: 10, paddingTop: 3, paddingBottom: 3,
                   gap: 1,
-                  color: "#fff",
-                  WebkitTextFillColor: record ? "#fff" : "#a0b8b6",
+                  color: record ? "#1a1a1a" : "#a0b8b6",
+                  WebkitTextFillColor: record ? "#1a1a1a" : "#a0b8b6",
                 }}
               >
                 {/* Top row: week label + dots + CAT score */}
                 <div className="flex items-center justify-between w-full">
-                  <span style={{ color: record ? "#fff" : "#b8cccb", fontSize: 9, fontWeight: 700 }}>
+                  <span style={{ color: record ? "#1a1a1a" : "#b8cccb", fontSize: 9, fontWeight: 900 }}>
                     {t.week ?? "W"}{wn}
                   </span>
                   <div className="flex items-center gap-1.5">
@@ -226,7 +226,7 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
                       </div>
                     )}
                     {record && show.catScore && (
-                      <span style={{ fontSize: 12, fontWeight: 800, lineHeight: 1, color: "#fff" }}>
+                      <span style={{ fontSize: 12, fontWeight: 900, lineHeight: 1, color: record ? "#1a1a1a" : "#fff" }}>
                         {record.cat8}
                       </span>
                     )}
@@ -248,15 +248,15 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
                           borderRadius: "50%",
                           display: "flex", alignItems: "center", justifyContent: "center",
                           flexShrink: 0,
-                          background: isToday && record ? "rgba(255,255,255,0.25)" : "transparent",
-                          border: isToday && record ? "1.5px solid rgba(255,255,255,0.8)" : "none",
+                          background: isToday && record ? "rgba(0,0,0,0.12)" : "transparent",
+                          border: isToday && record ? "1.5px solid rgba(0,0,0,0.5)" : "none",
                         }}
                       >
                         <span style={{
                           fontSize: 10,
-                          fontWeight: isToday ? 800 : inMonth ? 600 : 400,
+                          fontWeight: isToday ? 900 : inMonth ? 700 : 400,
                           color: record
-                            ? inMonth ? "#fff" : "rgba(255,255,255,0.35)"
+                            ? inMonth ? "#1a1a1a" : "rgba(0,0,0,0.3)"
                             : inMonth ? "#a0b8b6" : "#d0e0de",
                           lineHeight: 1,
                         }}>
@@ -311,21 +311,67 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
       </div>
 
       {/* Monthly summary */}
-      <div className="mt-5 rounded-xl p-4 grid grid-cols-2 gap-3" style={{ background: "rgba(38,142,134,0.05)", border: "1px solid rgba(38,142,134,0.12)" }}>
-        <p className="col-span-2 text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "#268E86" }}>
-          {t.monthlySummary}
-        </p>
+      <div
+        className="mt-5 rounded-xl overflow-hidden"
+        style={{ background: "#fff", border: "1px solid rgba(38,142,134,0.14)", boxShadow: "0 4px 16px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08)" }}
+      >
+        <div className="px-4 pt-3 pb-2" style={{ borderBottom: "1px solid rgba(38,142,134,0.08)" }}>
+          <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#268E86" }}>
+            {t.monthlySummary}
+          </p>
+        </div>
+
         {[
-          [t.filledDays,     counts.filled,         "#268E86"],
-          [t.exacerbation,   counts.exacerbations,  "#ef4444"],
-          [t.lowImpact,      counts.low,             "#0f8a6a"],
-          [t.mediumImpact,   counts.medium,          "#a16200"],
-          [t.highImpact,     counts.high,            "#c05400"],
-          [t.veryHighImpact, counts.veryHigh,        "#b91c1c"],
-        ].map(([label, val, color]) => (
-          <div key={label} className="flex items-center justify-between">
-            <span className="text-xs" style={{ color: "#7a9a98" }}>{label}</span>
-            <span className="text-sm font-bold" style={{ color }}>{val}</span>
+          {
+            icon: "⬤",
+            iconColor: counts.filled === 0 ? "#a0b8b6"
+              : monthRecords.length && (monthRecords.reduce((s, r) => s + (r.cat8 ?? 0), 0) / monthRecords.length) <= 10 ? "#4CC189"
+              : (monthRecords.reduce((s, r) => s + (r.cat8 ?? 0), 0) / monthRecords.length) <= 20 ? "#FFC659"
+              : (monthRecords.reduce((s, r) => s + (r.cat8 ?? 0), 0) / monthRecords.length) <= 30 ? "#FF7473"
+              : "#BE3830",
+            label: t.avgSymptoms,
+            value: counts.filled
+              ? Math.round(monthRecords.reduce((s, r) => s + (r.cat8 ?? 0), 0) / monthRecords.length)
+              : "–",
+          },
+          {
+            icon: "⚠",
+            iconColor: "#f97316",
+            label: t.moderateExacerbation,
+            value: counts.exacerbations,
+          },
+          {
+            icon: "⚠",
+            iconColor: "#ef4444",
+            label: t.seriousExacerbation,
+            value: monthRecords.filter(r => r.seriousExacerbations).length,
+          },
+          {
+            icon: "🏃",
+            iconColor: "#268E86",
+            label: t.physicalActivity,
+            value: (() => {
+              const vals = monthRecords.filter(r => r.physicalActivity > 0);
+              return vals.length
+                ? `${Math.round(vals.reduce((s, r) => s + r.physicalActivity, 0) / vals.length)} ${t.hours ?? t.hour}`
+                : "–";
+            })(),
+          },
+          {
+            icon: "💊",
+            iconColor: "#0ea5e9",
+            label: t.weeksWithMedicine ?? t.medicines,
+            value: monthRecords.filter(r => r.medicines?.length > 0).length,
+          },
+        ].map(({ icon, iconColor, label, value }) => (
+          <div
+            key={label}
+            className="flex items-center px-4 py-2.5"
+            style={{ borderBottom: "1px solid rgba(38,142,134,0.06)" }}
+          >
+            <span className="w-6 text-base" style={{ color: iconColor }}>{icon}</span>
+            <span className="flex-1 text-sm ml-2" style={{ color: "#4a7a78" }}>{label}</span>
+            <span className="text-sm font-bold" style={{ color: "#b91c1c" }}>{value}</span>
           </div>
         ))}
       </div>
