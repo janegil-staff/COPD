@@ -87,20 +87,7 @@
   "gad7restless": "Agité",
   "gad7easilyAnnoyed": "Facilement irrité",
   "gad7afraid": "Peur de quelque chose",
-  "months": [
-    "Janvier",
-    "Février",
-    "Mars",
-    "Avril",
-    "Mai",
-    "Juin",
-    "Juillet",
-    "Août",
-    "Septembre",
-    "Octobre",
-    "Novembre",
-    "Décembre"
-  ],
+  "months": "mois",
   "days": [
     "Lun",
     "Mar",
@@ -127,5 +114,13 @@
   "hours": "heures",
   "searchPlaceholder": "Rechercher...",
   "weeksWithMedicine": "Semaines avec médicaments",
-  "hourSingular": "heure"
+  "hourSingular": "heure",
+  "activityLabels": [
+    "Aucune",
+    "Moins d'1 heure",
+    "1–2 heures",
+    "2–3 heures",
+    "Plus de 3 heures"
+  ],
+  "monthSingular": "mois"
 }

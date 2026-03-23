@@ -449,13 +449,6 @@ export default function SummaryPage() {
               </div>
             </Card>
           )}
-
-
-
-
-
-
-
         </div>
       </main>
     </div>

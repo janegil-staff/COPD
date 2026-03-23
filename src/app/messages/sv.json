@@ -87,20 +87,7 @@
   "gad7restless": "Rastlös",
   "gad7easilyAnnoyed": "Lättirriterad",
   "gad7afraid": "Rädd för något",
-  "months": [
-    "Januari",
-    "Februari",
-    "Mars",
-    "April",
-    "Maj",
-    "Juni",
-    "Juli",
-    "Augusti",
-    "September",
-    "Oktober",
-    "November",
-    "December"
-  ],
+  "months": "månader",
   "days": [
     "Mån",
     "Tis",
@@ -127,5 +114,13 @@
   "hours": "timmar",
   "searchPlaceholder": "Sök...",
   "weeksWithMedicine": "Veckor med medicin",
-  "hourSingular": "timme"
+  "hourSingular": "timme",
+  "activityLabels": [
+    "Ingen",
+    "Mindre än 1 timme",
+    "1–2 timmar",
+    "2–3 timmar",
+    "Mer än 3 timmar"
+  ],
+  "monthSingular": "månad"
 }

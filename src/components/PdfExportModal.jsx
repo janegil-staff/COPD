@@ -211,7 +211,7 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
         { label: t.daysRecorded,    value: String(filtered.length) },
         { label: t.catScore,        value: avgCat != null ? String(avgCat) : "–" },
         { label: t.exacerbation,    value: String(exCount) },
-        { label: t.physicalActivity, value: avgAct != null ? `${avgAct} ${avgAct === 1 ? (t.hourSingular ?? t.hours ?? t.hour) : (t.hours ?? t.hour)}` : "–" },
+        { label: t.physicalActivity, value: avgAct != null ? t.activityLabels?.[Math.round(avgAct)] ?? Math.round(avgAct) : "–" },
       ];
 
       const statW = CW / stats.length;
@@ -421,7 +421,7 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
           if (fields.weight   && r.weight != null)
             { doc.text(`${r.weight} kg`, COL.stats.x + PAD_SIDE, sy); sy += LINE_H; }
           if (fields.activity && r.physicalActivity > 0)
-            { doc.text(`${r.physicalActivity} ${r.physicalActivity === 1 ? (t.hourSingular ?? t.hours ?? t.hour) : (t.hours ?? t.hour)}`, COL.stats.x + PAD_SIDE, sy); }
+            { doc.text((t.activityLabels?.[r.physicalActivity] ?? r.physicalActivity) + "", COL.stats.x + PAD_SIDE, sy); }
         }
 
         // ── Exacerbation text ───────────────────────────────
@@ -527,7 +527,14 @@ export default function PdfExportModal({ open, onClose, patient, t }) {
           {/* Date range */}
           <div>
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: "#7a9a98" }}>
-              {t.lastFourMonths ?? "Period"}
+              {(() => {
+                if (!fromDate || !toDate) return t.lastFourMonths ?? "Period";
+                const from = new Date(fromDate);
+                const to   = new Date(toDate);
+                const months = (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth());
+                const rounded = Math.max(1, Math.round(months));
+                return `${rounded} ${rounded === 1 ? (t.monthSingular ?? t.month ?? "month") : (t.months ?? "months")}`;
+              })()}
             </p>
             <div className="grid grid-cols-2 gap-3">
               <DateInput

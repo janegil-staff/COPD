@@ -87,20 +87,7 @@
   "gad7restless": "Rusteloos",
   "gad7easilyAnnoyed": "Snel geïrriteerd",
   "gad7afraid": "Bang voor iets ergs",
-  "months": [
-    "Januari",
-    "Februari",
-    "Maart",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Augustus",
-    "September",
-    "Oktober",
-    "November",
-    "December"
-  ],
+  "months": "maanden",
   "days": [
     "Ma",
     "Di",
@@ -127,5 +114,13 @@
   "hours": "uur",
   "searchPlaceholder": "Zoeken...",
   "weeksWithMedicine": "Weken met medicijnen",
-  "hourSingular": "uur"
+  "hourSingular": "uur",
+  "activityLabels": [
+    "Geen",
+    "Minder dan 1 uur",
+    "1–2 uur",
+    "2–3 uur",
+    "Meer dan 3 uur"
+  ],
+  "monthSingular": "maand"
 }

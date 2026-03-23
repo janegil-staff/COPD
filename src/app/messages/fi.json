@@ -87,20 +87,7 @@
   "gad7restless": "Levoton",
   "gad7easilyAnnoyed": "Helposti ärsyyntyvä",
   "gad7afraid": "Pelokas jostakin",
-  "months": [
-    "Tammikuu",
-    "Helmikuu",
-    "Maaliskuu",
-    "Huhtikuu",
-    "Toukokuu",
-    "Kesäkuu",
-    "Heinäkuu",
-    "Elokuu",
-    "Syyskuu",
-    "Lokakuu",
-    "Marraskuu",
-    "Joulukuu"
-  ],
+  "months": "kuukautta",
   "days": [
     "Ma",
     "Ti",
@@ -127,5 +114,13 @@
   "hours": "tuntia",
   "searchPlaceholder": "Hae...",
   "weeksWithMedicine": "Viikkoja lääkkeellä",
-  "hourSingular": "tunti"
+  "hourSingular": "tunti",
+  "activityLabels": [
+    "Ei mitään",
+    "Alle 1 tunti",
+    "1–2 tuntia",
+    "2–3 tuntia",
+    "Yli 3 tuntia"
+  ],
+  "monthSingular": "kuukausi"
 }

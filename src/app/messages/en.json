@@ -87,20 +87,7 @@
   "gad7restless": "Restless",
   "gad7easilyAnnoyed": "Easily annoyed",
   "gad7afraid": "Feeling afraid",
-  "months": [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ],
+  "months": "months",
   "days": [
     "Mon",
     "Tue",
@@ -127,5 +114,13 @@
   "hours": "hours",
   "searchPlaceholder": "Search...",
   "weeksWithMedicine": "Weeks with medicine",
-  "hourSingular": "hour"
+  "hourSingular": "hour",
+  "activityLabels": [
+    "None",
+    "Less than 1 hour",
+    "1–2 hours",
+    "2–3 hours",
+    "More than 3 hours"
+  ],
+  "monthSingular": "month"
 }

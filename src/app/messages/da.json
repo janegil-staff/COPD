@@ -87,20 +87,7 @@
   "gad7restless": "Rastløs",
   "gad7easilyAnnoyed": "Let irritabel",
   "gad7afraid": "Bange for noget",
-  "months": [
-    "Januar",
-    "Februar",
-    "Marts",
-    "April",
-    "Maj",
-    "Juni",
-    "Juli",
-    "August",
-    "September",
-    "Oktober",
-    "November",
-    "December"
-  ],
+  "months": "måneder",
   "days": [
     "Man",
     "Tir",
@@ -127,5 +114,13 @@
   "hours": "timer",
   "searchPlaceholder": "Søg...",
   "weeksWithMedicine": "Uger med medicin",
-  "hourSingular": "time"
+  "hourSingular": "time",
+  "activityLabels": [
+    "Ingen",
+    "Under 1 time",
+    "1–2 timer",
+    "2–3 timer",
+    "Mere end 3 timer"
+  ],
+  "monthSingular": "måned"
 }
