@@ -199,7 +199,7 @@ export default function Dashboard() {
         medicines={patient.medicines}
         userMedicines={patient.userMedicines}
         show={show}
-      />
+      /> 
     </div>
   );
 }
