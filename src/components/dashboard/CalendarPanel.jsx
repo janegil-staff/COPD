@@ -266,22 +266,6 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
         </div>
       </div>
 
-      {/* Active dot legend */}
-      <div className="flex flex-wrap gap-4 mt-3">
-        {[
-          show.exacerbation && ["#ef4444", t.exacerbation],
-          show.note         && ["#8b5cf6", t.notes],
-          show.medicine     && ["#0ea5e9", t.medication],
-          show.activity     && ["#0f8a6a", t.physicalActivity],
-          show.weight       && ["#a16200", t.weight],
-        ].filter(Boolean).map(([color, label]) => (
-          <div key={label} className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full" style={{ background: color }} />
-            <span className="text-xs" style={{ color: "#7a9a98" }}>{label}</span>
-          </div>
-        ))}
-      </div>
-
       {/* Monthly summary */}
       <div
         className="mt-5 rounded-xl overflow-hidden"
