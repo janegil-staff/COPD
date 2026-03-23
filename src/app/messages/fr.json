@@ -122,5 +122,19 @@
     "2–3 heures",
     "Plus de 3 heures"
   ],
-  "monthSingular": "mois"
+  "monthSingular": "mois",
+  "monthNames": [
+    "Janvier",
+    "Février",
+    "Mars",
+    "Avril",
+    "Mai",
+    "Juin",
+    "Juillet",
+    "Août",
+    "Septembre",
+    "Octobre",
+    "Novembre",
+    "Décembre"
+  ]
 }

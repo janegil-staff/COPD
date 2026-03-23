@@ -122,5 +122,19 @@
     "2–3 timmar",
     "Mer än 3 timmar"
   ],
-  "monthSingular": "månad"
+  "monthSingular": "månad",
+  "monthNames": [
+    "Januari",
+    "Februari",
+    "Mars",
+    "April",
+    "Maj",
+    "Juni",
+    "Juli",
+    "Augusti",
+    "September",
+    "Oktober",
+    "November",
+    "December"
+  ]
 }

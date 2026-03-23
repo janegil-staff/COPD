@@ -122,5 +122,19 @@
     "2–3 timer",
     "Mere end 3 timer"
   ],
-  "monthSingular": "måned"
+  "monthSingular": "måned",
+  "monthNames": [
+    "Januar",
+    "Februar",
+    "Marts",
+    "April",
+    "Maj",
+    "Juni",
+    "Juli",
+    "August",
+    "September",
+    "Oktober",
+    "November",
+    "December"
+  ]
 }

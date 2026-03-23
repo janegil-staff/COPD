@@ -122,5 +122,19 @@
     "2–3 uur",
     "Meer dan 3 uur"
   ],
-  "monthSingular": "maand"
+  "monthSingular": "maand",
+  "monthNames": [
+    "Januari",
+    "Februari",
+    "Maart",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Augustus",
+    "September",
+    "Oktober",
+    "November",
+    "December"
+  ]
 }

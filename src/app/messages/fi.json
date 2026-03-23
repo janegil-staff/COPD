@@ -122,5 +122,19 @@
     "2–3 tuntia",
     "Yli 3 tuntia"
   ],
-  "monthSingular": "kuukausi"
+  "monthSingular": "kuukausi",
+  "monthNames": [
+    "Tammikuu",
+    "Helmikuu",
+    "Maaliskuu",
+    "Huhtikuu",
+    "Toukokuu",
+    "Kesäkuu",
+    "Heinäkuu",
+    "Elokuu",
+    "Syyskuu",
+    "Lokakuu",
+    "Marraskuu",
+    "Joulukuu"
+  ]
 }
