@@ -237,13 +237,13 @@ function RecordRow({ record, medicines, userMedicines, t, expanded, onToggle, is
           )}
 
           {/* Note */}
-          {record.note?.trim() && (
+          {(record.note?.trim() || record.notes?.trim() || record.noteText?.trim() || record.comment?.trim()) && (
             <div
               className="px-3 py-2.5 rounded-xl"
               style={{ background: "#f5f3ff", border: "1px solid #c4b5fd" }}
             >
               <p className="text-xs font-semibold mb-1" style={{ color: "#8b5cf6" }}>{t.note}</p>
-              <p className="text-sm" style={{ color: "#6d28d9" }}>{record.note}</p>
+              <p className="text-sm" style={{ color: "#6d28d9" }}>{record.note?.trim() || record.notes?.trim() || record.noteText?.trim() || record.comment?.trim()}</p>
             </div>
           )}
         </div>
@@ -299,9 +299,33 @@ export default function LogPage() {
 
   const filtered = records.filter((r) => {
     if (!search) return true;
-    const q = search.toLowerCase();
+    const q = search.toLowerCase().trim();
+
+    // ISO week number
+    const d   = new Date(r.date.slice(0,4), r.date.slice(5,7)-1, r.date.slice(8,10));
+    const dow = (d.getDay() + 6) % 7;
+    const thu = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + 3);
+    const jan4 = new Date(thu.getFullYear(), 0, 4);
+    const wn  = 1 + Math.round((thu - jan4) / 604800000);
+    const weekStr = `${t.week ?? "w"}${wn}`.toLowerCase();
+
+    // Mon–Sun range in DD.MM format (as displayed in the UI)
+    const mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow);
+    const sun = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + 6);
+    const fmt = (dd) => `${String(dd.getDate()).padStart(2,"0")}.${String(dd.getMonth()+1).padStart(2,"0")}`;
+    const weekRange = `${fmt(mon)} – ${fmt(sun)}`;
+
+    // Also match DD.MM.YYYY and DD.MM formats for the record date
+    const dateDotFull  = `${r.date.slice(8,10)}.${r.date.slice(5,7)}.${r.date.slice(0,4)}`;
+    const dateDotShort = `${r.date.slice(8,10)}.${r.date.slice(5,7)}`;
+
     return (
       r.date.includes(q) ||
+      dateDotFull.includes(q) ||
+      dateDotShort.includes(q) ||
+      weekRange.includes(q) ||
+      weekStr.includes(q) ||
+      String(wn) === q ||
       r.note?.toLowerCase().includes(q) ||
       (r.medicines ?? []).some((id) => {
         const m = patient.medicines?.find(x => x.id === id);
