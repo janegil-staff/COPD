@@ -309,24 +309,15 @@ export default function LogPage() {
     const wn  = 1 + Math.round((thu - jan4) / 604800000);
     const weekStr = `${t.week ?? "w"}${wn}`.toLowerCase();
 
-    // Mon–Sun range in DD.MM format (as displayed in the UI)
-    const mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow);
-    const sun = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + 6);
-    const fmt = (dd) => `${String(dd.getDate()).padStart(2,"0")}.${String(dd.getMonth()+1).padStart(2,"0")}`;
-    const weekRange = `${fmt(mon)} – ${fmt(sun)}`;
-
-    // Also match DD.MM.YYYY and DD.MM formats for the record date
-    const dateDotFull  = `${r.date.slice(8,10)}.${r.date.slice(5,7)}.${r.date.slice(0,4)}`;
-    const dateDotShort = `${r.date.slice(8,10)}.${r.date.slice(5,7)}`;
+    // CAT score
+    const catStr = String(r.cat8 ?? "");
 
     return (
-      r.date.includes(q) ||
-      dateDotFull.includes(q) ||
-      dateDotShort.includes(q) ||
-      weekRange.includes(q) ||
       weekStr.includes(q) ||
       String(wn) === q ||
+      catStr === q ||
       r.note?.toLowerCase().includes(q) ||
+      (r.notes?.toLowerCase() ?? "").includes(q) ||
       (r.medicines ?? []).some((id) => {
         const m = patient.medicines?.find(x => x.id === id);
         return m?.name?.toLowerCase().includes(q);
