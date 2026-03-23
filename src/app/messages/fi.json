@@ -126,5 +126,6 @@
   "week": "Viikko",
   "hours": "tuntia",
   "searchPlaceholder": "Hae...",
-  "weeksWithMedicine": "Viikkoja lääkkeellä"
+  "weeksWithMedicine": "Viikkoja lääkkeellä",
+  "hourSingular": "tunti"
 }

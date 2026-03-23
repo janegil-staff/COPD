@@ -118,8 +118,6 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
   };
 
   const checkboxes = [
-    { key: "catScore",     label: t.showCatScore,     color: "#268E86" },
-    { key: "exacerbation", label: t.showExacerbation, color: "#ef4444" },
     { key: "medicine",     label: t.showMedicine,     color: "#0ea5e9" },
     { key: "note",         label: t.showNote,         color: "#8b5cf6" },
     { key: "activity",     label: t.showActivity,     color: "#0f8a6a" },
@@ -140,31 +138,28 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
       {/* Week rows — one bar per week */}
       <div className="space-y-1">
         {(() => {
+          // Build week rows from ISO weeks that overlap with this month
           const rows = [];
-          let i = 0;
-          while (i < cells.length) {
-            const weekCells = cells.slice(i, i + 7);
-            const firstDay  = weekCells.find(d => d != null);
-            i += 7;
-            if (firstDay == null) continue;
+          const seen = new Set();
 
-            const dateStr = `${viewYear}-${pad(viewMonth + 1)}-${pad(firstDay)}`;
-            // Find the record for this week via weekMap
-            const record  = weekMap[dateStr];
-            const c       = CAT_COLOR(record?.cat8);
-            const isSelected = record && selectedDate === record.date;
+          // Iterate every day of the month, collect unique ISO weeks
+          const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+          for (let d = 1; d <= daysInMonth; d++) {
+            const date = new Date(viewYear, viewMonth, d);
+            const dow  = (date.getDay() + 6) % 7; // 0=Mon
+            const mon  = new Date(viewYear, viewMonth, d - dow);
+            const monKey = `${mon.getFullYear()}-${String(mon.getMonth()+1).padStart(2,"0")}-${String(mon.getDate()).padStart(2,"0")}`;
+            if (seen.has(monKey)) continue;
+            seen.add(monKey);
 
             // ISO week number
-            const d    = new Date(viewYear, viewMonth, firstDay);
-            const dow  = (d.getDay() + 6) % 7;
-            const thu  = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + 3);
+            const thu  = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + 3);
             const jan4 = new Date(thu.getFullYear(), 0, 4);
             const wn   = 1 + Math.round((thu - jan4) / 604800000);
 
-            // Mon–Sun date range
-            const mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow);
-            const sun = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + 6);
-            const fmt = (dd) => `${String(dd.getDate()).padStart(2,"0")}.${String(dd.getMonth()+1).padStart(2,"0")}`;
+            // Find record via weekMap using the Monday date
+            const record     = weekMap[monKey];
+            const isSelected = record && selectedDate === record.date;
 
             const showExDot   = show.exacerbation && record && (record.moderateExacerbations || record.seriousExacerbations);
             const showNoteDot = show.note     && record?.note?.trim();
@@ -173,16 +168,13 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
             const showWtDot   = show.weight   && record?.weight != null;
             const anyDot      = showExDot || showNoteDot || showMedDot || showActDot || showWtDot;
 
-            // Solid colour backgrounds per CAT level
             const bgColor = record
               ? record.cat8 <= 10 ? "#4CC189"
               : record.cat8 <= 20 ? "#FFC659"
               : record.cat8 <= 30 ? "#FF7473"
               : "#BE3830"
               : "rgba(38,142,134,0.05)";
-            const textColor = record ? "#fff" : "#a0b8b6";
-            const stripeColor = isSelected
-              ? "#0f6b63"
+            const stripeColor = isSelected ? "#0f6b63"
               : record
               ? record.cat8 <= 10 ? "#2e9e68"
               : record.cat8 <= 20 ? "#c99500"
@@ -192,7 +184,7 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
 
             rows.push(
               <div
-                key={`week-${wn}`}
+                key={monKey}
                 role="button"
                 tabIndex={record ? 0 : -1}
                 onClick={() => record && onDayClick(record)}
@@ -201,7 +193,6 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
                 style={{
                   background: bgColor,
                   border: isSelected ? `2.5px solid #1a1a1a` : "none",
-                  borderLeft: isSelected ? `2.5px solid #1a1a1a` : "none",
                   cursor: record ? "pointer" : "default",
                   boxShadow: isSelected ? "0 8px 24px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.4)" : record ? "0 1px 4px rgba(0,0,0,0.12)" : "none",
                   paddingLeft: 8, paddingRight: 10, paddingTop: 3, paddingBottom: 3,
@@ -210,31 +201,8 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
                   WebkitTextFillColor: record ? "#1a1a1a" : "#a0b8b6",
                 }}
               >
-                {/* Top row: week label + dots + CAT score */}
-                <div className="flex items-center justify-between w-full">
-                  <span style={{ color: record ? "#1a1a1a" : "#b8cccb", fontSize: 9, fontWeight: 900 }}>
-                    {t.week ?? "W"}{wn}
-                  </span>
-                  <div className="flex items-center gap-1.5">
-                    {anyDot && (
-                      <div className="flex gap-0.5">
-                        {showExDot   && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#ff6b6b" }} />}
-                        {showNoteDot && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#c084fc" }} />}
-                        {showMedDot  && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#38bdf8" }} />}
-                        {showActDot  && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#4ade80" }} />}
-                        {showWtDot   && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#fbbf24" }} />}
-                      </div>
-                    )}
-                    {record && show.catScore && (
-                      <span style={{ fontSize: 12, fontWeight: 900, lineHeight: 1, color: record ? "#1a1a1a" : "#fff" }}>
-                        {record.cat8}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Day numbers spanning full width */}
-                <div className="flex items-center justify-between w-full">
+                {/* Day numbers Mon–Sun */}
+                <div className="flex items-center justify-between w-full" style={{ direction: "ltr" }}>
                   {Array.from({ length: 7 }).map((_, di) => {
                     const dd      = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + di);
                     const inMonth = dd.getMonth() === viewMonth;
@@ -353,7 +321,7 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
             value: (() => {
               const vals = monthRecords.filter(r => r.physicalActivity > 0);
               return vals.length
-                ? `${Math.round(vals.reduce((s, r) => s + r.physicalActivity, 0) / vals.length)} ${t.hours ?? t.hour}`
+                ? (() => { const avg = Math.round(vals.reduce((s, r) => s + r.physicalActivity, 0) / vals.length); return `${avg} ${avg === 1 ? (t.hourSingular ?? t.hours ?? t.hour) : (t.hours ?? t.hour)}`; })()
                 : "–";
             })(),
           },

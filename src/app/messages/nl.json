@@ -126,5 +126,6 @@
   "week": "Week",
   "hours": "uur",
   "searchPlaceholder": "Zoeken...",
-  "weeksWithMedicine": "Weken met medicijnen"
+  "weeksWithMedicine": "Weken met medicijnen",
+  "hourSingular": "uur"
 }

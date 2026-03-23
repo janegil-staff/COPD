@@ -182,7 +182,7 @@ function RecordRow({ record, medicines, userMedicines, t, expanded, onToggle, is
                   style={{ background: "rgba(38,142,134,0.05)", border: "1px solid rgba(38,142,134,0.12)" }}
                 >
                   <p className="text-xs" style={{ color: "#7a9a98" }}>{t.physicalActivity}</p>
-                  <p className="text-sm font-bold" style={{ color: "#268E86" }}>{record.physicalActivity} {t.hours ?? t.hour}</p>
+                  <p className="text-sm font-bold" style={{ color: "#268E86" }}>{record.physicalActivity} {record.physicalActivity === 1 ? (t.hourSingular ?? t.hours ?? t.hour) : (t.hours ?? t.hour)}</p>
                 </div>
               )}
             </div>

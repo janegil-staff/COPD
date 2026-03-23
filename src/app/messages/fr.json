@@ -126,5 +126,6 @@
   "week": "Semaine",
   "hours": "heures",
   "searchPlaceholder": "Rechercher...",
-  "weeksWithMedicine": "Semaines avec médicaments"
+  "weeksWithMedicine": "Semaines avec médicaments",
+  "hourSingular": "heure"
 }

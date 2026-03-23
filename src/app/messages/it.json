@@ -126,5 +126,6 @@
   "week": "Settimana",
   "hours": "ore",
   "searchPlaceholder": "Cerca...",
-  "weeksWithMedicine": "Settimane con farmaci"
+  "weeksWithMedicine": "Settimane con farmaci",
+  "hourSingular": "ora"
 }
