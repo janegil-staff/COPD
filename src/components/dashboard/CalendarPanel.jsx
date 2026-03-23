@@ -319,9 +319,9 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
             iconColor: "#268E86",
             label: t.physicalActivity,
             value: (() => {
-              const vals = monthRecords.filter(r => r.physicalActivity > 0);
-              return vals.length
-                ? (() => { const avg = Math.round(vals.reduce((s, r) => s + r.physicalActivity, 0) / vals.length); return `${avg} ${avg === 1 ? (t.hourSingular ?? t.hours ?? t.hour) : (t.hours ?? t.hour)}`; })()
+              const total = monthRecords.reduce((s, r) => s + (r.physicalActivity ?? 0), 0);
+              return total > 0
+                ? `${total} ${total === 1 ? (t.hourSingular ?? t.hours ?? t.hour) : (t.hours ?? t.hour)}`
                 : "–";
             })(),
           },

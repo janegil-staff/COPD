@@ -118,7 +118,7 @@
   "showActivity": "Pokaż aktywność",
   "showWeight": "Pokaż wagę",
   "showIn": "Pokaż w kalendarzu",
-  "sessionExpiring": "Zostaniesz wylogowany za 1 minutę.",
+  "sessionExpiring": "Zostaniesz wylogowany w mniej niż minutę.",
   "downloadPdf": "Pobierz PDF",
   "reportDate": "Data raportu",
   "reportTitle": "Raport objawów",

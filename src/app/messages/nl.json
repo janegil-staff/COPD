@@ -118,7 +118,7 @@
   "showActivity": "Toon activiteit",
   "showWeight": "Toon gewicht",
   "showIn": "Toon in kalender",
-  "sessionExpiring": "U wordt over 1 minuut uitgelogd.",
+  "sessionExpiring": "U wordt binnen minder dan een minuut uitgelogd.",
   "downloadPdf": "PDF downloaden",
   "reportDate": "Rapportdatum",
   "reportTitle": "Symptoomrapport",

@@ -118,7 +118,7 @@
   "showActivity": "Aktivität anzeigen",
   "showWeight": "Gewicht anzeigen",
   "showIn": "Im Kalender anzeigen",
-  "sessionExpiring": "Sie werden in 1 Minute abgemeldet.",
+  "sessionExpiring": "Sie werden in weniger als einer Minute abgemeldet.",
   "downloadPdf": "PDF herunterladen",
   "reportDate": "Berichtsdatum",
   "reportTitle": "Symptombericht",

@@ -118,7 +118,7 @@
   "showActivity": "Näytä aktiviteetti",
   "showWeight": "Näytä paino",
   "showIn": "Näytä kalenterissa",
-  "sessionExpiring": "Sinut kirjataan ulos 1 minuutin kuluttua.",
+  "sessionExpiring": "Sinut kirjataan ulos alle minuutissa.",
   "downloadPdf": "Lataa PDF",
   "reportDate": "Raporttipäivä",
   "reportTitle": "Oireraportti",

@@ -118,7 +118,7 @@
   "showActivity": "Afficher activité",
   "showWeight": "Afficher poids",
   "showIn": "Afficher dans le calendrier",
-  "sessionExpiring": "Vous serez déconnecté dans 1 minute.",
+  "sessionExpiring": "Vous serez déconnecté dans moins d'une minute.",
   "downloadPdf": "Télécharger PDF",
   "reportDate": "Date du rapport",
   "reportTitle": "Rapport de symptômes",

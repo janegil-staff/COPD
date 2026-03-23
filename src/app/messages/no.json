@@ -118,7 +118,7 @@
   "showActivity": "Vis aktivitet",
   "showWeight": "Vis vekt",
   "showIn": "Vis i kalender",
-  "sessionExpiring": "Du blir logget ut om 1 minutt.",
+  "sessionExpiring": "Du blir logget ut om mindre enn ett minutt.",
   "downloadPdf": "Last ned PDF",
   "reportDate": "Rapportdato",
   "reportTitle": "Symptomrapport",
