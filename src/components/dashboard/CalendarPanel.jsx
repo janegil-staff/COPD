@@ -34,11 +34,20 @@ function Checkbox({ checked, onChange, label, color }) {
       >
         {checked && (
           <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
-            <path d="M1 3.5L3.5 6L8 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M1 3.5L3.5 6L8 1"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         )}
       </div>
-      <span className="text-xs font-medium" style={{ color: checked ? "#1a3a38" : "#a0b8b6" }}>
+      <span
+        className="text-xs font-medium"
+        style={{ color: checked ? "#1a3a38" : "#a0b8b6" }}
+      >
         {label}
       </span>
     </label>
@@ -46,10 +55,20 @@ function Checkbox({ checked, onChange, label, color }) {
 }
 
 // show and onToggleShow come from page.js (lifted state)
-export default function CalendarPanel({ t, records, medicines, onDayClick, selectedDate, show, onToggleShow }) {
+export default function CalendarPanel({
+  t,
+  records,
+  medicines,
+  onDayClick,
+  selectedDate,
+  show,
+  onToggleShow,
+}) {
   const recordMap = useMemo(() => {
     const map = {};
-    (records || []).forEach((r) => { map[r.date] = r; });
+    (records || []).forEach((r) => {
+      map[r.date] = r;
+    });
     return map;
   }, [records]);
 
@@ -64,44 +83,69 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
     };
 
     const toKey = (d) =>
-      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
     (records || []).forEach((r) => {
-      const d   = parseLocal(r.date);
+      const d = parseLocal(r.date);
       const dow = (d.getDay() + 6) % 7; // 0=Mon … 6=Sun
       for (let i = 0; i < 7; i++) {
-        const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + i);
+        const dd = new Date(
+          d.getFullYear(),
+          d.getMonth(),
+          d.getDate() - dow + i,
+        );
         const key = toKey(dd);
         if (!map[key]) map[key] = r;
       }
     });
     // Exact record dates always win
-    (records || []).forEach((r) => { map[r.date] = r; });
+    (records || []).forEach((r) => {
+      map[r.date] = r;
+    });
     return map;
   }, [records]);
 
   const now = new Date();
   const [viewYear, setViewYear] = useState(() => {
-    if (records?.length) return parseInt(records[records.length - 1].date.slice(0, 4));
+    if (records?.length)
+      return parseInt(records[records.length - 1].date.slice(0, 4));
     return now.getFullYear();
   });
   const [viewMonth, setViewMonth] = useState(() => {
-    if (records?.length) return parseInt(records[records.length - 1].date.slice(5, 7)) - 1;
+    if (records?.length)
+      return parseInt(records[records.length - 1].date.slice(5, 7)) - 1;
     return now.getMonth();
   });
 
-  const cells  = buildCalendar(viewYear, viewMonth);
-  const pad    = (n) => String(n).padStart(2, "0");
-  const months = t.monthNames ?? ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  const days   = t.days   ?? ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const cells = buildCalendar(viewYear, viewMonth);
+  const pad = (n) => String(n).padStart(2, "0");
+  const months = t.monthNames ?? [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const days = t.days ?? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const prevMonth = () => {
-    if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); }
-    else setViewMonth(m => m - 1);
+    if (viewMonth === 0) {
+      setViewMonth(11);
+      setViewYear((y) => y - 1);
+    } else setViewMonth((m) => m - 1);
   };
   const nextMonth = () => {
-    if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); }
-    else setViewMonth(m => m + 1);
+    if (viewMonth === 11) {
+      setViewMonth(0);
+      setViewYear((y) => y + 1);
+    } else setViewMonth((m) => m + 1);
   };
 
   const monthRecords = Object.entries(recordMap)
@@ -109,30 +153,54 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
     .map(([, r]) => r);
 
   const counts = {
-    low:           monthRecords.filter(r => r.cat8 != null && r.cat8 <= 10).length,
-    medium:        monthRecords.filter(r => r.cat8 != null && r.cat8 > 10 && r.cat8 <= 20).length,
-    high:          monthRecords.filter(r => r.cat8 != null && r.cat8 > 20 && r.cat8 <= 30).length,
-    veryHigh:      monthRecords.filter(r => r.cat8 != null && r.cat8 > 30).length,
-    exacerbations: monthRecords.filter(r => r.moderateExacerbations || r.seriousExacerbations).length,
-    filled:        monthRecords.length,
+    low: monthRecords.filter((r) => r.cat8 != null && r.cat8 <= 10).length,
+    medium: monthRecords.filter(
+      (r) => r.cat8 != null && r.cat8 > 10 && r.cat8 <= 20,
+    ).length,
+    high: monthRecords.filter(
+      (r) => r.cat8 != null && r.cat8 > 20 && r.cat8 <= 30,
+    ).length,
+    veryHigh: monthRecords.filter((r) => r.cat8 != null && r.cat8 > 30).length,
+    exacerbations: monthRecords.filter(
+      (r) => r.moderateExacerbations || r.seriousExacerbations,
+    ).length,
+    filled: monthRecords.length,
   };
 
   const checkboxes = [
-    { key: "medicine",     label: t.showMedicine,     color: "#0ea5e9" },
-    { key: "note",         label: t.showNote,         color: "#8b5cf6" },
-    { key: "activity",     label: t.showActivity,     color: "#0f8a6a" },
-    { key: "weight",       label: t.showWeight,       color: "#a16200" },
+    { key: "medicine", label: t.showMedicine, color: "#0ea5e9" },
+    { key: "note", label: t.showNote, color: "#8b5cf6" },
+    { key: "activity", label: t.showActivity, color: "#0f8a6a" },
+    { key: "weight", label: t.showWeight, color: "#a16200" },
   ];
 
   return (
     <div>
       {/* Month navigation */}
       <div className="flex items-center justify-between mb-4">
-        <button onClick={prevMonth} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 transition-all" style={{ color: "#268E86", fontSize: 18 }}>‹</button>
-        <h2 className="text-lg font-bold tracking-wide" style={{ color: "#1a3a38", fontFamily: "'Playfair Display', Georgia, serif" }}>
+        <button
+          onClick={prevMonth}
+          className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 transition-all"
+          style={{ color: "#268E86", fontSize: 18 }}
+        >
+          ‹
+        </button>
+        <h2
+          className="text-lg font-bold tracking-wide"
+          style={{
+            color: "#1a3a38",
+            fontFamily: "'Playfair Display', Georgia, serif",
+          }}
+        >
           {months[viewMonth]} {viewYear}
         </h2>
-        <button onClick={nextMonth} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 transition-all" style={{ color: "#268E86", fontSize: 18 }}>›</button>
+        <button
+          onClick={nextMonth}
+          className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 transition-all"
+          style={{ color: "#268E86", fontSize: 18 }}
+        >
+          ›
+        </button>
       </div>
 
       {/* Week rows — one bar per week */}
@@ -146,43 +214,60 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
           const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
           for (let d = 1; d <= daysInMonth; d++) {
             const date = new Date(viewYear, viewMonth, d);
-            const dow  = (date.getDay() + 6) % 7; // 0=Mon
-            const mon  = new Date(viewYear, viewMonth, d - dow);
-            const monKey = `${mon.getFullYear()}-${String(mon.getMonth()+1).padStart(2,"0")}-${String(mon.getDate()).padStart(2,"0")}`;
+            const dow = (date.getDay() + 6) % 7; // 0=Mon
+            const mon = new Date(viewYear, viewMonth, d - dow);
+            const monKey = `${mon.getFullYear()}-${String(mon.getMonth() + 1).padStart(2, "0")}-${String(mon.getDate()).padStart(2, "0")}`;
             if (seen.has(monKey)) continue;
             seen.add(monKey);
 
             // ISO week number
-            const thu  = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + 3);
+            const thu = new Date(
+              mon.getFullYear(),
+              mon.getMonth(),
+              mon.getDate() + 3,
+            );
             const jan4 = new Date(thu.getFullYear(), 0, 4);
-            const wn   = 1 + Math.round((thu - jan4) / 604800000);
+            const wn = 1 + Math.round((thu - jan4) / 604800000);
 
             // Find record via weekMap using the Monday date
-            const record     = weekMap[monKey];
+            const record = weekMap[monKey];
             const isSelected = record && selectedDate === record.date;
 
-            const showExDot   = show.exacerbation && record && (record.moderateExacerbations || record.seriousExacerbations);
-            const showNoteDot = show.note     && record?.note?.trim();
-            const showMedDot  = show.medicine && record?.medicines?.length > 0;
-            const showActDot  = show.activity && record?.physicalActivity > 0;
-            const showWtDot   = show.weight   && record?.weight != null;
-            const anyDot      = showExDot || showNoteDot || showMedDot || showActDot || showWtDot;
+            const showExDot =
+              show.exacerbation &&
+              record &&
+              (record.moderateExacerbations || record.seriousExacerbations);
+            const showNoteDot = show.note && record?.note?.trim();
+            const showMedDot = show.medicine && record?.medicines?.length > 0;
+            const showActDot = show.activity && record?.physicalActivity > 0;
+            const showWtDot = show.weight && record?.weight != null;
+            const anyDot =
+              showExDot || showNoteDot || showMedDot || showActDot || showWtDot;
 
             const bgColor = record
-              ? record.cat8 == null ? "rgba(38,142,134,0.08)"
-              : record.cat8 <= 10 ? "#4CC189"
-              : record.cat8 <= 20 ? "#FFC659"
-              : record.cat8 <= 30 ? "#FF7473"
-              : "#BE3830"
+              ? record.cat8 == null
+                ? "rgba(38,142,134,0.08)"
+                : record.cat8 <= 10
+                  ? "#4CC189"
+                  : record.cat8 <= 20
+                    ? "#FFC659"
+                    : record.cat8 <= 30
+                      ? "#FF7473"
+                      : "#BE3830"
               : "rgba(38,142,134,0.03)";
-            const stripeColor = isSelected ? "#0f6b63"
+            const stripeColor = isSelected
+              ? "#0f6b63"
               : record
-              ? record.cat8 == null ? "rgba(38,142,134,0.2)"
-              : record.cat8 <= 10 ? "#2e9e68"
-              : record.cat8 <= 20 ? "#c99500"
-              : record.cat8 <= 30 ? "#cc4040"
-              : "#8a2020"
-              : "rgba(38,142,134,0.08)";
+                ? record.cat8 == null
+                  ? "rgba(38,142,134,0.2)"
+                  : record.cat8 <= 10
+                    ? "#2e9e68"
+                    : record.cat8 <= 20
+                      ? "#c99500"
+                      : record.cat8 <= 30
+                        ? "#cc4040"
+                        : "#8a2020"
+                : "rgba(38,142,134,0.08)";
 
             rows.push(
               <div
@@ -190,55 +275,84 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
                 role="button"
                 tabIndex={record ? 0 : -1}
                 onClick={() => record && onDayClick(record)}
-                onKeyDown={(e) => e.key === "Enter" && record && onDayClick(record)}
+                onKeyDown={(e) =>
+                  e.key === "Enter" && record && onDayClick(record)
+                }
                 className="w-full flex flex-col rounded-xl transition-all overflow-hidden"
                 style={{
                   background: bgColor,
                   border: "none",
                   cursor: record ? "pointer" : "default",
                   boxShadow: record ? "0 1px 4px rgba(0,0,0,0.12)" : "none",
-                  paddingLeft: 8, paddingRight: 10, paddingTop: 3, paddingBottom: 3,
+                  paddingLeft: 8,
+                  paddingRight: 10,
+                  paddingTop: 3,
+                  paddingBottom: 3,
                   gap: 1,
                   color: record ? "#1a1a1a" : "#a0b8b6",
                   WebkitTextFillColor: record ? "#1a1a1a" : "#a0b8b6",
                 }}
               >
                 {/* Day numbers Mon–Sun */}
-                <div className="flex items-center justify-between w-full" style={{ direction: "ltr" }}>
+                <div
+                  className="flex items-center justify-between w-full"
+                  style={{ direction: "ltr" }}
+                >
                   {Array.from({ length: 7 }).map((_, di) => {
-                    const dd      = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + di);
+                    const dd = new Date(
+                      mon.getFullYear(),
+                      mon.getMonth(),
+                      mon.getDate() + di,
+                    );
                     const inMonth = dd.getMonth() === viewMonth;
-                    const dayNum  = dd.getDate();
+                    const dayNum = dd.getDate();
                     const isToday = dd.toDateString() === now.toDateString();
                     return (
                       <div
                         key={di}
                         style={{
-                          width: 18, height: 18,
+                          width: 18,
+                          height: 18,
                           borderRadius: "50%",
-                          display: "flex", alignItems: "center", justifyContent: "center",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
                           flexShrink: 0,
-                          background: isToday && record ? "rgba(0,0,0,0.12)" : "transparent",
-                          border: isToday && record ? "1.5px solid rgba(0,0,0,0.5)" : "none",
+                          background:
+                            isToday && record
+                              ? "rgba(0,0,0,0.12)"
+                              : "transparent",
+                          border:
+                            isToday && record
+                              ? "1.5px solid rgba(0,0,0,0.5)"
+                              : "none",
                         }}
                       >
-                        <span style={{
-                          fontSize: 10,
-                          fontWeight: isToday ? 900 : 700,
-                          color: record
-                            ? record.cat8 == null
-                              ? inMonth ? "rgba(38,142,134,0.5)" : "rgba(38,142,134,0.25)"
-                              : inMonth ? "#1a1a1a" : "rgba(0,0,0,0.3)"
-                            : inMonth ? "#a0b8b6" : "#d0e0de",
-                          lineHeight: 1,
-                        }}>
+                        <span
+                          style={{
+                            fontSize: 10,
+                            fontWeight: isToday ? 900 : 700,
+                            color: record
+                              ? record.cat8 == null
+                                ? inMonth
+                                  ? "rgba(38,142,134,0.5)"
+                                  : "rgba(38,142,134,0.25)"
+                                : inMonth
+                                  ? "#1a1a1a"
+                                  : "rgba(0,0,0,0.3)"
+                              : inMonth
+                                ? "#a0b8b6"
+                                : "#d0e0de",
+                            lineHeight: 1,
+                          }}
+                        >
                           {dayNum}
                         </span>
                       </div>
                     );
                   })}
                 </div>
-              </div>
+              </div>,
             );
           }
           return rows;
@@ -248,9 +362,15 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
       {/* Visibility checkboxes */}
       <div
         className="mt-4 rounded-xl px-4 py-3"
-        style={{ background: "rgba(38,142,134,0.03)", border: "1px solid rgba(38,142,134,0.1)" }}
+        style={{
+          background: "rgba(38,142,134,0.03)",
+          border: "1px solid rgba(38,142,134,0.1)",
+        }}
       >
-        <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: "#7a9a98" }}>
+        <p
+          className="text-xs font-semibold tracking-widest uppercase mb-3"
+          style={{ color: "#7a9a98" }}
+        >
           {t.showIn}
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2.5">
@@ -266,29 +386,23 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
         </div>
       </div>
 
-      {/* Active dot legend */}
-      <div className="flex flex-wrap gap-4 mt-3">
-        {[
-          show.exacerbation && ["#ef4444", t.exacerbation],
-          show.note         && ["#8b5cf6", t.notes],
-          show.medicine     && ["#0ea5e9", t.medication],
-          show.activity     && ["#0f8a6a", t.physicalActivity],
-          show.weight       && ["#a16200", t.weight],
-        ].filter(Boolean).map(([color, label]) => (
-          <div key={label} className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full" style={{ background: color }} />
-            <span className="text-xs" style={{ color: "#7a9a98" }}>{label}</span>
-          </div>
-        ))}
-      </div>
-
       {/* Monthly summary */}
       <div
         className="mt-5 rounded-xl overflow-hidden"
-        style={{ background: "#fff", border: "1px solid rgba(38,142,134,0.14)", boxShadow: "0 4px 16px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08)" }}
+        style={{
+          background: "#fff",
+          border: "1px solid rgba(38,142,134,0.14)",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08)",
+        }}
       >
-        <div className="px-4 pt-3 pb-2" style={{ borderBottom: "1px solid rgba(38,142,134,0.08)" }}>
-          <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#268E86" }}>
+        <div
+          className="px-4 pt-3 pb-2"
+          style={{ borderBottom: "1px solid rgba(38,142,134,0.08)" }}
+        >
+          <p
+            className="text-xs font-semibold tracking-widest uppercase"
+            style={{ color: "#268E86" }}
+          >
             {t.monthlySummary}
           </p>
         </div>
@@ -296,14 +410,29 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
         {[
           {
             icon: "⬤",
-            iconColor: counts.filled === 0 ? "#a0b8b6"
-              : monthRecords.length && (monthRecords.reduce((s, r) => s + (r.cat8 ?? 0), 0) / monthRecords.length) <= 10 ? "#4CC189"
-              : (monthRecords.reduce((s, r) => s + (r.cat8 ?? 0), 0) / monthRecords.length) <= 20 ? "#FFC659"
-              : (monthRecords.reduce((s, r) => s + (r.cat8 ?? 0), 0) / monthRecords.length) <= 30 ? "#FF7473"
-              : "#BE3830",
+            iconColor:
+              counts.filled === 0
+                ? "#a0b8b6"
+                : monthRecords.length &&
+                    monthRecords.reduce((s, r) => s + (r.cat8 ?? 0), 0) /
+                      monthRecords.length <=
+                      10
+                  ? "#4CC189"
+                  : monthRecords.reduce((s, r) => s + (r.cat8 ?? 0), 0) /
+                        monthRecords.length <=
+                      20
+                    ? "#FFC659"
+                    : monthRecords.reduce((s, r) => s + (r.cat8 ?? 0), 0) /
+                          monthRecords.length <=
+                        30
+                      ? "#FF7473"
+                      : "#BE3830",
             label: t.avgSymptoms,
             value: counts.filled
-              ? Math.round(monthRecords.reduce((s, r) => s + (r.cat8 ?? 0), 0) / monthRecords.length)
+              ? Math.round(
+                  monthRecords.reduce((s, r) => s + (r.cat8 ?? 0), 0) /
+                    monthRecords.length,
+                )
               : "–",
           },
           {
@@ -316,16 +445,18 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
             icon: "⚠",
             iconColor: "#ef4444",
             label: t.seriousExacerbation,
-            value: monthRecords.filter(r => r.seriousExacerbations).length,
+            value: monthRecords.filter((r) => r.seriousExacerbations).length,
           },
           {
             icon: "🏃",
             iconColor: "#268E86",
             label: t.physicalActivity,
             value: (() => {
-              const vals = monthRecords.filter(r => r.physicalActivity > 0);
+              const vals = monthRecords.filter((r) => r.physicalActivity > 0);
               if (!vals.length) return "–";
-              const avg = Math.round(vals.reduce((s, r) => s + r.physicalActivity, 0) / vals.length);
+              const avg = Math.round(
+                vals.reduce((s, r) => s + r.physicalActivity, 0) / vals.length,
+              );
               return t.activityLabels?.[avg] ?? avg;
             })(),
           },
@@ -333,7 +464,7 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
             icon: "💊",
             iconColor: "#0ea5e9",
             label: t.weeksWithMedicine ?? t.medicines,
-            value: monthRecords.filter(r => r.medicines?.length > 0).length,
+            value: monthRecords.filter((r) => r.medicines?.length > 0).length,
           },
         ].map(({ icon, iconColor, label, value }) => (
           <div
@@ -341,13 +472,18 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
             className="flex items-center px-4 py-2.5"
             style={{ borderBottom: "1px solid rgba(38,142,134,0.06)" }}
           >
-            <span className="w-6 text-base" style={{ color: iconColor }}>{icon}</span>
-            <span className="flex-1 text-sm ml-2" style={{ color: "#4a7a78" }}>{label}</span>
-            <span className="text-sm font-bold" style={{ color: "#b91c1c" }}>{value}</span>
+            <span className="w-6 text-base" style={{ color: iconColor }}>
+              {icon}
+            </span>
+            <span className="flex-1 text-sm ml-2" style={{ color: "#4a7a78" }}>
+              {label}
+            </span>
+            <span className="text-sm font-bold" style={{ color: "#b91c1c" }}>
+              {value}
+            </span>
           </div>
         ))}
       </div>
-
     </div>
   );
 }
