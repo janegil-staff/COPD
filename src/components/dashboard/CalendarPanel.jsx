@@ -222,7 +222,7 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
                       >
                         <span style={{
                           fontSize: 10,
-                          fontWeight: isToday ? 900 : inMonth ? 700 : 400,
+                          fontWeight: isToday ? 900 : 700,
                           color: record
                             ? inMonth ? "#1a1a1a" : "rgba(0,0,0,0.3)"
                             : inMonth ? "#a0b8b6" : "#d0e0de",
