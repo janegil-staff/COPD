@@ -117,7 +117,7 @@ export default function Sidebar({ t, patient, selectedRecord, show }) {
                 {show.activity && selectedRecord.physicalActivity > 0 && (
                   <div className="flex-1 px-3 py-2 rounded-xl text-center" style={{ background: "rgba(38,142,134,0.06)", border: "1px solid rgba(38,142,134,0.15)" }}>
                     <p className="text-xs" style={{ color: "#7a9a98" }}>{t.physicalActivity}</p>
-                    <p className="text-sm font-bold" style={{ color: "#268E86" }}>{selectedRecord.physicalActivity} {selectedRecord.physicalActivity === 1 ? (t.hourSingular ?? t.hours ?? t.hour) : (t.hours ?? t.hour)}</p>
+                    <p className="text-sm font-bold" style={{ color: "#268E86" }}>{t.activityLabels?.[selectedRecord.physicalActivity] ?? selectedRecord.physicalActivity}</p>
                   </div>
                 )}
               </div>
@@ -170,57 +170,6 @@ export default function Sidebar({ t, patient, selectedRecord, show }) {
         </>
       )}
 
-      {/* GAD-7 — not tied to checkboxes (it's a questionnaire, not a calendar indicator) */}
-      {gad7 && (
-        <>
-          <SectionHeader>{t.anxiety} · {gad7.date}</SectionHeader>
-          <div className="px-5 pb-4 space-y-2">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs" style={{ color: "#7a9a98" }}>{t.anxietySum}</span>
-              <span
-                className="text-sm font-bold px-3 py-0.5 rounded-full"
-                style={{ background: `${gad7Color}18`, color: gad7Color, border: `1px solid ${gad7Color}40` }}
-              >
-                {gad7Sum} · {gad7Level}
-              </span>
-            </div>
-            {GAD7_KEYS.map((key) => (
-              <div key={key} className="flex items-center gap-2">
-                <span className="text-xs shrink-0" style={{ color: "#7a9a98", width: 148 }}>
-                  {t[`gad7${key.charAt(0).toUpperCase()}${key.slice(1)}`] ?? key}
-                </span>
-                <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(38,142,134,0.1)" }}>
-                  <div className="h-full rounded-full" style={{ width: `${((gad7[key] ?? 0) / 3) * 100}%`, background: gad7Color }} />
-                </div>
-                <span className="text-xs w-3 text-right" style={{ color: "#7a9a98" }}>{gad7[key] ?? 0}</span>
-              </div>
-            ))}
-          </div>
-          <Divider />
-        </>
-      )}
-
-      {/* Medicine satisfaction — not tied to checkboxes */}
-      {medSat?.medicines?.length > 0 && (
-        <>
-          <SectionHeader>{t.medicineSatisfaction} · {medSat.date}</SectionHeader>
-          <div className="px-5 pb-5 space-y-2">
-            {medSat.medicines.map((ms) => {
-              const med = patient.userMedicines?.find(um => um.medicineId === ms.medicineId)?.medicine;
-              return (
-                <div key={ms.medicineId} className="flex items-center justify-between">
-                  <span className="text-xs" style={{ color: "#7a9a98" }}>{med?.name ?? `ID ${ms.medicineId}`}</span>
-                  <div className="flex gap-0.5">
-                    {[1,2,3,4,5].map((star) => (
-                      <span key={star} style={{ color: star <= ms.satisfaction ? "#f59e0b" : "#d1e8e6", fontSize: 14 }}>★</span>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )}
     </div>
   );
 }
