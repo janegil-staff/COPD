@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLang } from "@/context/LangContext";
 import CalendarPanel from "@/components/dashboard/CalendarPanel";
-import Sidebar from "@/components/dashboard/Sidebar";
 import DayDetailDrawer from "@/components/dashboard/DayDetailDrawer";
 import no from "@/app/messages/no.json";
 import en from "@/app/messages/en.json";
@@ -100,7 +99,7 @@ export default function Dashboard() {
           <button onClick={() => router.push("/log")} className="text-xs px-4 py-1.5 rounded-full font-semibold transition-all hover:opacity-80" style={{ background: "rgba(38,142,134,0.08)", color: "#268E86", border: "1px solid rgba(38,142,134,0.2)" }}>
             {t.logTab}
           </button>
-          <button onClick={() => { sessionStorage.removeItem("patientData"); router.replace("/"); }} className="text-xs px-4 py-1.5 rounded-full font-semibold transition-all hover:opacity-80" style={{ background: "rgba(38,142,134,0.12)", color: "#268E86", border: "1px solid rgba(38,142,134,0.3)" }}>
+          <button onClick={() => { sessionStorage.removeItem("patientData"); localStorage.removeItem("sessionStartAt"); router.replace("/"); }} className="text-xs px-4 py-1.5 rounded-full font-semibold transition-all hover:opacity-80" style={{ background: "rgba(38,142,134,0.12)", color: "#268E86", border: "1px solid rgba(38,142,134,0.3)" }}>
             {t.logout}
           </button>
         </div>
@@ -135,7 +134,7 @@ export default function Dashboard() {
                 {[
                   { label: t.summaryTab, action: () => { setMenuOpen(false); router.push("/summary"); } },
                   { label: t.logTab,     action: () => { setMenuOpen(false); router.push("/log"); } },
-                  { label: t.logout,     action: () => { setMenuOpen(false); sessionStorage.removeItem("patientData"); router.replace("/"); }, danger: true },
+                  { label: t.logout,     action: () => { setMenuOpen(false); sessionStorage.removeItem("patientData"); localStorage.removeItem("sessionStartAt"); router.replace("/"); }, danger: true },
                 ].map(({ label, action, danger }) => (
                   <button
                     key={label}
@@ -174,21 +173,6 @@ export default function Dashboard() {
             onToggleShow={toggleShow}
           />
         </div>
-
-        {/* <div
-          className="hidden lg:block rounded-2xl shadow-xl overflow-y-auto flex-shrink-0"
-          style={{
-            background: "rgba(255,255,255,0.88)",
-            backdropFilter: "blur(16px)",
-            border: "1px solid rgba(38,142,134,0.18)",
-            width: 290,
-            maxHeight: "calc(100vh - 120px)",
-            position: "sticky",
-            top: 24,
-          }}
-        >
-          <Sidebar t={t} patient={patient} selectedRecord={selectedRecord} show={show} /> 
-        </div> */}
       </main>
 
       <DayDetailDrawer
@@ -199,7 +183,7 @@ export default function Dashboard() {
         medicines={patient.medicines}
         userMedicines={patient.userMedicines}
         show={show}
-      /> 
+      />
     </div>
   );
 }

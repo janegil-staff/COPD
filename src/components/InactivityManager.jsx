@@ -44,7 +44,7 @@ export default function InactivityManager() {
 
     const logout = () => {
       sessionStorage.removeItem("patientData");
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY); // clear so next login starts fresh
       router.replace("/");
     };
 
