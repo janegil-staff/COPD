@@ -163,6 +163,12 @@ export default function Dashboard() {
             padding: "20px 18px",
           }}
         >
+          <h1
+            className="text-center text-xl font-bold mb-4"
+            style={{ color: "#268E86", fontFamily: "'Playfair Display', Georgia, serif" }}
+          >
+            {t.title}
+          </h1>
           <CalendarPanel
             t={t}
             records={patient.records}
