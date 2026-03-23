@@ -189,7 +189,9 @@ function RecordRow({
               className="text-xs hidden sm:inline"
               style={{ color: "#a0b8b6" }}
             >
-              🚶 {record.physicalActivity} {t.hour}
+              🚶{" "}
+              {t.activityLabels?.[record.physicalActivity] ??
+                record.physicalActivity}
             </span>
           )}
           <span
@@ -292,10 +294,8 @@ function RecordRow({
                     {t.physicalActivity}
                   </p>
                   <p className="text-sm font-bold" style={{ color: "#268E86" }}>
-                    {record.physicalActivity}{" "}
-                    {record.physicalActivity === 1
-                      ? (t.hourSingular ?? t.hours ?? t.hour)
-                      : (t.hours ?? t.hour)}
+                    {t.activityLabels?.[record.physicalActivity] ??
+                      record.physicalActivity}
                   </p>
                 </div>
               )}
@@ -526,7 +526,7 @@ export default function LogPage() {
         </div>
         <div className="flex items-center gap-2">
           <span
-            className="text-xs px-3 py-1.5 rounded-full"
+            className="hidden md:inline text-xs px-3 py-1.5 rounded-full"
             style={{
               background: "rgba(38,142,134,0.08)",
               color: "#268E86",
@@ -594,7 +594,6 @@ export default function LogPage() {
             </div>
           ))}
       </div>
-
       {/* Records */}
       <main className="flex-1 px-6 py-4 max-w-3xl mx-auto w-full pb-12">
         {filtered.length === 0 ? (
