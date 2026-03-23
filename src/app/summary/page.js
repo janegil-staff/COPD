@@ -412,7 +412,7 @@ export default function SummaryPage() {
           {activityData.length > 0 && (
             <Card
               title={t.physicalActivity}
-              accent={avgActivity != null ? { value: avgActivity + " " + t.hour, color: "#0f8a6a" } : undefined}
+              accent={avgActivity != null ? { value: avgActivity + " " + (t.hours ?? t.hour), color: "#0f8a6a" } : undefined}
               subtitle={t.avgSymptoms}
             >
               <BarChart data={activityData} colorFn={() => "#34d399"} height={80} />
