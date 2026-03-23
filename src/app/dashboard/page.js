@@ -175,7 +175,7 @@ export default function Dashboard() {
           />
         </div>
 
-        <div
+        {/* <div
           className="hidden lg:block rounded-2xl shadow-xl overflow-y-auto flex-shrink-0"
           style={{
             background: "rgba(255,255,255,0.88)",
@@ -187,8 +187,8 @@ export default function Dashboard() {
             top: 24,
           }}
         >
-          <Sidebar t={t} patient={patient} selectedRecord={selectedRecord} show={show} />
-        </div>
+          <Sidebar t={t} patient={patient} selectedRecord={selectedRecord} show={show} /> 
+        </div> */}
       </main>
 
       <DayDetailDrawer

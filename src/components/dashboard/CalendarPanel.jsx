@@ -194,9 +194,9 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
                 className="w-full flex flex-col rounded-xl transition-all overflow-hidden"
                 style={{
                   background: bgColor,
-                  border: isSelected ? `2.5px solid #1a1a1a` : "none",
+                  border: "none",
                   cursor: record ? "pointer" : "default",
-                  boxShadow: isSelected ? "0 8px 24px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.4)" : record ? "0 1px 4px rgba(0,0,0,0.12)" : "none",
+                  boxShadow: record ? "0 1px 4px rgba(0,0,0,0.12)" : "none",
                   paddingLeft: 8, paddingRight: 10, paddingTop: 3, paddingBottom: 3,
                   gap: 1,
                   color: record ? "#1a1a1a" : "#a0b8b6",
