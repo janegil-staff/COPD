@@ -98,7 +98,7 @@ export default function Sidebar({ t, patient, selectedRecord, show }) {
             )}
 
             {/* Note */}
-            {(selectedRecord.note?.trim() || selectedRecord.notes?.trim() || selectedRecord.noteText?.trim() || selectedRecord.comment?.trim()) && (
+            {show.note && (selectedRecord.note?.trim() || selectedRecord.notes?.trim() || selectedRecord.noteText?.trim() || selectedRecord.comment?.trim()) && (
               <div className="mx-5 mb-3 px-3 py-2 rounded-xl" style={{ background: "#f5f3ff", border: "1px solid #c4b5fd" }}>
                 <p className="text-xs font-semibold mb-0.5" style={{ color: "#7c3aed" }}>{t.note}</p>
                 <p className="text-xs" style={{ color: "#6d5a9a" }}>{selectedRecord.note?.trim() || selectedRecord.notes?.trim() || selectedRecord.noteText?.trim() || selectedRecord.comment?.trim()}</p>

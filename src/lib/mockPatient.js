@@ -190,8 +190,8 @@ export const mockPatient = {
     },
     {
       date: "2026-02-23",
-      cat8: 18, cat8Cough: 2, cat8Phlegm: 3, cat8ChestTightness: 2, cat8Breathlessness: 3,
-      cat8Activities: 2, cat8Confidence: 2, cat8Sleep: 2, cat8Energy: 2,
+      cat8: 26, cat8Cough: 3, cat8Phlegm: 5, cat8ChestTightness: 2, cat8Breathlessness: 4,
+      cat8Activities: 4, cat8Confidence: 2, cat8Sleep: 3, cat8Energy: 3,
       moderateExacerbations: false, seriousExacerbations: false,
       physicalActivity: 2, weight: 82,
       note: "Litt sliten etter helgen.",
@@ -208,8 +208,8 @@ export const mockPatient = {
     },
     {
       date: "2026-03-09",
-      cat8: 20, cat8Cough: 3, cat8Phlegm: 2, cat8ChestTightness: 3, cat8Breathlessness: 2,
-      cat8Activities: 3, cat8Confidence: 2, cat8Sleep: 3, cat8Energy: 2,
+      cat8: 40, cat8Cough: 5, cat8Phlegm: 5, cat8ChestTightness: 5, cat8Breathlessness: 5,
+      cat8Activities: 5, cat8Confidence: 5, cat8Sleep: 5, cat8Energy: 5,
       moderateExacerbations: true, seriousExacerbations: false,
       physicalActivity: 2, weight: 81,
       note: "Mer hoste denne uken.",
@@ -226,7 +226,7 @@ export const mockPatient = {
     },
     {
       date: "2026-03-23",
-      cat8: 11, cat8Cough: 1, cat8Phlegm: 2, cat8ChestTightness: 1, cat8Breathlessness: 2,
+      cat8: 10, cat8Cough: 1, cat8Phlegm: 1, cat8ChestTightness: 1, cat8Breathlessness: 2,
       cat8Activities: 1, cat8Confidence: 2, cat8Sleep: 1, cat8Energy: 1,
       moderateExacerbations: false, seriousExacerbations: false,
       physicalActivity: 3, weight: 82,
