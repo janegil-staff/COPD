@@ -109,10 +109,10 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
     .map(([, r]) => r);
 
   const counts = {
-    low:           monthRecords.filter(r => r.cat8 <= 10).length,
-    medium:        monthRecords.filter(r => r.cat8 > 10 && r.cat8 <= 20).length,
-    high:          monthRecords.filter(r => r.cat8 > 20 && r.cat8 <= 30).length,
-    veryHigh:      monthRecords.filter(r => r.cat8 > 30).length,
+    low:           monthRecords.filter(r => r.cat8 != null && r.cat8 <= 10).length,
+    medium:        monthRecords.filter(r => r.cat8 != null && r.cat8 > 10 && r.cat8 <= 20).length,
+    high:          monthRecords.filter(r => r.cat8 != null && r.cat8 > 20 && r.cat8 <= 30).length,
+    veryHigh:      monthRecords.filter(r => r.cat8 != null && r.cat8 > 30).length,
     exacerbations: monthRecords.filter(r => r.moderateExacerbations || r.seriousExacerbations).length,
     filled:        monthRecords.length,
   };
@@ -169,18 +169,20 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
             const anyDot      = showExDot || showNoteDot || showMedDot || showActDot || showWtDot;
 
             const bgColor = record
-              ? record.cat8 <= 10 ? "#4CC189"
+              ? record.cat8 == null ? "rgba(38,142,134,0.08)"
+              : record.cat8 <= 10 ? "#4CC189"
               : record.cat8 <= 20 ? "#FFC659"
               : record.cat8 <= 30 ? "#FF7473"
               : "#BE3830"
-              : "rgba(38,142,134,0.05)";
+              : "rgba(38,142,134,0.03)";
             const stripeColor = isSelected ? "#0f6b63"
               : record
-              ? record.cat8 <= 10 ? "#2e9e68"
+              ? record.cat8 == null ? "rgba(38,142,134,0.2)"
+              : record.cat8 <= 10 ? "#2e9e68"
               : record.cat8 <= 20 ? "#c99500"
               : record.cat8 <= 30 ? "#cc4040"
               : "#8a2020"
-              : "rgba(38,142,134,0.15)";
+              : "rgba(38,142,134,0.08)";
 
             rows.push(
               <div
@@ -224,7 +226,9 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
                           fontSize: 10,
                           fontWeight: isToday ? 900 : 700,
                           color: record
-                            ? inMonth ? "#1a1a1a" : "rgba(0,0,0,0.3)"
+                            ? record.cat8 == null
+                              ? inMonth ? "rgba(38,142,134,0.5)" : "rgba(38,142,134,0.25)"
+                              : inMonth ? "#1a1a1a" : "rgba(0,0,0,0.3)"
                             : inMonth ? "#a0b8b6" : "#d0e0de",
                           lineHeight: 1,
                         }}>
@@ -319,10 +323,10 @@ export default function CalendarPanel({ t, records, medicines, onDayClick, selec
             iconColor: "#268E86",
             label: t.physicalActivity,
             value: (() => {
-              const total = monthRecords.reduce((s, r) => s + (r.physicalActivity ?? 0), 0);
-              return total > 0
-                ? `${total} ${total === 1 ? (t.hourSingular ?? t.hours ?? t.hour) : (t.hours ?? t.hour)}`
-                : "–";
+              const vals = monthRecords.filter(r => r.physicalActivity > 0);
+              if (!vals.length) return "–";
+              const avg = Math.round(vals.reduce((s, r) => s + r.physicalActivity, 0) / vals.length);
+              return t.activityLabels?.[avg] ?? avg;
             })(),
           },
           {
@@ -467,7 +471,7 @@ function RecordsList({ records, selectedDate, onDayClick, show, t }) {
               {/* Right: weight, activity, CAT badge */}
               <div className="flex items-center gap-1.5 sm:gap-3">
                 {show.weight   && r.weight != null       && <span className="text-xs hidden sm:inline" style={{ color: "#a0b8b6" }}>⚖ {r.weight} kg</span>}
-                {show.activity && r.physicalActivity > 0 && <span className="text-xs hidden sm:inline" style={{ color: "#a0b8b6" }}>🚶 {r.physicalActivity} {t.hour}</span>}
+                {show.activity && r.physicalActivity > 0 && <span className="text-xs hidden sm:inline" style={{ color: "#a0b8b6" }}>🚶 {t.activityLabels?.[r.physicalActivity] ?? r.physicalActivity}</span>}
                 {show.catScore && (
                   <span className="font-bold rounded-full" style={{
                     background: c.bg, color: c.text, border: `1px solid ${c.border}`,
