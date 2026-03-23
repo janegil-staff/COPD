@@ -57,7 +57,14 @@ export default function Sidebar({ t, patient, selectedRecord, show }) {
       {selectedRecord ? (
         hasVisibleRecordData ? (
           <>
-            <SectionHeader>{t.catScore} · {selectedRecord.date}</SectionHeader>
+            <SectionHeader>{t.catScore} · {(() => {
+              const d   = new Date(selectedRecord.date.slice(0,4), selectedRecord.date.slice(5,7)-1, selectedRecord.date.slice(8,10));
+              const dow = (d.getDay() + 6) % 7;
+              const thu = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + 3);
+              const jan4 = new Date(thu.getFullYear(), 0, 4);
+              const wn = 1 + Math.round((thu - jan4) / 604800000);
+              return `${t.week ?? "W"}${wn} · `;
+            })()}{selectedRecord.date}</SectionHeader>
             <div className="px-5 pb-4 space-y-2">
 
               {/* CAT sub-scores — always show when catScore is on */}
@@ -91,10 +98,10 @@ export default function Sidebar({ t, patient, selectedRecord, show }) {
             )}
 
             {/* Note */}
-            {show.note && selectedRecord.note?.trim() && (
+            {(selectedRecord.note?.trim() || selectedRecord.notes?.trim() || selectedRecord.noteText?.trim() || selectedRecord.comment?.trim()) && (
               <div className="mx-5 mb-3 px-3 py-2 rounded-xl" style={{ background: "#f5f3ff", border: "1px solid #c4b5fd" }}>
                 <p className="text-xs font-semibold mb-0.5" style={{ color: "#7c3aed" }}>{t.note}</p>
-                <p className="text-xs" style={{ color: "#6d5a9a" }}>{selectedRecord.note}</p>
+                <p className="text-xs" style={{ color: "#6d5a9a" }}>{selectedRecord.note?.trim() || selectedRecord.notes?.trim() || selectedRecord.noteText?.trim() || selectedRecord.comment?.trim()}</p>
               </div>
             )}
 

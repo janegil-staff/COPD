@@ -37,6 +37,16 @@ export default function DrawerContent({ t, record, catColor, usedMedicines, onCl
           <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "#a0b8b6" }}>
             {t.registration}
           </p>
+          <p className="text-xs font-semibold mb-0.5" style={{ color: "#a0b8b6" }}>
+            {(() => {
+              const d   = new Date(record.date.slice(0,4), record.date.slice(5,7)-1, record.date.slice(8,10));
+              const dow = (d.getDay() + 6) % 7;
+              const thu = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow + 3);
+              const jan4 = new Date(thu.getFullYear(), 0, 4);
+              const wn  = 1 + Math.round((thu - jan4) / 604800000);
+              return `${t.week ?? "W"}${wn}`;
+            })()}
+          </p>
           <p className="text-xl font-bold" style={{ color: "#1a3a38", fontFamily: "'Playfair Display', Georgia, serif" }}>
             {record.date}
           </p>
@@ -155,16 +165,19 @@ export default function DrawerContent({ t, record, catColor, usedMedicines, onCl
       )}
 
       {/* ── Note ── */}
-      {show.note && record.note?.trim() && (
-        <>
-          <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: "#a0b8b6" }}>
-            {t.note}
-          </p>
-          <div className="px-4 py-3 rounded-xl" style={{ background: "#f5f3ff", border: "1px solid #c4b5fd" }}>
-            <p className="text-sm" style={{ color: "#6d28d9" }}>{record.note}</p>
-          </div>
-        </>
-      )}
+      {(() => {
+        const noteText = record.note?.trim() || record.notes?.trim() || record.noteText?.trim() || record.comment?.trim();
+        return noteText ? (
+          <>
+            <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: "#a0b8b6" }}>
+              {t.note}
+            </p>
+            <div className="px-4 py-3 rounded-xl" style={{ background: "#f5f3ff", border: "1px solid #c4b5fd" }}>
+              <p className="text-sm" style={{ color: "#6d28d9" }}>{noteText}</p>
+            </div>
+          </>
+        ) : null;
+      })()}
 
     </div>
   );
